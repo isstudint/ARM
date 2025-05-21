@@ -1,0 +1,119 @@
+@font-face {
+  font-family: 'Logo';
+  src: url('../fonts/Miskan\ Oblique.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'light';
+  src: url('../fonts/HelveticaNeueLight.otf') format('openType');
+}
+@font-face {
+  font-family: 'Regular';
+  src: url('../fonts/HelveticaNeueMedium.otf') format('truetype');
+}
+@font-face {
+  font-family: 'Header';
+  src: url('../fonts/HelveticaNeueHeavy.otf') format('truetype');
+}
+
+body{
+    height: 99%;
+    width: 100%;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+  }
+  #div1{
+    background-color: white;
+    height: 67%;
+
+  }
+#div2{
+    background-image: url('da.jpg');
+    background-size: cover;
+    background-position:center;
+    background-repeat: no-repeat;
+    height: 34%;
+}
+
+#container {
+    display: flex;
+    flex-direction:row; /* vertical stack */
+    align-items: flex-start; /* optional, aligns content to the left */
+    padding: 30px 50px; /* reduced padding */
+
+
+  }
+
+.section {
+    width: 25%;
+    color: white;
+    margin: 0;
+    margin-left: 60px;
+    padding: 0;
+}
+.logo {
+  margin-left: auto; /* pushes it to the right */
+  margin-right: 100px;
+  color: white;
+  font-size: 100px;
+  font-family: 'Logo';
+  margin-top: -30px;
+}
+
+.logo h4 {
+  font-size: 20px;
+  font-family: 'Regular';
+}
+
+  
+  .section h1, .section h3 {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+
+  }
+  
+  .section h1 {
+    font-size: 40px;
+    color:yellow ;
+    font-family:'Header';
+  }
+  
+  .section h3 {
+    font-size: 19px;
+    font-family:'light';
+  }
+
+  .section_logo {
+    width: 27%;
+    color: white;
+    text-align: center; 
+    justify-content: center;
+    margin-left: auto; /* pushes it to the right */
+    margin-right: 100px;
+    margin-top: -35px;
+  }
+  
+
+img{
+        height: 35px; 
+        vertical-align: middle; 
+        filter: brightness(0) saturate(100%) invert(79%) sepia(98%) saturate(1986%) hue-rotate(5deg) brightness(97%) contrast(93%);
+        cursor: pointer;
+        margin-right: 12px; 
+        margin-top: 5px;  
+        transition: transform 0.2s ease-in-out; 
+    }
+    
+    img:hover {
+        transform: scale(1.3); 
+    }
+
+
+    
+
+  
