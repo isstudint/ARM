@@ -41,9 +41,9 @@ body{
 
 #container {
     display: flex;
-    flex-direction:row; /* vertical stack */
-    align-items: flex-start; /* optional, aligns content to the left */
-    padding: 30px 50px; /* reduced padding */
+    flex-direction:row; 
+    align-items: flex-start; 
+    padding: 30px 50px; 
 
 
   }
@@ -56,7 +56,7 @@ body{
     padding: 0;
 }
 .logo {
-  margin-left: auto; /* pushes it to the right */
+  margin-left: auto; 
   margin-right: 100px;
   color: white;
   font-size: 100px;
@@ -93,7 +93,7 @@ body{
     color: white;
     text-align: center; 
     justify-content: center;
-    margin-left: auto; /* pushes it to the right */
+    margin-left: auto; 
     margin-right: 100px;
     margin-top: -35px;
   }
