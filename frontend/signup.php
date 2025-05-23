@@ -14,7 +14,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     }else{
         $query = "INSERT INTO users VALUES('$fullname', '$email', '$bday', '$password')";
         mysqli_query($conn, $query);
-        header("Location:login.php");
+        header("Location:../frontend/login.php");
         die;
     }
 }

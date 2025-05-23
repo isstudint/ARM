@@ -67,9 +67,15 @@
                         </a>
                     </li>
                     <li class="nav-item">
+<<<<<<< Updated upstream
                         <a href="" class="nav-link">
                             <span class="nav-icon material-symbols-outlined">help</span>
                             <span class="nav-label">Help</span>    
+=======
+                        <a href="../forms/login.php" class="nav-link">
+                            <span class="nav-icon material-symbols-outlined">admin_panel_settings</span>
+                            <span class="nav-label">Admin</span>    
+>>>>>>> Stashed changes
                         </a>
                     </li>
                 </ul>
