@@ -1,0 +1,17 @@
+@font-face {
+  font-family: 'Regular';
+  src: url('../fonts/HelveticaNeueMedium.otf') format('truetype');
+}
+@font-face {
+  font-family: 'Logo';
+  src: url('../fonts/Miskan\ Oblique.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Header';
+  src: url('../fonts/HelveticaNeueHeavy.otf') format('truetype');
+}
+@font-face {
+  font-family: 'light';
+  src: url('../fonts/HelveticaNeueLight.otf') format('openType');
+}
+
