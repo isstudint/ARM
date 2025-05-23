@@ -57,20 +57,26 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
+            </ul>
+            <!-- Sidebar Secondary nav -->
+              <ul class="nav-list footer-nav">
+                    <li class="nav-item">
                         <a href="" class="nav-link">
-                            <span class="nav-icon material-symbols-outlined">call</span>
-                            <span class="nav-label">Contact Us</span>    
+                            <span class="nav-icon material-symbols-outlined">settings</span>
+                            <span class="nav-label">Settings</span>    
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="" class="nav-link">
-                            <span class="nav-icon material-symbols-outlined">admin_panel_settings</span>
-                            <span class="nav-label">Admin</span>    
+                            <span class="nav-icon material-symbols-outlined">help</span>
+                            <span class="nav-label">Help</span>    
                         </a>
                     </li>
-            </ul>
+                </ul>
          </nav>
+
+         
+              
     </aside>
 
    
