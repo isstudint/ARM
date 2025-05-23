@@ -1,0 +1,122 @@
+.main-content {
+    min-height: 100vh;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.page-title {
+        text-align: center;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1a202c;
+    margin-bottom: 0.5rem;
+}
+
+
+
+.container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.standing-cont {
+    width: 100%;
+    max-width: 800px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+
+.standings-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+
+.standings-table thead {
+    background: #2d53da;
+
+}
+
+.standings-table th {
+    color: #fff;
+    font-weight: 500;
+    padding: 1rem;
+    text-align: center;
+    font-size: 1rem;
+}
+
+
+
+.team-row {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.standings-table td {
+    padding: 1rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+.rank-cell {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+
+.team-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-weight: 500;
+    font-size: 0.8rem;
+    color: #475569;
+}
+
+
+.team-cell {
+    text-align: left;
+}
+
+/* kung magamit
+.team-name {
+
+}
+*/
+
+/* Sort Links */
+.sort-link {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.sort-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+/* Active sort indicator */
+.sort-link:hover {
+    color: #ffd700;
+}
+
+
+
+

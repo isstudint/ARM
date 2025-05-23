@@ -68,6 +68,9 @@ $total_players = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM play
                 </tr>
                 <?php endwhile; ?>
             </table>
+
+
+            
         </div>
     </div>
 </body>

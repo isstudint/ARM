@@ -110,6 +110,12 @@ a.header-logo{
     border-radius: 8px;
 }
 
+.sidebar-nav .footer-nav{
+    position: absolute;
+    bottom:40px;
+    width: 100%;
+}
+
 /*toggle*/
 .toggler{
     width: 20px;
@@ -119,9 +125,12 @@ a.header-logo{
 }
 
 .toggler:hover{
-    background: black;
+    background: grey;
     color: #fff;
     
 }
+
+
+    
 
 

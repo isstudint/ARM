@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&" />
-    <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="../Css/landing.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;
@@ -67,15 +67,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
-<<<<<<< Updated upstream
                         <a href="" class="nav-link">
                             <span class="nav-icon material-symbols-outlined">help</span>
                             <span class="nav-label">Help</span>    
-=======
-                        <a href="../forms/login.php" class="nav-link">
-                            <span class="nav-icon material-symbols-outlined">admin_panel_settings</span>
-                            <span class="nav-label">Admin</span>    
->>>>>>> Stashed changes
                         </a>
                     </li>
                 </ul>

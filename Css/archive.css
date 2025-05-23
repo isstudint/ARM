@@ -1,0 +1,128 @@
+@font-face {
+  font-family: 'Logo';
+  src: url('../fonts/Miskan\ Oblique.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'light';
+  src: url('../fonts/HelveticaNeueLight.otf') format('openType');
+}
+@font-face {
+  font-family: 'Regular';
+  src: url('../fonts/HelveticaNeueMedium.otf') format('truetype');
+}
+@font-face {
+  font-family: 'Header';
+  src: url('../fonts/HelveticaNeueHeavy.otf') format('truetype');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #dcf0fc, #e3f0ff);
+}
+
+
+.sidebar {
+    width: 270px;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    height: calc(100vh - 32px);
+    background: #2d53da;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-title {
+    font-family: 'Logo', sans-serif;
+    font-size: 2rem;
+    color: #fff;
+    font-weight: bold;
+}
+
+.header-logo {
+    text-decoration: none;
+}
+
+.toggler {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.toggler:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+
+.sidebar-nav {
+    flex: 1;
+    padding: 1rem 0;
+}
+
+.nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-item {
+    margin: 0.25rem 0;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    font-weight: 400;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    border-radius: 0 25px 25px 0;
+    margin-right: 1rem;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: translateX(5px);
+}
+
+.nav-icon {
+    font-size: 1.25rem;
+    min-width: 24px;
+}
+
+.nav-label {
+    font-family: 'light', sans-serif;
+}
+
+
+
+
+
