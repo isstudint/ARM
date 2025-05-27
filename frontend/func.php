@@ -15,7 +15,7 @@ function check_login($conn) {
 }
 
 function check_admin() {
-    if(!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true){
+    if(!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== 1 && $_SESSION['is_admin'] !== 2) {
         echo "Access denied. Admin only.";
         die;
     }

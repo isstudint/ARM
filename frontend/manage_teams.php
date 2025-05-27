@@ -82,6 +82,8 @@ if (isset($_GET['id'])) {
 
 // Get all teams for listing
 $teams_result = mysqli_query($conn, "SELECT team_id, team_name, logo FROM teams ORDER BY team_name");
+
+include("landing.php");
 ?>
 
 <!DOCTYPE html>

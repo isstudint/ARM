@@ -31,7 +31,7 @@ if (!$teams) {
 include("landing.php");
 ?>
 <body>
-    <div class="main-content">
+    <div >
         <div class="teams-grid">
             <?php while($team = mysqli_fetch_assoc($teams)): ?>
             <a href="players.php?team_id=<?php echo $team['team_id']; ?>" class="team-card">

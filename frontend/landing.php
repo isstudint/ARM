@@ -1,4 +1,11 @@
-<?php session_start(); ?>
+<?php 
+
+    if(!isset($_SESSION)) 
+    { 
+        session_start(); 
+    } 
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,23 +57,36 @@
                         <span class="nav-icon material-symbols-outlined">leaderboard</span>
                         <span class="nav-label">Standing</span>    
                     </a>
-                </li>
+                </li>                   <!--<span class="nav-icon material-symbols-outlined">sports_soccer</span> !--> 
                  <?php if(isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
+
+                <li class="nav-item">
+                    <a href="manage_matches.php" class="nav-link">
+                            <span class="material-symbols-outlined">manage_accounts</span>
+                        <span class="nav-label">Manage Matches</span>    
+                    </a>
+                </li>
+                <?php endif; ?>
+
+
+
+                <?php if(isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 2): ?>
+                <li class="nav-item">
+                    <a href="manage_roster.php" class="nav-link">
+                        <span class="material-symbols-outlined">patient_list</span>
+                        <span class="nav-label">Manage Roster</span>    
+                    </a>
+
+                <?php endif; ?>
+                
+                <?php if(isset($_SESSION['is_admin']) && ($_SESSION['is_admin'] == 1 || $_SESSION['is_admin'] == 2)   ): ?>
                  <li class="nav-item">
                     <a href="manage_teams.php" class="nav-link">
                         <span class="nav-icon material-symbols-outlined">trophy</span>
                         <span class="nav-label">Manage Teams</span>    
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="manage_matches.php" class="nav-link">
-                        <span class="nav-icon material-symbols-outlined">sports_soccer</span>
-                        <span class="nav-label">Manage Matches</span>    
-                    </a>
-                </li>
                 <?php endif; ?>
-                
-
 
             </ul>
             <!-- Sidebar Secondary nav -->
@@ -83,7 +103,7 @@
                             <span class="nav-label">Help</span>    
                         </a>
                     </li>
-                <?php if(isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
+                <?php if(isset($_SESSION['is_admin']) && ($_SESSION['is_admin'] == 1 || $_SESSION['is_admin'] == 2)  ): ?>
                 <li class="nav-item">
                     <a href="logout.php" class="nav-link">
                         <span class="nav-icon material-symbols-outlined">logout</span>
