@@ -12,7 +12,13 @@ function check_login($conn) {
 
     header("Location:login.php");
     die;
+}
 
+function check_admin() {
+    if(!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true){
+        echo "Access denied. Admin only.";
+        die;
+    }
 }
 
 ?>

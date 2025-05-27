@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,7 +28,7 @@
          <nav class="sidebar-nav">
             <ul class="nav-list primary-nav">
                 <li class="nav-item">
-                    <a href="" class="nav-link">
+                    <a href="teams.php" class="nav-link">
                         <span class="nav-icon material-symbols-outlined">groups_3</span>
                         <span class="nav-label">Teams</span>    
                     </a>
@@ -45,17 +46,27 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="" class="nav-link">
+                    <a href="standing.php" class="nav-link">
                         <span class="nav-icon material-symbols-outlined">leaderboard</span>
                         <span class="nav-label">Standing</span>    
                     </a>
                 </li>
+                 <?php if(isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
                  <li class="nav-item">
-                    <a href="" class="nav-link">
+                    <a href="manage_teams.php" class="nav-link">
                         <span class="nav-icon material-symbols-outlined">trophy</span>
-                        <span class="nav-label">Coach</span>    
+                        <span class="nav-label">Manage Teams</span>    
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="manage_matches.php" class="nav-link">
+                        <span class="nav-icon material-symbols-outlined">sports_soccer</span>
+                        <span class="nav-label">Manage Matches</span>    
+                    </a>
+                </li>
+                <?php endif; ?>
+                
+
 
             </ul>
             <!-- Sidebar Secondary nav -->
@@ -72,6 +83,14 @@
                             <span class="nav-label">Help</span>    
                         </a>
                     </li>
+                <?php if(isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
+                <li class="nav-item">
+                    <a href="logout.php" class="nav-link">
+                        <span class="nav-icon material-symbols-outlined">logout</span>
+                        <span class="nav-label">Logout</span>    
+                    </a>
+                </li>
+                <?php endif; ?>
                 </ul>
          </nav>
 
