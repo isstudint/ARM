@@ -28,7 +28,7 @@ if (!$teams) {
     die("Query failed: " . mysqli_error($conn));
 }
 
-include("landing.php");
+include("sidebar.php");
 ?>
 <body>
     <div >

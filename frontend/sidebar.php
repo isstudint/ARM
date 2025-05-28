@@ -1,3 +1,13 @@
+<?php 
+
+    if(!isset($_SESSION)) 
+    { 
+        session_start(); 
+    } 
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,7 +42,14 @@
         <nav class="sidebar-nav">
             <ul class="nav-list primary-nav">
                 <li class="nav-item">
-                    <a href="" class="nav-link">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon material-symbols-outlined">groups_3</span>
+                        <span class="nav-label">Match Today</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="teams.php" class="nav-link">
                         <span class="nav-icon material-symbols-outlined">groups_3</span>
                         <span class="nav-label">Teams</span>
                     </a>
@@ -50,34 +67,72 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="" class="nav-link">
+                    <a href="standing.php" class="nav-link">
                         <span class="nav-icon material-symbols-outlined">leaderboard</span>
                         <span class="nav-label">Standing</span>
                     </a>
-                </li>
+                </li>                   <!--<span class="nav-icon material-symbols-outlined">sports_soccer</span> !--> 
+                 <?php if(isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
+
                 <li class="nav-item">
-                    <a href="" class="nav-link">
-                        <span class="nav-icon material-symbols-outlined">trophy</span>
-                        <span class="nav-label">Coach</span>
+                    <a href="manage_matches.php" class="nav-link">
+                            <span class="material-symbols-outlined">manage_accounts</span>
+                        <span class="nav-label">Manage Matches</span>    
                     </a>
                 </li>
+                <?php endif; ?>
+
+
+
+                <?php if(isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 2): ?>
+                <li class="nav-item">
+                    <a href="manage_roster.php" class="nav-link">
+                        <span class="material-symbols-outlined">patient_list</span>
+                        <span class="nav-label">Manage Roster</span>    
+                    </a>
+
+                <?php endif; ?>
+                
+                <?php if(isset($_SESSION['is_admin']) && ($_SESSION['is_admin'] == 1 || $_SESSION['is_admin'] == 2)   ): ?>
+                 <li class="nav-item">
+                    <a href="manage_teams.php" class="nav-link">
+                        <span class="nav-icon material-symbols-outlined">trophy</span>
+                        <span class="nav-label">Manage Teams</span>    
+                    </a>
+                </li>
+                <?php endif; ?>
+
+            </ul>
+            <!-- Sidebar Secondary nav -->
+              <ul class="nav-list footer-nav">
+                    <li class="nav-item">
+                        <a href="" class="nav-link">
+                            <span class="nav-icon material-symbols-outlined">settings</span>
+                            <span class="nav-label">Settings</span>    
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="" class="nav-link">
+                            <span class="nav-icon material-symbols-outlined">help</span>
+                            <span class="nav-label">Help</span>    
+                        </a>
+                    </li>
+                <?php if(isset($_SESSION['is_admin']) && ($_SESSION['is_admin'] == 1 || $_SESSION['is_admin'] == 2)  ): ?>
+                <li class="nav-item">
+                    <a href="logout.php" class="nav-link">
+                        <span class="nav-icon material-symbols-outlined">logout</span>
+                        <span class="nav-label">Logout</span>    
+                    </a>
+                </li>
+                <?php endif; ?>
+                </ul>
+         </nav>
+                </li>
+
             </ul>
 
             <!-- Sidebar Secondary nav -->
-            <ul class="nav-list footer-nav">
-                <li class="nav-item">
-                    <a href="" class="nav-link">
-                        <span class="nav-icon material-symbols-outlined">settings</span>
-                        <span class="nav-label">Settings</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="" class="nav-link">
-                        <span class="nav-icon material-symbols-outlined">help</span>
-                        <span class="nav-label">Help</span>
-                    </a>
-                </li>
-            </ul>
+
         </nav>
     </aside>
 

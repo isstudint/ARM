@@ -28,7 +28,7 @@ $standings = mysqli_query($conn, $standings_query);
 
 
 
-include 'landing.php';
+include 'sidebar.php';
 ?>
 
 <main class="main-content">
