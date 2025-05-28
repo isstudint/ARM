@@ -27,15 +27,11 @@ if (!$teams) {
     die("Query failed: " . mysqli_error($conn));
 }
 
-<<<<<<< HEAD
 
-=======
-include("landing.php");
->>>>>>> parent of 694332d (asdsadasd)
 ?>
 <body>
     <?php include("sidebar.php") ?>
-    <div >
+    <div class="main-content">
         <div class="teams-grid">
             <?php while($team = mysqli_fetch_assoc($teams)): ?>
             <a href="players.php?team_id=<?php echo $team['team_id']; ?>" class="team-card">

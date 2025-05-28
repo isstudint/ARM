@@ -16,7 +16,6 @@
   src: url('../fonts/HelveticaNeueHeavy.otf') format('truetype');
 }
 
-
 *{
     margin: 0;
     padding: 0;
@@ -38,16 +37,8 @@ body{
     background: #2d53da;
     height: calc(100vh - 32px);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    transition: width 0.4s ease;
 }
-
-/* .sidebar-nav .nav-link{
-    color: #fff;
-    font-size: 20px;
-    font-family: 'light';
-    padding: 10px 20px;
-    text-decoration: none;
-    transition: 0.4s ease;
-} */
 
 .sidebar-nav .nav-link{
     display: flex;
@@ -66,6 +57,7 @@ body{
     font-size: 30px;
     color: #000;
     margin-left: 20px;
+    transition: 0.4s ease;
 }
 
 a.header-logo{
@@ -130,12 +122,11 @@ a.header-logo{
     
 }
 
+/* COLLAPSED */
+.sidebar.collapsed{
+    width: 85px;
+}
 
-<<<<<<< HEAD
-    
-
-
-=======
 .sidebar-nav .nav-link .nav-label {
     display: inline-block;
     transition: opacity 0.4s ease;
@@ -148,14 +139,3 @@ a.header-logo{
     opacity: 0;
     pointer-events: none;
 }
-
-.sidebar.collapsed .sidebar-header .toggler{
-    transform: translate(-50px, 40px);
-}
-
-.sidebar.collapsed .sidebar-title {
-    margin-left: 0;
-    transform: translateX(-6px); 
-    transition: transform 0.3s ease;
-}
->>>>>>> parent of 694332d (asdsadasd)

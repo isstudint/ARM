@@ -96,7 +96,7 @@ if (!$players_result) {
     die("Query failed: " . mysqli_error($conn));
 }
 
-include("landing.php");
+include("sidebar.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
