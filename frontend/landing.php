@@ -18,6 +18,7 @@
     <title>Document</title>
 </head>
 <body>
+    
     <?php include("sidebar.php") ?>
 
     <div class="container">
@@ -99,6 +100,19 @@
                 
                     
         </div>
+
+     <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const sidebarToggler = document.querySelector(".sidebar-toggler");
+        const sidebar = document.querySelector(".sidebar");
+
+        sidebarToggler.addEventListener("click", () => {
+          sidebar.classList.toggle("collapsed");
+        });
+      });
+    </script>
+
+        
 
 
 
