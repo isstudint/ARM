@@ -1,0 +1,136 @@
+@font-face {
+  font-family: 'Logo';
+  src: url('../fonts/Miskan\ Oblique.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'light';
+  src: url('../fonts/HelveticaNeueLight.otf') format('openType');
+}
+@font-face {
+  font-family: 'Regular';
+  src: url('../fonts/HelveticaNeueMedium.otf') format('truetype');
+}
+@font-face {
+  font-family: 'Header';
+  src: url('../fonts/HelveticaNeueHeavy.otf') format('truetype');
+}
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body{
+    min-height: 100vh;
+    background: linear-gradient(#dcf0fc, #e3f0ff);
+}
+
+/* Sidebar */
+.sidebar{
+    width: 270px;
+    position: fixed;
+    margin:16px;
+    border-radius: 16px;
+    background: #2d53da;
+    height: calc(100vh - 32px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* .sidebar-nav .nav-link{
+    color: #fff;
+    font-size: 20px;
+    font-family: 'light';
+    padding: 10px 20px;
+    text-decoration: none;
+    transition: 0.4s ease;
+} */
+
+.sidebar-nav .nav-link{
+    display: flex;
+    align-items: center;
+    padding: 20px 20px;
+    text-decoration: none;
+    gap:12px;
+    color: #fff;
+    font-size: 20px;
+    font-family: 'light';
+    transition: 0.4s ease;
+}
+
+.sidebar-title{
+    font-family: 'Logo';
+    font-size: 30px;
+    color: #000;
+    margin-left: 20px;
+}
+
+a.header-logo{
+    text-decoration: none;
+}
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.sidebar-nav .nav-list{
+    list-style: none;
+    display: flex;
+    gap: 4px;
+    padding: 0 15px;
+    flex-direction: column;
+    transform: translateY(30px);
+}
+
+.sidebar-header .logo{
+    font-family: 'Logo';
+    font-size: 30px;
+    color: #fff;
+}
+
+.sidebar-header .toggler{
+    background: #fff;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.4s ease;
+    cursor: pointer;
+}
+
+.sidebar-nav .nav-link:hover{
+    color: black;
+    background: #f7f7f7;
+    border-radius: 8px;
+}
+
+.sidebar-nav .footer-nav{
+    position: absolute;
+    bottom:40px;
+    width: 100%;
+}
+
+/*toggle*/
+.toggler{
+    width: 20px;
+    height: 20px;
+    border-radius: 8px;
+    transition: 0.4s ease;
+}
+
+.toggler:hover{
+    background: grey;
+    color: #fff;
+    
+}
+
+
+    
+
+
