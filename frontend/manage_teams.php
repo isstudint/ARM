@@ -82,8 +82,6 @@ if (isset($_GET['id'])) {
 
 // Get all teams for listing
 $teams_result = mysqli_query($conn, "SELECT team_id, team_name, logo FROM teams ORDER BY team_name");
-
-include("landing.php");
 ?>
 
 <!DOCTYPE html>
@@ -91,7 +89,8 @@ include("landing.php");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../Css/admin.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&" />
+    <link rel="stylesheet" href="sidebar.css">
     <title>Manage Teams</title>
     <style>
         .admin-container {
@@ -162,71 +161,75 @@ include("landing.php");
     </style>
 </head>
 <body>
-    <div class="admin-container">
-        <h1>Manage Teams</h1>
-        
-        <?php if (isset($message)): ?>
-            <div class="message success"><?php echo $message; ?></div>
-        <?php endif; ?>
-        
-        <?php if (isset($error)): ?>
-            <div class="message error"><?php echo $error; ?></div>
-        <?php endif; ?>
-        
-        <div class="form-section">
-            <h2><?php echo empty($team) ? 'Add New Team' : 'Edit Team'; ?></h2>
+    <?php include("sidebar.php"); ?>
+    
+    <div class="main-content">
+        <div class="admin-container">
+            <h1>Manage Teams</h1>
             
-            <form method="post" enctype="multipart/form-data">
-                <?php if (!empty($team)): ?>
-                    <input type="hidden" name="team_id" value="<?php echo $team['team_id']; ?>">
-                <?php endif; ?>
+            <?php if (isset($message)): ?>
+                <div class="message success"><?php echo $message; ?></div>
+            <?php endif; ?>
+            
+            <?php if (isset($error)): ?>
+                <div class="message error"><?php echo $error; ?></div>
+            <?php endif; ?>
+            
+            <div class="form-section">
+                <h2><?php echo empty($team) ? 'Add New Team' : 'Edit Team'; ?></h2>
                 
-                <label for="team_name">Team Name</label>
-                <input type="text" id="team_name" name="team_name" value="<?php echo $team['team_name'] ?? ''; ?>" required>
-                
-                <label for="logo">Team Logo</label>
-                <?php if (!empty($team['logo'])): ?>
-                    <div>
-                        <p>Current logo:</p>
-                        <img src="<?php echo htmlspecialchars($team['logo']); ?>" alt="Current Logo" style="max-width: 100px; max-height: 100px;">
-                    </div>
-                    <br>
-                <?php endif; ?>
-                <input type="file" id="logo" name="logo" accept="image/*">
-                <p style="color:#777;font-size:0.9em;">Select an image file (JPG, PNG, or GIF)</p>
-                
-                <button type="submit">Save Team</button>
-            </form>
-        </div>
-        
-        <div class="teams-list">
-            <h2>Current Teams</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Logo</th>
-                        <th>Team Name</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($team_row = mysqli_fetch_assoc($teams_result)): ?>
-                    <tr>
-                        <td>
-                            <?php if(!empty($team_row['logo']) && file_exists('../../' . $team_row['logo'])): ?>
-                                <img src="../../<?php echo $team_row['logo']; ?>" alt="<?php echo $team_row['team_name']; ?> Logo" class="team-logo-preview">
-                            <?php else: ?>
-                                <div>No logo</div>
-                            <?php endif; ?>
-                        </td>
-                        <td><?php echo htmlspecialchars($team_row['team_name']); ?></td>
-                        <td>
-                            <a href="?id=<?php echo $team_row['team_id']; ?>">Edit</a>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+                <form method="post" enctype="multipart/form-data">
+                    <?php if (!empty($team)): ?>
+                        <input type="hidden" name="team_id" value="<?php echo $team['team_id']; ?>">
+                    <?php endif; ?>
+                    
+                    <label for="team_name">Team Name</label>
+                    <input type="text" id="team_name" name="team_name" value="<?php echo $team['team_name'] ?? ''; ?>" required>
+                    
+                    <label for="logo">Team Logo</label>
+                    <?php if (!empty($team['logo'])): ?>
+                        <div>
+                            <p>Current logo:</p>
+                            <img src="<?php echo htmlspecialchars($team['logo']); ?>" alt="Current Logo" style="max-width: 100px; max-height: 100px;">
+                        </div>
+                        <br>
+                    <?php endif; ?>
+                    <input type="file" id="logo" name="logo" accept="image/*">
+                    <p style="color:#777;font-size:0.9em;">Select an image file (JPG, PNG, or GIF)</p>
+                    
+                    <button type="submit">Save Team</button>
+                </form>
+            </div>
+            
+            <div class="teams-list">
+                <h2>Current Teams</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Logo</th>
+                            <th>Team Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($team_row = mysqli_fetch_assoc($teams_result)): ?>
+                        <tr>
+                            <td>
+                                <?php if(!empty($team_row['logo']) && file_exists('../../' . $team_row['logo'])): ?>
+                                    <img src="../../<?php echo $team_row['logo']; ?>" alt="<?php echo $team_row['team_name']; ?> Logo" class="team-logo-preview">
+                                <?php else: ?>
+                                    <div>No logo</div>
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo htmlspecialchars($team_row['team_name']); ?></td>
+                            <td>
+                                <a href="?id=<?php echo $team_row['team_id']; ?>">Edit</a>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </body>

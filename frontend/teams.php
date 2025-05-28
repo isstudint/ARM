@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../Css/teams.css">
-    <link rel="stylesheet" href="../Css/landing.css">
     <title>Teams</title>
  
 </head>
@@ -28,9 +27,10 @@ if (!$teams) {
     die("Query failed: " . mysqli_error($conn));
 }
 
-include("sidebar.php");
+
 ?>
 <body>
+    <?php include("sidebar.php") ?>
     <div >
         <div class="teams-grid">
             <?php while($team = mysqli_fetch_assoc($teams)): ?>
