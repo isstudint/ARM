@@ -24,7 +24,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 $_SESSION['fullname'] = $user_data['fullname'];
                 $_SESSION['is_admin'] = 1;
                 
-                header("Location: landing.php");
+                header("Location: teams.php");
                 die;
             } 
             else if(in_array($admin_key, $valid_coach_keys) && $user_data['password'] === $password){
@@ -32,7 +32,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 $_SESSION['fullname'] = $user_data['fullname'];
                 $_SESSION['is_admin'] = 2;
                 
-                header("Location: landing.php");
+                header("Location: teams.php");
                 die;
             }
             else {

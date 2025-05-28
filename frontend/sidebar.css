@@ -131,6 +131,31 @@ a.header-logo{
 }
 
 
+<<<<<<< HEAD
     
 
 
+=======
+.sidebar-nav .nav-link .nav-label {
+    display: inline-block;
+    transition: opacity 0.4s ease;
+    font-size: 16px;
+    font-family: 'light';
+}
+
+.sidebar.collapsed .sidebar-nav .nav-link .nav-label {
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.sidebar.collapsed .sidebar-header .toggler{
+    transform: translate(-50px, 40px);
+}
+
+.sidebar.collapsed .sidebar-title {
+    margin-left: 0;
+    transform: translateX(-6px); 
+    transition: transform 0.3s ease;
+}
+>>>>>>> parent of 694332d (asdsadasd)

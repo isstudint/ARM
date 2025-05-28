@@ -29,7 +29,7 @@ $standings = mysqli_query($conn, $standings_query);
 
 
 
-include 'sidebar.php';
+include 'landing.php';
 ?>
 
 <main class="main-content">

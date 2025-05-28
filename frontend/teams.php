@@ -27,7 +27,11 @@ if (!$teams) {
     die("Query failed: " . mysqli_error($conn));
 }
 
+<<<<<<< HEAD
 
+=======
+include("landing.php");
+>>>>>>> parent of 694332d (asdsadasd)
 ?>
 <body>
     <?php include("sidebar.php") ?>
