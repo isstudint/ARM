@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 28, 2025 at 08:30 AM
+-- Generation Time: Jun 01, 2025 at 05:10 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -31,15 +31,18 @@ CREATE TABLE `matches` (
   `match_id` int(11) NOT NULL,
   `team1_id` int(11) DEFAULT NULL,
   `team2_id` int(11) DEFAULT NULL,
-  `match_date` date DEFAULT NULL
+  `match_date` date DEFAULT NULL,
+  `status` enum('Scheduled','Ongoing','Completed','Cancelled') DEFAULT 'Scheduled'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `matches`
 --
 
-INSERT INTO `matches` (`match_id`, `team1_id`, `team2_id`, `match_date`) VALUES
-(1, 1, 2, '2025-05-25');
+INSERT INTO `matches` (`match_id`, `team1_id`, `team2_id`, `match_date`, `status`) VALUES
+(1, 1, 2, '2025-05-25', 'Scheduled'),
+(2, 4, 5, '2025-06-18', 'Scheduled'),
+(3, 2, 5, '2025-06-26', 'Scheduled');
 
 -- --------------------------------------------------------
 
@@ -61,7 +64,8 @@ CREATE TABLE `players` (
 --
 
 INSERT INTO `players` (`player_id`, `player_name`, `team_id`, `position`, `age`, `image`) VALUES
-(1, 'Marvs ', 1, 'Center', 18, 'uploads/player_images/player_6835dbaa41eff3.85748908.png');
+(1, 'Marvs ', 1, 'Center', 18, 'uploads/player_images/player_6835dbaa41eff3.85748908.png'),
+(2, 'Shaq', 1, 'Center', 17, 'uploads/player_images/player_683c651e9410b7.17265751.jpg');
 
 -- --------------------------------------------------------
 
@@ -104,7 +108,8 @@ INSERT INTO `teams` (`team_id`, `team_name`, `coach_name`, `logo`) VALUES
 (1, 'Borland', 'John', '../uploads/team_logos/team_68357d362fbb89.65854291.png'),
 (2, 'Gentri', 'Mary', '../uploads/team_logos/team_68357d5e86e865.72546140.png'),
 (3, 'Fontana', NULL, '../uploads/team_logos/team_68357fea8e9543.00065791.png'),
-(4, 'Conchu', NULL, 'uploads/team_logos/team_6836a3c9a2cf06.53218358.png');
+(4, 'Conchu', NULL, 'uploads/team_logos/team_68370c987e4385.36143584.png'),
+(5, 'La Tri', NULL, 'uploads/team_logos/team_68370a0156df48.96388581.png');
 
 -- --------------------------------------------------------
 
@@ -175,13 +180,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `matches`
 --
 ALTER TABLE `matches`
-  MODIFY `match_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `match_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `players`
 --
 ALTER TABLE `players`
-  MODIFY `player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `scores`
@@ -193,7 +198,7 @@ ALTER TABLE `scores`
 -- AUTO_INCREMENT for table `teams`
 --
 ALTER TABLE `teams`
-  MODIFY `team_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `team_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `users`
