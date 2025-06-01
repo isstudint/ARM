@@ -12,7 +12,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&"
     />
-    <link rel="stylesheet" href="sidebar.css" />
+    <link rel="stylesheet" href="../Css/sidebar.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,7 +26,7 @@
     <aside class="sidebar">
         <!-- Sidebar Header -->
         <div class="sidebar-header">
-            <a href="#" class="header-logo">
+            <a href="landing.php" class="header-logo">
                 <h1 class="sidebar-title">ARM</h1>
             </a>
             <button class="toggler sidebar-toggler">
@@ -74,6 +74,12 @@
                     <a href="manage_matches.php" class="nav-link">
                             <span class="material-symbols-outlined">manage_accounts</span>
                         <span class="nav-label">Manage Matches</span>    
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="manage_scores.php" class="nav-link">
+                        <span class="material-symbols-outlined">scoreboard</span>
+                        <span class="nav-label">Manage Scores</span>    
                     </a>
                 </li>
                 <?php endif; ?>

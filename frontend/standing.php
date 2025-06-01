@@ -13,9 +13,11 @@
 $conn = mysqli_connect("localhost", "root", "", "arm");
 
 $standings_query = "
-SELECT t.team_name, t.logo, SUM( (t.team_id = m.team1_id AND s.team1_score > s.team2_score) OR (t.team_id = m.team2_id AND s.team2_score > s.team1_score)) AS wins,
-SUM((t.team_id = m.team1_id AND s.team1_score < s.team2_score) OR  (t.team_id = m.team2_id AND s.team2_score < s.team1_score) ) AS losses ,
-COUNT(m.match_id) AS total_matches
+SELECT t.team_name, t.logo, 
+SUM( (t.team_id = m.team1_id AND s.team1_score > s.team2_score) OR (t.team_id = m.team2_id AND s.team2_score > s.team1_score)) AS wins,
+SUM((t.team_id = m.team1_id AND s.team1_score < s.team2_score) OR  (t.team_id = m.team2_id AND s.team2_score < s.team1_score) ) AS losses,
+
+COUNT(DISTINCT s.match_id) AS games_played
 FROM teams t
 LEFT JOIN matches m ON t.team_id = m.team1_id OR t.team_id = m.team2_id
 LEFT JOIN scores s ON m.match_id = s.match_id
@@ -26,7 +28,7 @@ $standings = mysqli_query($conn, $standings_query);
 
 
 
-
+// COUNT(DISTINCT m.match_id) AS total_matches, if di gumana yung query
 
 
 include 'sidebar.php';
@@ -69,7 +71,7 @@ include 'sidebar.php';
                         </td>
                         <td class="stat-cell"><?php echo $row['wins'] ?? 0; ?></td>
                         <td class="stat-cell"><?php echo $row['losses'] ?? 0; ?></td>
-                        <td class="stat-cell"><?php echo $row['total_matches'] ?? 0; ?></td>
+                        <td class="stat-cell"><?php echo $row['games_played'] ?? 0; ?></td>
                     </tr>
                     <?php 
                     $rank++;
@@ -83,7 +85,9 @@ include 'sidebar.php';
             <ul class="upcoming-matches-list">
                 <?php
                 $upcoming_query = "
-                    SELECT m.match_date, t1.team_name AS team1, t2.team_name AS team2
+                    SELECT m.match_date, 
+                           t1.team_name AS team1, t1.logo AS team1_logo,
+                           t2.team_name AS team2, t2.logo AS team2_logo
                     FROM matches m
                     JOIN teams t1 ON m.team1_id = t1.team_id
                     JOIN teams t2 ON m.team2_id = t2.team_id
@@ -95,8 +99,30 @@ include 'sidebar.php';
                 while($match = mysqli_fetch_assoc($upcoming)):
                 ?>
                 <li>
-                    <strong><?php echo date('M d', strtotime($match['match_date'])); ?></strong>: 
-                    <?php echo htmlspecialchars($match['team1']); ?> vs <?php echo htmlspecialchars($match['team2']); ?>
+                    <div class="match-item">
+                        <div class="match-date">
+                            <strong><?php echo date('M d', strtotime($match['match_date'])); ?></strong>
+                        </div>
+                        <div class="match-teams">
+                            <div class="team-info">
+                                <?php if(!empty($match['team1_logo']) && file_exists('../' . $match['team1_logo'])): ?>
+                                    <img src="../<?php echo htmlspecialchars($match['team1_logo']); ?>" alt="<?php echo htmlspecialchars($match['team1']); ?>" class="upcoming-team-logo">
+                                <?php else: ?>
+                                    <div class="upcoming-logo-placeholder"><?php echo substr($match['team1'], 0, 2); ?></div>
+                                <?php endif; ?>
+                                <span class="team-name-small"><?php echo htmlspecialchars($match['team1']); ?></span>
+                            </div>
+                            <span class="vs-text">vs</span>
+                            <div class="team-info">
+                                <?php if(!empty($match['team2_logo']) && file_exists('../' . $match['team2_logo'])): ?>
+                                    <img src="../<?php echo htmlspecialchars($match['team2_logo']); ?>" alt="<?php echo htmlspecialchars($match['team2']); ?>" class="upcoming-team-logo">
+                                <?php else: ?>
+                                    <div class="upcoming-logo-placeholder"><?php echo substr($match['team2'], 0, 2); ?></div>
+                                <?php endif; ?>
+                                <span class="team-name-small"><?php echo htmlspecialchars($match['team2']); ?></span>
+                            </div>
+                        </div>
+                    </div>
                 </li>
                 <?php endwhile; ?>
             </ul>

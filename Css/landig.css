@@ -16,7 +16,6 @@
   src: url('../fonts/HelveticaNeueHeavy.otf') format('truetype');
 }
 
-
 *{
     margin: 0;
     padding: 0;
@@ -26,8 +25,7 @@
 
 body{
     min-height: 100vh;
-    /* background: linear-gradient(#dcf0fc, #e3f0ff); */
-    background: black;
+    background: linear-gradient(#dcf0fc, #e3f0ff);
 }
 
 /* Sidebar */
@@ -39,17 +37,8 @@ body{
     background: #2d53da;
     height: calc(100vh - 32px);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    transition: 0.4s ease;
+    transition: width 0.4s ease;
 }
-
-/* .sidebar-nav .nav-link{
-    color: #fff;
-    font-size: 20px;
-    font-family: 'light';
-    padding: 10px 20px;
-    text-decoration: none;
-    transition: 0.4s ease;
-} */
 
 .sidebar-nav .nav-link{
     display: flex;
@@ -68,11 +57,12 @@ body{
     font-size: 30px;
     color: #000;
     margin-left: 20px;
+    transition: 0.4s ease;
 }
 
-/* a.header-logo{
+a.header-logo{
     text-decoration: none;
-} */
+}
 .sidebar-header {
     display: flex;
     align-items: center;
@@ -132,11 +122,9 @@ body{
     
 }
 
-
 /* COLLAPSED */
 .sidebar.collapsed{
     width: 85px;
-    
 }
 
 .sidebar-nav .nav-link .nav-label {
@@ -150,17 +138,139 @@ body{
     display: none;
     opacity: 0;
     pointer-events: none;
-    
 }
 
 .sidebar.collapsed .sidebar-header .toggler{
-    transform: translate(-70px, 45px);
+    transform: translate(-50px, 40px);
 }
 
-.sidebar.collapsed .sidebar-header .header-logo {
-   position: absolute;
-   left: 5px;
+.sidebar.collapsed .sidebar-title {
+    margin-left: 0;
+    transform: translateX(-6px); 
+    transition: transform 0.3s ease;
+}
+
+/* Main content */
+
+/* Main container sits next to fixed sidebar */
+.container {
+    margin-left: 302px; /* 270px sidebar width + 16px margin * 2 */
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 16px;
+    min-height: 100vh;
+    transition: margin-left 0.4s ease;
+}
+/*pag nag collapse ang sidebar*/
+.sidebar.collapsed + .container {
+    margin-left: 117px; 
 }
 
 
 
+/* Right sidebar*/
+.right {
+    width: 400px;
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#laman{
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: whitesmoke;
+    width: 100%;
+    height: 45%;
+    
+}
+ 
+.match{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.teams{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    
+
+}
+
+.team-logo{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.team1{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.team2{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scored{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.teams{
+    height: 100%;
+    display: flex;
+}
+
+/* Fix duplicate ID issue - use class instead */
+.laman {
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: whitesmoke;
+    width: 100%;
+    flex: 1;
+    height: 100%;
+}
+
+/* Adjust .human container to a defined height */
+.human {
+    display: flex;
+    width: 100%;
+    height: 300px; /* or another fixed height as needed */
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 10px;
+}
+
+
+.player:hover{
+    border-bottom: #2d53da 5px solid;
+    cursor: pointer;
+}
+
+.coaches:hover{
+    border-bottom: #2d53da 5px solid;
+    cursor: pointer;
+}
