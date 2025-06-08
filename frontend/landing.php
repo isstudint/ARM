@@ -53,15 +53,51 @@
 
             <div class="human">
                 <div class="player laman" >
-                    <a href=""><h1 >Players</h1></a>
+                    <a href=""><h1>Players</h1></a>
+                    <table class="player-table">
+                      <thead class="thead">
+                        <tr>
+                            <td>Picture</td>
+                            <td>Player name</td>
+                            <td>Position</td>
+                            <td>Team</td>
+                        </tr>
+                      <thead>
+                      <tbody>
+                        <tr>
+                            <td class = "litrato"><img src="../Images/nba-boston.png" alt="Player Image" class="player-image"></td>
+                            <td>Player Name</td>
+                            <td>Position</td>
+                            <td>Team Name</td>
+                        </tr>
+                        
+                        <tr>
+                            <td class = "litrato"><img src="../Images/nba-boston.png" alt="Player Image" class="player-image"></td>
+                            <td>Player Name</td>
+                            <td>Position</td>
+                            <td>Team Name</td>
+                        </tr>
+                      
+
+                    </table>
+                    
                 </div>
             
                 <div class="coaches laman">
-                    <a href=""><h1 >Coaches</h1></a>
+                    <a href=""><h1 >Standing</h1></a>
                 </div>
             </div>
             <div class="team" id = "laman">
-                <h1 >Teams</h1>
+              <h1 >Teams</h1>
+              <div class="scroller">
+                <div class="scrolling">
+                <img src="../Images/nba-boston.png" alt="Player Image" class="teamlogo">
+                <img src="../Images/nba-haws.png" alt="Player Image" class="teamlogo">
+                <img src="../Images/nba-minnesota.png" alt="Player Image" class="teamlogo">
+                <img src="../Images/nba-norl.png" alt="Player Image" class="teamlogo">
+            
+           
+              </div>
             </div>
         </main>
 
@@ -72,8 +108,7 @@
         
     </div>
 
-    <div id="div2">
-
+    <!-- <div id="div2">
                 <div id="container">
                     <div class="section">
                       <h1>ARM</h1>
@@ -81,33 +116,23 @@
                       <h3>ARM brings the game</h3>
                       <h3>to your screen in real-time.</h3>
                     </div>
-                  
-                    <div class="section">
-                      <h1>ARM</h1>
-                      <h3>To give every sports fan live scores  </h3>
-                      <h3>and updates, anytime, anywhere.</h3>
-                      <h3> Also, To be the world’s go-to platform</h3>
-                      <h3>for real-time sports tracking and team insights.</h3>
+                    <div class="vs">VS</div>
+                    <div class="team-history">
+                      <img src="../Images/nba-haws.png" alt="Hawks Logo" class="teamlogo">
+                      <div class="score">98</div>
                     </div>
-                   
-                    <div class="logo">ARM<h4>All Results Matter</h4></div>
-                    
-                    </div>
-                    <div class="section_logo">
-                      <a href="https://www.facebook.com/" target="blank">
-                          <img src="fb.png"  alt="Icon" >
-                            </a>
-                             <a href="https://www.Instagram.com/" target="blank">
-                          <img src="ig.png"  alt="Icon" >
-                            </a>
-                            <a href="https://www.Youtube.com/" target="blank">
-                              <img src="yr.png"  alt="Icon" >
-                                </a>
-                                </div>
-       
-                
-                    
-        </div>
+                  </div>
+                </td>
+                <td>Team 1</td>
+              </tr>
+            </tbody>
+          </table>
+</div> -->
+
+
+
+        
+    </div>
 
      <script>
       document.addEventListener("DOMContentLoaded", () => {
