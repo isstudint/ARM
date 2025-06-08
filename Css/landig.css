@@ -303,7 +303,7 @@ a.header-logo{
   object-fit: cover;     
   border-radius: 8px;    
   display: block;
-  margin: auto;         
+  margin-right: auto;         
 }
 
 .standing-table {
@@ -329,9 +329,9 @@ a.header-logo{
     background-color: #f9f9f9;
 }
 
-#litrato img {
-    transform: translateX(-25px);
-}
+/* #litrato img {
+    transform: translateX(-150px);
+} */
 
 /* Team Logos */
 
