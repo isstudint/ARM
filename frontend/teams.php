@@ -34,7 +34,7 @@ if (!$teams) {
     <div class="main-content">
         <div class="teams-grid">
             <?php while($team = mysqli_fetch_assoc($teams)): ?>
-            <a href="players.php?team_id=<?php echo $team['team_id']; ?>" class="team-card">
+            <a href="roster.php?team_id=<?php echo $team['team_id']; ?>" class="team-card">
                 <div class="team-header">
                     <div class="team-logo">
                         <?php if(!empty($team['logo']) && file_exists('../' . $team['logo'])): ?>

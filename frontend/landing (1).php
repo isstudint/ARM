@@ -53,7 +53,7 @@
 
             <div class="human">
                 <div class="player laman" >
-                    <a href="roster.php"><h1>Players</h1></a>
+                    <a href=""><h1>Players</h1></a>
                     <table class="player-table">
                       <thead class="thead">
                         <tr>
