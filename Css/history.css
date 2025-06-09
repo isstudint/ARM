@@ -1,0 +1,32 @@
+.history-container{
+
+    margin-left: 302px; /* 270px sidebar width + 16px margin * 2 */
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 16px;
+    min-height: 100vh;
+    transition: margin-left 0.4s ease;
+    
+    
+}
+
+.sidebar.collapsed + .history-container {
+    margin-left: 117px; 
+}
+
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 60vw; /* or whatever max width you want */
+    margin: 0 auto; /* centers it within .container */
+    width: 100%;
+    background-color: aliceblue;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    padding: 16px;
+    border-radius: 16px;
+
+}

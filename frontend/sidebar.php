@@ -57,7 +57,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="" class="nav-link">
+                    <a href="history.php" class="nav-link">
                         <span class="material-symbols-outlined">history</span>
                         <span class="nav-label">History</span>
                     </a>
