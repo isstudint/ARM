@@ -84,7 +84,7 @@
                 </div>
             
                 <div class="coaches laman">
-                    <a href=""><h1 >Standing</h1></a>
+                    <a href="standing.php"><h1 >Standing</h1></a>
                     <table class="player-table">
                       <thead class="thead">
                         <tr>
@@ -207,11 +207,11 @@
               </tr>
             </tbody>
           </table>
-</div>
+  </div>
 
 
         
-    </div>
+</div>
 
     <!-- <div id="div2">
                 <div id="container">
