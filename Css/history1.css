@@ -1,0 +1,280 @@
+ * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: linear-gradient(#dcf0fc, #e3f0ff);
+        font-family: 'Arial', sans-serif;
+        color: white;
+        padding: 20px;
+        min-height: 100vh;
+    }
+
+    .header {
+        max-width: 1200px;
+        margin: 0 auto 20px auto;
+        padding: 0 20px;
+        text-align: center;
+    }
+
+    .header h1 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    /* Add Game Form */
+    .add-game-form {
+        max-width: 800px;
+        margin: 0 auto 30px auto;
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-title {
+        color: #333;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 18px;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+        align-items: end;
+    }
+
+    .form-group {
+        flex: 1;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .form-group select,
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .form-group select:focus,
+    .form-group input:focus {
+        outline: none;
+        border-color: #4CAF50;
+    }
+
+    .btn {
+        background: #4CAF50;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        background: #45a049;
+        transform: translateY(-1px);
+    }
+
+    .btn-danger {
+        background: #f44336;
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .btn-danger:hover {
+        background: #da190b;
+    }
+
+    .vs-text {
+        color: #666;
+        font-weight: bold;
+        margin: 20px 10px 0 10px;
+    }
+
+    /* Messages */
+    .message {
+        max-width: 800px;
+        margin: 0 auto 20px auto;
+        padding: 12px;
+        border-radius: 6px;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    /* Scoreboard */
+    .scoreboard {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        max-height: 500px;
+        overflow-y: auto;
+    }
+
+    .scoreboard::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .scoreboard::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .scoreboard::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+    .game-row {
+        display: flex;
+        align-items: center;
+        padding: 16px 24px;
+        border-bottom: 1px solid #e0e0e0;
+        position: relative;
+        transition: background-color 0.2s ease;
+    }
+
+    .game-row:hover {
+        background-color: #f9f9f9;
+    }
+
+    .game-row:last-child {
+        border-bottom: none;
+    }
+
+    .teams-info {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex: 1;
+    }
+
+    .team-info {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .scores-section {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin: 0 24px;
+        align-items: center;
+    }
+
+    .team-score {
+        font-size: 20px;
+        font-weight: bold;
+        min-width: 40px;
+        text-align: center;
+        color: #333;
+    }
+
+    .team-logo {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 14px;
+        background: white;
+        border: 2px solid white;
+    }
+
+    .team-logo img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .team-name {
+        font-size: 16px;
+        font-weight: 600;
+        flex: 1;
+        min-width: 120px;
+        color: #333;
+    }
+
+    .winner {
+        color: #4CAF50 !important;
+        font-weight: bold;
+    }
+
+    .game-divider {
+        width: 1px;
+        height: 90px;
+        background-color: #ddd;
+        margin: 0 20px;
+        align-self: center;
+    }
+
+    .game-date {
+        font-size: 11px;
+        color: #666;
+
+    }
+
+    .delete-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+    }
+
+    .no-games {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+        font-size: 16px;
+    }
+
+    @media (max-width: 768px) {
+        .form-row {
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .vs-text {
+            margin: 10px 0;
+            text-align: center;
+        }
+    }
+    .winner-crown {
+      color: #FFD700;
+      margin-left: 8px;
+      font-size: 18px;
+    }
+    
