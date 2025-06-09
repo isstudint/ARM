@@ -1,17 +1,15 @@
+
 .teams-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Change to exactly 4 columns */
-    gap: 15px; /* Reduce gap slightly */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
     max-width: 1200px;
-    
-    /* background-color: #adadad; */
     margin: 0 auto;
     padding: 20px;
+     /*background-color: #2b0091; debug */
     align-content: center;
     padding-top: 3rem;
 }
-
-
 
 .team-card {
     background: white;
@@ -21,39 +19,32 @@
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s , border-bottom 0.2s;
     text-decoration: none;
-
     display: block;
     padding: 15px; 
-
     margin-bottom: 10px; 
     text-align: center; 
 }
 
-
 .team-card:hover {
     transform: translateY(-5px);
     border-bottom: 4px solid #2b0091; 
-
 }
 
 .team-header {
     padding: 20px 0; 
-
     display: flex;
-
-    flex-direction: column; /* Stack logo and name vertically */
+    flex-direction: column;
     align-items: center;
     border-bottom: 1px solid #eee;
 }
 
 .team-logo {
-    width: 120px; 
-    height: 120px;
-    margin: 0 0 10px 0; /* Smaller margin */
+    width: 150px; 
+    height: 150px;
+    margin: 0 0 10px 0;
     display: flex;
     align-items: center;
     justify-content: center;
-
     border-radius: 50%;
 }
 
@@ -64,25 +55,23 @@
 }
 
 .team-name {
-    font-size: 18px; /* Slightly smaller font */
+    font-size: 18px;
     font-weight: 600;
     color: #111;
     letter-spacing: 0.5px;
     text-align: center;
     width: 100%;
-    margin-bottom: 5px; /* Smaller margin */
+    margin-bottom: 5px;
 }
 
 .team-record {
     padding: 10px 0 5px;
-    font-size: 16px; /* Slightly smaller font */
-
+    font-size: 16px;
     color: #333;
     text-align: center;
 }
 
 .no-logo {
-
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -92,4 +81,125 @@
     color: #666;
     font-weight: 500;
     content: 'Logo';
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 290px;
+    padding: 30px 30px 30px 30px;
+    min-height: 100vh;
+    display: flex;
+    gap: 30px;
+    justify-content: space-between;
+}
+
+/* Teams Section */
+.teams-section {
+    flex: 1;
+    max-width: calc(100% - 380px);
+}
+
+
+.right-sidebar {
+    width: 350px;
+    position: fixed;
+    right: 30px;
+    top: 30px;
+    bottom: 30px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.sidebar-card {
+    background: rgba(255, 255, 255, 0.95);
+
+    border-radius: 20px;
+    padding: 25px;
+    border-bottom: solid 4px #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.sidebar-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-bottom-color: #2b0091;
+}
+
+.sidebar-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+
+
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.ranking-item:hover {
+    transform: translateX(5px);
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-left-color: #2d53da;
+    box-shadow: 0 4px 15px rgba(45, 83, 218, 0.1);
+}
+
+.ranking-position {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, #2d53da, #4f46e5);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    margin-right: 15px;
+}
+
+.ranking-team {
+    flex: 1;
+}
+
+.ranking-team-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 2px;
+}
+
+.ranking-record {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.ranking-wins {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2d53da;
+    text-align: right;
+}
+
+
+
+/* Sidebar collapsed state */
+.sidebar.collapsed ~ .main-content {
+    margin-left: 105px;
 }
