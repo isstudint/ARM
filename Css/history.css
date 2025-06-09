@@ -1,5 +1,5 @@
-.history-container{
-
+/* General layout */
+.history-container {
     margin-left: 302px; /* 270px sidebar width + 16px margin * 2 */
     display: flex;
     flex-direction: row;
@@ -8,25 +8,115 @@
     min-height: 100vh;
     transition: margin-left 0.4s ease;
     
-    
 }
 
 .sidebar.collapsed + .history-container {
     margin-left: 117px; 
 }
 
-
 .main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 60vw; /* or whatever max width you want */
-    margin: 0 auto; /* centers it within .container */
-    width: 100%;
-    background-color: aliceblue;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    padding: 16px;
-    border-radius: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
+/* Title and date filter */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.header-row h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.date-selector {
+  font-size: 16px;
+  padding: 5px 10px;
+}
+
+/* Match grid and card layout */
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.match-card {
+  padding: 15px;
+ 
+  border-radius: 10px;
+  background-color: white;
+}
+.match-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.match-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  border-bottom: 4px solid #2b0091;
+}
+
+
+/* Match header */
+.match-title {
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Team logos */
+.teamlogo {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+/* Score table */
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.score-table th,
+.score-table td {
+  text-align: center;
+  padding: 10px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  background: none;
+}
+
+.team-name-cell {
+  font-weight: bold;
+}
+
+
+/* Team logo */
+.teamlogo-history {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+.logo-with-crown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.crown-icon {
+  font-size: 30px;
+  color: gold;
+  margin-bottom: 4px; /* space between crown and logo */
 }
