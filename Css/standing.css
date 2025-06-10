@@ -132,6 +132,13 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     padding: 1rem 1.5rem;
     margin-left: 1rem;
+    border-bottom: 4px solid #ffffff;
+    transition: transform 0.2s , border-bottom 0.2s;
+}
+
+.upcoming-cont:hover {
+    transform: translateY(-5px);
+    border-bottom: 4px solid #2b0091;
 }
 
 .upcoming-matches-list {
