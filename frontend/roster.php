@@ -61,15 +61,6 @@
             <td>6</td>
             <td>4</td> 
           </tr>
-
-          <tr>
-            <td>Marvelous Jaco</td>
-            <td>Forward</td>
-            <td>Korean</td>
-            <td>24</td>
-            <td>12</td>
-            <td>18</td> 
-          </tr>
           <!-- More player rows -->
         </tbody>
       </table>

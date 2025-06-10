@@ -274,6 +274,8 @@ a.header-logo{
 
 /* Player Table */
 
+
+
 .player-table {
     width: 100%;
     border-collapse: collapse;
@@ -305,6 +307,7 @@ a.header-logo{
   display: block;
   margin-right: auto;         
 }
+
 
 .standing-table {
     width: 100%;
@@ -443,7 +446,7 @@ a.header-logo{
   height: auto;
 }
 
-.score {
+.scorees {
   margin-top: 8px;
   font-weight: bold;
   font-size: 16px;
@@ -453,3 +456,25 @@ a.header-logo{
   font-size: 18px;
   font-weight: bold;
 }
+
+
+/* Score time */
+.score{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 120px;
+  
+}
+
+.oras{
+  margin-left: 20px;
+}
+
+.oras h2{
+  font-size: 20px;
+  color: #000;
+  font-family: 'light';
+}
+
+

@@ -38,10 +38,13 @@
                     <h7>(standing)</h7>    
                     <img src= "../Images/nba-boston.png" alt="Team 1 Logo" class="team-logo">
                   </div>
-                  <div class="scored"><h1>999</h1></div>
-
-                  <div class="score"><h2>SCORE</h2></div>
-                    <div class="scored"><h1>999</h1></div>
+                  <div class="scored"><h1>84</h1></div>
+                  <div class="score">
+                    <h1>SCORE</h1>
+                    <div class="oras"><h2>10:00</h2></div>
+                  </div>
+                  
+                  <div class="scored"><h1>72</h1></div>
 
                 <div class="team2"> 
                   <h3>Team name</h3> 
@@ -52,36 +55,7 @@
             </div>
 
             <div class="human">
-                <div class="player laman" >
-                    <a href="roster.php"><h1>Players</h1></a>
-                    <table class="player-table">
-                      <thead class="thead">
-                        <tr>
-                            <td>Logo</td>
-                            <td>Player name</td>
-                            <td>Position</td>
-                            <td>Team</td>
-                        </tr>
-                      <thead>
-                      <tbody>
-                        <tr>
-                            <td class = "litrato"><img src="../Images/nba-boston.png" alt="Player Image" class="player-image"></td>
-                            <td>Player Name</td>
-                            <td>Position</td>
-                            <td>Team Name</td>
-                        </tr>
-                        
-                        <tr>
-                            <td class = "litrato"><img src="../Images/nba-boston.png" alt="Player Image" class="player-image"></td>
-                            <td>Player Name</td>
-                            <td>Position</td>
-                            <td>Team Name</td>
-                        </tr>
-                      
-
-                    </table>
-                    
-                </div>
+                c
             
                 <div class="coaches laman">
                     <a href="standing.php"><h1 >Standing</h1></a>
@@ -121,6 +95,10 @@
                 <img src="../Images/nba-haws.png" alt="Player Image" class="teamlogo">
                 <img src="../Images/nba-minnesota.png" alt="Player Image" class="teamlogo">
                 <img src="../Images/nba-norl.png" alt="Player Image" class="teamlogo">
+                <img src="../Images/nba-boston.png" alt="Player Image" class="teamlogo">
+                <img src="../Images/nba-haws.png" alt="Player Image" class="teamlogo">
+                <img src="../Images/nba-minnesota.png" alt="Player Image" class="teamlogo">
+                <img src="../Images/nba-norl.png" alt="Player Image" class="teamlogo">
             
            
               </div>
@@ -143,12 +121,12 @@
                   <div class="teams-wrapper">
                     <div class="team-history">
                       <img src="../Images/nba-boston.png" alt="Boston Logo" class="teamlogo">
-                      <div class="score">102</div>
+                      <div class="scorees">102</div>
                     </div>
                     <div class="vs">VS</div>
                     <div class="team-history">
                       <img src="../Images/nba-haws.png" alt="Hawks Logo" class="teamlogo">
-                      <div class="score">98</div>
+                      <div class="scorees">98</div>
                     </div>
                   </div>
                 </td>
@@ -160,12 +138,12 @@
                   <div class="teams-wrapper">
                     <div class="team-history">
                       <img src="../Images/nba-boston.png" alt="Boston Logo" class="teamlogo">
-                      <div class="score">102</div>
+                      <div class="scorees">102</div>
                     </div>
                     <div class="vs">VS</div>
                     <div class="team-history">
                       <img src="../Images/nba-haws.png" alt="Hawks Logo" class="teamlogo">
-                      <div class="score">98</div>
+                      <div class="scorees">98</div>
                     </div>
                   </div>
                 </td>
@@ -177,34 +155,51 @@
                   <div class="teams-wrapper">
                     <div class="team-history">
                       <img src="../Images/nba-boston.png" alt="Boston Logo" class="teamlogo">
-                      <div class="score">102</div>
+                      <div class="scorees">102</div>
                     </div>
                     <div class="vs">VS</div>
                     <div class="team-history">
                       <img src="../Images/nba-haws.png" alt="Hawks Logo" class="teamlogo">
-                      <div class="score">98</div>
+                      <div class="scorees">98</div>
+                    </div>
+                  </div>
+                </td>
+                <td>Team 1</td>
+              </tr>
+              <tr>
+                <td class="match-history">
+                  <div class="teams-wrapper">
+                    <div class="team-history">
+                      <img src="../Images/nba-boston.png" alt="Boston Logo" class="teamlogo">
+                      <div class="scorees">102</div>
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="team-history">
+                      <img src="../Images/nba-haws.png" alt="Hawks Logo" class="teamlogo">
+                      <div class="scorees">98</div>
+                    </div>
+                  </div>
+                </td>
+                <td>Team 1</td>
+              </tr>
+              <tr>
+                <td class="match-history">
+                  <div class="teams-wrapper">
+                    <div class="team-history">
+                      <img src="../Images/nba-boston.png" alt="Boston Logo" class="teamlogo">
+                      <div class="scorees">102</div>
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="team-history">
+                      <img src="../Images/nba-haws.png" alt="Hawks Logo" class="teamlogo">
+                      <div class="scorees">98</div>
                     </div>
                   </div>
                 </td>
                 <td>Team 1</td>
               </tr>
 
-              <tr>
-                <td class="match-history">
-                  <div class="teams-wrapper">
-                    <div class="team-history">
-                      <img src="../Images/nba-boston.png" alt="Boston Logo" class="teamlogo">
-                      <div class="score">102</div>
-                    </div>
-                    <div class="vs">VS</div>
-                    <div class="team-history">
-                      <img src="../Images/nba-haws.png" alt="Hawks Logo" class="teamlogo">
-                      <div class="score">98</div>
-                    </div>
-                  </div>
-                </td>
-                <td>Team 1</td>
-              </tr>
+              
             </tbody>
           </table>
   </div>
