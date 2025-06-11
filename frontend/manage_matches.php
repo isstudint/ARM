@@ -7,11 +7,11 @@ check_admin();
 
 
 
-// Handle delete request
+
 if (isset($_GET['delete']) && isset($_GET['match_id'])) {
     $match_id = intval($_GET['match_id']);
     
-    // Check if match has scores recorded
+
     $score_check = "SELECT COUNT(*) as score_count FROM scores WHERE match_id = $match_id";
     $score_result = mysqli_query($conn, $score_check);
     $score_row = mysqli_fetch_assoc($score_result);

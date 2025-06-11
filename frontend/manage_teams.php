@@ -10,84 +10,41 @@ $conn = mysqli_connect("localhost", "root", "", "arm");
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Handle delete action
+
     if (isset($_POST['delete_team'])) {
         $team_id = $_POST['team_id'];
         $force_delete = isset($_POST['force_delete']);
         
-        // Check if team has associated matches
-        $match_check = "SELECT COUNT(*) as match_count FROM matches WHERE team1_id = $team_id OR team2_id = $team_id";
-        $match_result = mysqli_query($conn, $match_check);
-        $match_row = mysqli_fetch_assoc($match_result);
+
+        $data_check = "SELECT 
+            (SELECT COUNT(*) FROM players WHERE team_id = $team_id) as players,
+            (SELECT COUNT(*) FROM matches WHERE team1_id = $team_id OR team2_id = $team_id) as matches
+        ";
+        $check_result = mysqli_query($conn, $data_check);
+        $data = mysqli_fetch_assoc($check_result);
         
-        // Check if team has associated scores
-        $score_check = "SELECT COUNT(*) as score_count FROM scores s 
-                       JOIN matches m ON s.match_id = m.match_id 
-                       WHERE m.team1_id = $team_id OR m.team2_id = $team_id";
-        $score_result = mysqli_query($conn, $score_check);
-        $score_row = mysqli_fetch_assoc($score_result);
-        
-        if (($match_row['match_count'] > 0 || $score_row['score_count'] > 0) && !$force_delete) {
-            // Team has matches/scores, show confirmation
+        if (($data['players'] > 0 || $data['matches'] > 0) && !$force_delete) {
+            // Show warning
             $team_name_query = "SELECT team_name FROM teams WHERE team_id = $team_id";
-            $team_name_result = mysqli_query($conn, $team_name_query);
-            $team_name_row = mysqli_fetch_assoc($team_name_result);
+            $team_result = mysqli_query($conn, $team_name_query);
+            $team_data = mysqli_fetch_assoc($team_result);
             
-            $warning = "Team '{$team_name_row['team_name']}' has {$match_row['match_count']} match(es) and {$score_row['score_count']} score record(s). Deleting this team will also remove all associated matches and scores.";
-            $show_force_delete = true;
+            $warning = "Team '{$team_data['team_name']}' has {$data['players']} players and {$data['matches']} matches. Delete anyway?";
             $pending_delete_id = $team_id;
         } else {
-            // Safe to delete or force delete confirmed
-            mysqli_begin_transaction($conn);
+            // Just delete everything
+            if ($force_delete) {
+                // Delete related data first
+                mysqli_query($conn, "DELETE FROM scores WHERE match_id IN (SELECT match_id FROM matches WHERE team1_id = $team_id OR team2_id = $team_id)");
+                mysqli_query($conn, "DELETE FROM matches WHERE team1_id = $team_id OR team2_id = $team_id");
+                mysqli_query($conn, "DELETE FROM players WHERE team_id = $team_id");
+            }
             
-            try {
-                // Get team logo path before deleting
-                $logo_query = "SELECT logo, team_name FROM teams WHERE team_id = $team_id";
-                $logo_result = mysqli_query($conn, $logo_query);
-                $team_data = null;
-                
-                if ($logo_result && mysqli_num_rows($logo_result) > 0) {
-                    $team_data = mysqli_fetch_assoc($logo_result);
-                }
-                
-                if ($force_delete) {
-                    // Delete scores first (foreign key constraint)
-                    $delete_scores = "DELETE s FROM scores s 
-                                    JOIN matches m ON s.match_id = m.match_id 
-                                    WHERE m.team1_id = $team_id OR m.team2_id = $team_id";
-                    mysqli_query($conn, $delete_scores);
-                    
-                    // Delete matches
-                    $delete_matches = "DELETE FROM matches WHERE team1_id = $team_id OR team2_id = $team_id";
-                    mysqli_query($conn, $delete_matches);
-                    
-                    // Delete roster entries if they exist
-                    $delete_roster = "DELETE FROM roster WHERE team_id = $team_id";
-                    mysqli_query($conn, $delete_roster);
-                }
-                
-                // Delete team
-                $delete_query = "DELETE FROM teams WHERE team_id = $team_id";
-                mysqli_query($conn, $delete_query);
-                
-                // Delete logo file if exists and team_data is not null
-                if ($team_data && !empty($team_data['logo']) && file_exists('../' . $team_data['logo'])) {
-                    unlink('../' . $team_data['logo']);
-                }
-                
-                mysqli_commit($conn);
-                
-                $team_name = $team_data ? $team_data['team_name'] : 'Unknown Team';
-                
-                if ($force_delete) {
-                    $message = "Team '$team_name' and all associated data deleted successfully!";
-                } else {
-                    $message = "Team '$team_name' deleted successfully!";
-                }
-                
-            } catch (Exception $e) {
-                mysqli_rollback($conn);
-                $error = "Error deleting team: " . $e->getMessage();
+            // Delete team
+            if (mysqli_query($conn, "DELETE FROM teams WHERE team_id = $team_id")) {
+                $message = "Team deleted successfully!";
+            } else {
+                $error = "Error deleting team.";
             }
         }
     } else {

@@ -6,7 +6,7 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-     /*background-color: #2b0091; debug */
+     /*background-color: #2b0091; debug sa flex */
     align-content: center;
     padding-top: 3rem;
 }
@@ -83,7 +83,7 @@
     content: 'Logo';
 }
 
-/* Main Content */
+
 .main-content {
     margin-left: 290px;
     padding: 30px 30px 30px 30px;
@@ -93,7 +93,6 @@
     justify-content: space-between;
 }
 
-/* Teams Section */
 .teams-section {
     flex: 1;
     max-width: calc(100% - 380px);

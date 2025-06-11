@@ -4,7 +4,7 @@ include ("db.php");
 include ("func.php");
 
 check_admin();
-$conn = mysqli_connect("localhost", "root", "", "arm");
+
 
 // Handle form submission for player creation/update
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -13,6 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $team_id = $_POST['team_id'] ?? '';
     $position = $_POST['position'] ?? '';
     $age = $_POST['age'] ?? '';
+    $jersey_num = $_POST['jersey_num'] ?? '';
     
     // Create uploads directory if it doesn't exist
     $upload_dir = "../uploads/player_images/";
@@ -38,10 +39,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     
-    // Insert or update player in database
+
     if (!empty($player_id)) {
-        // Update existing player
-        $sql = "UPDATE players SET player_name='$player_name', team_id='$team_id', position='$position', age='$age'";
+
+        $sql = "UPDATE players SET player_name='$player_name', team_id='$team_id', position='$position', age='$age', jersey_num='$jersey_num'";
         
         if (!empty($image_path)) {
             $sql .= ", image='$image_path'";
@@ -55,11 +56,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error = "Error: " . mysqli_error($conn);
         }
     } else {
-        // Insert new player
+
         if (!empty($image_path)) {
-            $sql = "INSERT INTO players (player_name, team_id, position, age, image) VALUES ('$player_name', '$team_id', '$position', '$age', '$image_path')";
+            $sql = "INSERT INTO players (player_name, team_id, position, age, jersey_num, image) VALUES ('$player_name', '$team_id', '$position', '$age', '$jersey_num', '$image_path')";
         } else {
-            $sql = "INSERT INTO players (player_name, team_id, position, age) VALUES ('$player_name', '$team_id', '$position', '$age')";
+            $sql = "INSERT INTO players (player_name, team_id, position, age, jersey_num) VALUES ('$player_name', '$team_id', '$position', '$age', '$jersey_num')";
         }
         
         if(mysqli_query($conn, $sql)) {
@@ -70,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Get player details if editing
+
 $player = [];
 if (isset($_GET['id'])) {
     $player_id = $_GET['id'];
@@ -80,10 +81,10 @@ if (isset($_GET['id'])) {
     }
 }
 
-// Get all teams for dropdown
+
 $teams_result = mysqli_query($conn, "SELECT team_id, team_name FROM teams ORDER BY team_name");
 
-// Get all players for listing
+
 $players_result = mysqli_query($conn, "
     SELECT p.player_id, p.player_name, p.position, p.age, p.image, t.team_name 
     FROM players p 
@@ -227,11 +228,13 @@ include("sidebar.php");
                     <label for="age">Age</label>
                     <input type="number" id="age" name="age" min="15" max="50" value="<?php echo $player['age'] ?? ''; ?>" required>
                     
-                    <label for="player_image">Player Image</label>
+                    <label for="jersey_num">Jersey Number</label>
+                    <input type="number" id="jersey_num" name="jersey_num" min="0" max="99" value="<?php echo $player['jersey_num'] ?? ''; ?>" required>
+
                     <?php if (!empty($player['image'])): ?>
                         <div>
                             <p>Current image:</p>
-                            <img src="../<?php echo htmlspecialchars($player['image']); ?>" alt="Current Image" style="max-width: 100px; max-height: 100px;">
+                            <img src="../<?php echo ($player['image']); ?>" alt="Current Image" style="max-width: 100px; max-height: 100px;">
                         </div>
                         <br>
                     <?php endif; ?>

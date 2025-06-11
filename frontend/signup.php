@@ -18,7 +18,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         $error_msg = "Password must be at least 8 characters long!";
     } 
     else {
-        // Check if access key is valid
+
         if(in_array($accesskey, $admin_keys)){
             $is_admin = 1;
         } 

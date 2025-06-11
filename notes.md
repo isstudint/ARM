@@ -14,3 +14,8 @@ https://www.w3schools.com/php/func_array_in_array.asp
 
     // para to kasi user-friendly, di mawawala input ng user pag nag-error.
     diba kunwari nag input ka tas nag error mawawala yung input mo 
+
+
+
+
+    https://www.youtube.com/watch?v=aq3InkyXmn0
