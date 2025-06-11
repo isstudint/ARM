@@ -5,6 +5,66 @@ include ("func.php");
 
 check_admin();
 
+// Handle delete request
+if (isset($_GET['delete']) && isset($_GET['id'])) {
+    $player_id = intval($_GET['id']);
+    
+    // Force delete if confirmed
+    if (isset($_GET['force']) && $_GET['force'] == '1') {
+        // Get player image to delete file
+        $player_query = "SELECT image FROM players WHERE player_id = $player_id";
+        $player_result = mysqli_query($conn, $player_query);
+        $player_data = mysqli_fetch_assoc($player_result);
+        
+        // First delete player stats
+        mysqli_query($conn, "DELETE FROM player_stats WHERE player_id = $player_id");
+        
+        // Then delete player from database
+        $delete_query = "DELETE FROM players WHERE player_id = $player_id";
+        if (mysqli_query($conn, $delete_query)) {
+
+            if (!empty($player_data['image']) && file_exists('../' . $player_data['image'])) {
+                unlink('../' . $player_data['image']); // para masama yung image
+            }
+            $message = "Player and all statistics deleted successfully!";
+        } else {
+            $error = "Error deleting player: " . mysqli_error($conn);
+        }
+    } else {
+        // Check if player has any stats recorded
+        $stats_check = "SELECT COUNT(*) as stat_count FROM player_stats WHERE player_id = $player_id";
+        $stats_result = mysqli_query($conn, $stats_check);
+        $stats_row = mysqli_fetch_assoc($stats_result);
+        
+        if ($stats_row['stat_count'] > 0) {
+            // Get player name for confirmation modal
+            $player_query = "SELECT player_name FROM players WHERE player_id = $player_id";
+            $player_result = mysqli_query($conn, $player_query);
+            $player_data = mysqli_fetch_assoc($player_result);
+            
+            $confirm_delete = [
+                'player_id' => $player_id,
+                'player_name' => $player_data['player_name'],
+                'stat_count' => $stats_row['stat_count']
+            ];
+        } else {
+            // Get player image to delete file
+            $player_query = "SELECT image FROM players WHERE player_id = $player_id";
+            $player_result = mysqli_query($conn, $player_query);
+            $player_data = mysqli_fetch_assoc($player_result);
+            
+            // Delete player from database
+            $delete_query = "DELETE FROM players WHERE player_id = $player_id";
+            if (mysqli_query($conn, $delete_query)) {
+                // Delete image file if exists
+                if (!empty($player_data['image']) && file_exists('../' . $player_data['image'])) {
+                    unlink('../' . $player_data['image']);
+                }
+                $message = "Player deleted successfully!";
+            } 
+        }
+    }
+}
 
 // Handle form submission for player creation/update
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -86,7 +146,7 @@ $teams_result = mysqli_query($conn, "SELECT team_id, team_name FROM teams ORDER 
 
 
 $players_result = mysqli_query($conn, "
-    SELECT p.player_id, p.player_name, p.position, p.age, p.image, t.team_name 
+    SELECT p.player_id, p.player_name, p.position, p.jersey_num ,p.age, p.image, t.team_name 
     FROM players p 
     LEFT JOIN teams t ON p.team_id = t.team_id 
     ORDER BY t.team_name, p.player_name
@@ -175,6 +235,65 @@ include("sidebar.php");
             background-color: #f8d7da;
             color: #721c24;
         }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+        
+        .modal-buttons {
+            margin-top: 20px;
+            text-align: right;
+        }
+        
+        .modal-buttons button {
+            margin-left: 10px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -190,6 +309,24 @@ include("sidebar.php");
                 <div class="message error"><?php echo $error; ?></div>
             <?php endif; ?>
             
+            <!-- Confirmation Modal -->
+            <?php if (isset($confirm_delete)): ?>
+            <div id="deleteModal" class="modal" style="display: block;">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <h3>⚠️ Delete Player with Statistics</h3>
+                    <p><strong><?php echo htmlspecialchars($confirm_delete['player_name']); ?></strong> has <strong><?php echo $confirm_delete['stat_count']; ?></strong> recorded statistics.</p>
+                    <p>Deleting this player will also <strong>permanently remove all their game statistics</strong>.</p>
+                    <p><strong>This action cannot be undone!</strong></p>
+                    
+                    <div class="modal-buttons">
+                        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                        <button class="btn-delete" onclick="confirmDelete()">Delete Player & Stats</button>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <div class="form-section">
                 <h2><?php echo empty($player) ? 'Add New Player' : 'Edit Player'; ?></h2>
                 
@@ -254,6 +391,7 @@ include("sidebar.php");
                             <th>Player Name</th>
                             <th>Team</th>
                             <th>Position</th>
+                            <th>Jersy Number</th>
                             <th>Age</th>
                             <th>Actions</th>
                         </tr>
@@ -268,12 +406,14 @@ include("sidebar.php");
                                     <div>No image</div>
                                 <?php endif; ?>
                             </td>
-                            <td><?php echo htmlspecialchars($player_row['player_name']); ?></td>
-                            <td><?php echo htmlspecialchars($player_row['team_name']); ?></td>
-                            <td><?php echo htmlspecialchars($player_row['position']); ?></td>
-                            <td><?php echo htmlspecialchars($player_row['age']); ?></td>
+                            <td><?php echo ($player_row['player_name']); ?></td>
+                            <td><?php echo ($player_row['team_name']); ?></td>
+                            <td><?php echo ($player_row['position']); ?></td>
+                            <td><?php echo($player_row['jersey_num'])    ?></td>
+                            <td><?php echo ($player_row['age']); ?></td>
                             <td>
-                                <a href="?id=<?php echo $player_row['player_id']; ?>">Edit</a>
+                                <a href="?id=<?php echo $player_row['player_id']; ?>" style="margin-right: 10px; color: #4285f4; text-decoration: none;">Edit</a>
+                                <a href="javascript:void(0)" onclick="confirmDelete(<?php echo $player_row['player_id']; ?>, '<?php echo addslashes($player_row['player_name']); ?>')" style="color: #dc3545; text-decoration: none;">Delete</a>
                             </td>
                         </tr>
                         <?php endwhile; ?>
@@ -282,5 +422,31 @@ include("sidebar.php");
             </div>
         </div>
     </div>
+    
+    <script>
+        function confirmDelete(playerId, playerName) {
+            if (confirm('Are you sure you want to delete player "' + playerName + '"? This action cannot be undone.')) {
+                window.location.href = '?delete=1&id=' + playerId;
+            }
+        }
+        
+        <?php if (isset($confirm_delete)): ?>
+        function closeModal() {
+            window.location.href = 'manage_roster.php';
+        }
+        
+        function confirmDelete() {
+            window.location.href = '?delete=1&id=<?php echo $confirm_delete['player_id']; ?>&force=1';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            let modal = document.getElementById('deleteModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+        <?php endif; ?>
+    </script>
 </body>
 </html>

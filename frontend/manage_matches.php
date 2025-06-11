@@ -11,19 +11,22 @@ check_admin();
 if (isset($_GET['delete']) && isset($_GET['match_id'])) {
     $match_id = intval($_GET['match_id']);
     
-
-    $score_check = "SELECT COUNT(*) as score_count FROM scores WHERE match_id = $match_id";
+    // I checheck nya to kung may scores na recorded sa match like if both teams have scores greater than 0 dun nya malalaman kung pwede i-delete yung match
+    $score_check = "SELECT COALESCE(team1_score, 0) as team1_score, COALESCE(team2_score, 0) as team2_score FROM scores WHERE match_id = $match_id";
     $score_result = mysqli_query($conn, $score_check);
     $score_row = mysqli_fetch_assoc($score_result);
     
-    if ($score_row['score_count'] > 0) {
-        $error = "Cannot delete match with recorded scores.";
+
+    if ($score_row && ($score_row['team1_score'] > 0 || $score_row['team2_score'] > 0)) {
+        $error = "Cannot delete match with recorded scores (current: {$score_row['team1_score']}-{$score_row['team2_score']}).";
     } else {
+
+        mysqli_query($conn, "DELETE FROM scores WHERE match_id = $match_id");
+        
+        // Delete the match
         $delete_query = "DELETE FROM matches WHERE match_id = $match_id";
         if (mysqli_query($conn, $delete_query)) {
             $message = "Match deleted successfully!";
-        } else {
-            $error = "Error deleting match: " . mysqli_error($conn);
         }
     }
 }
@@ -78,13 +81,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $teams_query = "SELECT team_id, team_name FROM teams ORDER BY team_name";
 $teams = mysqli_query($conn, $teams_query);
 
-// Get all matches
+// Get all matches with better score checking
 $matches_query = "
 SELECT m.match_id, m.match_date, m.status, t1.team_name AS team1_name, t2.team_name AS team2_name,
-       (SELECT COUNT(*) FROM scores s WHERE s.match_id = m.match_id) as has_scores
+       COALESCE(s.team1_score, 0) as team1_score, COALESCE(s.team2_score, 0) as team2_score,
+       CASE 
+           WHEN s.team1_score > 0 OR s.team2_score > 0 THEN 1 
+           ELSE 0 
+       END as has_meaningful_scores
 FROM matches m
 JOIN teams t1 ON m.team1_id = t1.team_id
 JOIN teams t2 ON m.team2_id = t2.team_id
+LEFT JOIN scores s ON m.match_id = s.match_id
 ORDER BY m.match_date DESC
 ";
 $matches = mysqli_query($conn, $matches_query);
@@ -386,7 +394,7 @@ $standings = mysqli_query($conn, $standings_query);
                         <td><?php echo date('M j, Y - g:i A', strtotime($match['match_date'])); ?></td>
                         <td><?php echo htmlspecialchars($match['status']); ?></td>
                         <td class="actions-cell">
-                            <?php if ($match['has_scores'] == 0): ?>
+                            <?php if ($match['has_meaningful_scores'] == 0): ?>
                                 <button type="button" class="delete-btn" 
                                         onclick="confirmDelete(<?php echo $match['match_id']; ?>, 
                                                '<?php echo addslashes($match['team1_name']); ?>', 
@@ -395,7 +403,8 @@ $standings = mysqli_query($conn, $standings_query);
                                     Delete
                                 </button>
                             <?php else: ?>
-                                <button type="button" class="delete-btn" disabled title="Cannot delete match with recorded scores">
+                                <button type="button" class="delete-btn" disabled 
+                                        title="Cannot delete match with scores: <?php echo $match['team1_score']; ?>-<?php echo $match['team2_score']; ?>">
                                     Delete
                                 </button>
                             <?php endif; ?>

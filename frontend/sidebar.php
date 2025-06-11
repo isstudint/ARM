@@ -92,7 +92,7 @@
                 <?php endif; ?>
 
             
-                <?php if(isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
+                <?php if(isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): // dito yung debug ?> 
                 <li class="nav-item">
                     <a href="manage_roster.php" class="nav-link">
                         <span class="material-symbols-outlined">patient_list</span>
