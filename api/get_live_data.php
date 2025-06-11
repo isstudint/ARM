@@ -30,7 +30,7 @@ if ($match_id) {
         }
     }
     
-    // Get game state
+
     $state_query = "SELECT game_time, quarter, game_status FROM game_state WHERE match_id = $match_id";
     $state_result = mysqli_query($conn, $state_query);
     $game_state = mysqli_fetch_assoc($state_result);
@@ -41,7 +41,7 @@ if ($match_id) {
         'player_stats' => $player_stats,
         'game_time' => $game_state['game_time'] ?? 720,
         'quarter' => $game_state['quarter'] ?? 1,
-        'game_status' => $game_state['game_status'] ?? 'Ready'
+        'game_status' => $game_state['game_status'] ?? 'Scheduled'
     ]);
 } else {
     echo json_encode(['error' => 'No match ID provided']);

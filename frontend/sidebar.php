@@ -66,7 +66,7 @@
                 <li class="nav-item">
                     <a href="history.php" class="nav-link">
                         <span class="material-symbols-outlined">history</span>
-                        <span class="nav-label">History</span>
+                        <span class="nav-label">Schedule</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -113,16 +113,11 @@
         </ul>
         <!-- Sidebar Secondary nav -->
           <ul class="nav-list footer-nav">
+
                 <li class="nav-item">
-                    <a href="" class="nav-link">
-                        <span class="nav-icon material-symbols-outlined">settings</span>
-                        <span class="nav-label">Settings</span>    
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="" class="nav-link">
-                        <span class="nav-icon material-symbols-outlined">help</span>
-                        <span class="nav-label">Help</span>    
+                    <a href="support.php" class="nav-link">
+                        <span class="nav-icon material-symbols-outlined">Support</span>
+                        <span class="nav-label">Support</span>    
                     </a>
                 </li>
             <?php if(isset($_SESSION['is_admin']) && ($_SESSION['is_admin'] == 1 || $_SESSION['is_admin'] == 2)  ): ?>

@@ -12,74 +12,90 @@
 <?php 
 $conn = mysqli_connect("localhost", "root", "", "arm");
 
-$standings_query = "
-SELECT t.team_name, t.logo, 
-SUM( (t.team_id = m.team1_id AND s.team1_score > s.team2_score) OR (t.team_id = m.team2_id AND s.team2_score > s.team1_score)) AS wins,
-SUM((t.team_id = m.team1_id AND s.team1_score < s.team2_score) OR  (t.team_id = m.team2_id AND s.team2_score < s.team1_score) ) AS losses,
-
-COUNT(DISTINCT s.match_id) AS games_played
-FROM teams t
-LEFT JOIN matches m ON t.team_id = m.team1_id OR t.team_id = m.team2_id
-LEFT JOIN scores s ON m.match_id = s.match_id
-GROUP BY t.team_id, t.team_name, t.logo
-ORDER BY wins DESC, losses ASC
-";  
-$standings = mysqli_query($conn, $standings_query);   
-
-
-
-// COUNT(DISTINCT m.match_id) AS total_matches, if di gumana yung query
-
-
 include 'sidebar.php';
 ?>
 
 <main class="main-content">
-
-        <h1 class="page-title">Team Standings</h1>
+    <h1 class="page-title">Tournament Standings</h1>
+    
     <div class="container">
+        <!-- Tournament Standings Table (LEFT) -->
         <div class="standing-cont">
             <table class="standings-table">
                 <thead>
                     <tr>
-                        <th>Rank</th>
+                        <th>Seed</th>
                         <th>Logo</th>
                         <th>Team</th>
                         <th>W</th>
                         <th>L</th>
+                        <th>PD</th>
                         <th>GP</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php 
-                    $rank = 1;
-                    while($row = mysqli_fetch_assoc($standings)): 
+                    <?php
+                    $tournament_standings_query = "
+                        SELECT t.team_name, t.logo,
+                               COUNT(DISTINCT s.match_id) as games_played,
+                               SUM((t.team_id = m.team1_id AND s.team1_score > s.team2_score) OR (t.team_id = m.team2_id AND s.team2_score > s.team1_score)) AS wins,
+                               SUM((t.team_id = m.team1_id AND s.team1_score < s.team2_score) OR (t.team_id = m.team2_id AND s.team2_score < s.team1_score)) AS losses,
+                               SUM(CASE WHEN t.team_id = m.team1_id THEN s.team1_score ELSE s.team2_score END) - 
+                               SUM(CASE WHEN t.team_id = m.team1_id THEN s.team2_score ELSE s.team1_score END) AS point_differential
+                        FROM teams t
+                        LEFT JOIN matches m ON t.team_id = m.team1_id OR t.team_id = m.team2_id
+                        LEFT JOIN scores s ON m.match_id = s.match_id
+                        GROUP BY t.team_id, t.team_name, t.logo
+                        ORDER BY wins DESC, point_differential DESC
+                        LIMIT 8
+                    ";
+                    $tournament_teams = mysqli_query($conn, $tournament_standings_query);
+                    
+                    $seed = 1;
+                    while($team = mysqli_fetch_assoc($tournament_teams)):
+                        $is_qualified = $seed <= 4 && $team['games_played'] >= 3;
                     ?>
-                    <tr class="team-row" data-rank="<?php echo $rank; ?>">
-                        <td class="rank-cell"><?php echo $rank; ?></td>
+                    <tr class="team-row <?php echo $is_qualified ? 'qualified-row' : ''; ?>">
+                        <td class="rank-cell"><?php echo $seed; ?></td>
                         <td class="logo-cell">
                             <div class="team-logo">
-                                <?php if(!empty($row['logo']) && file_exists('../' . $row['logo'])): ?>
-                                    <img src="../<?php echo htmlspecialchars($row['logo']); ?>" alt="<?php echo htmlspecialchars($row['team_name']); ?>" class="team-logo-img">
+                                <?php if(!empty($team['logo']) && file_exists('../' . $team['logo'])): ?>
+                                    <img src="../<?php echo $team['logo']; ?>" alt="<?php echo $team['team_name']; ?>" class="team-logo-img">
                                 <?php else: ?>
-                                    <div class="logo-placeholder"><?php echo substr($row['team_name'], 0, 2); ?></div>
+                                    <div class="logo-placeholder"><?php echo substr($team['team_name'], 0, 2); ?></div>
                                 <?php endif; ?>
                             </div>
                         </td>
                         <td class="team-cell">
-                            <span class="team-name"><?php echo htmlspecialchars($row['team_name']); ?></span>
+                            <span class="team-name"><?php echo htmlspecialchars($team['team_name']); ?></span>
                         </td>
-                        <td class="stat-cell"><?php echo $row['wins'] ?? 0; ?></td>
-                        <td class="stat-cell"><?php echo $row['losses'] ?? 0; ?></td>
-                        <td class="stat-cell"><?php echo $row['games_played'] ?? 0; ?></td>
+                        <td class="stat-cell"><?php echo $team['wins'] ?? 0; ?></td>
+                        <td class="stat-cell"><?php echo $team['losses'] ?? 0; ?></td>
+                        <td class="stat-cell">
+                            <?php 
+                            $pd = $team['point_differential'] ?? 0;
+                            echo ($pd > 0 ? '+' : '') . $pd;
+                            ?>
+                        </td>
+                        <td class="stat-cell"><?php echo $team['games_played'] ?? 0; ?>/3</td>
+                        <td class="stat-cell">
+                            <?php if ($is_qualified): ?>
+                                <span class="qualified-badge">Qualified</span>
+                            <?php else: ?>
+                                <span class="active-badge">Active</span>
+                            <?php endif; ?>
+                        </td>
                     </tr>
                     <?php 
-                    $rank++;
+                    $seed++;
                     endwhile; 
                     ?>
                 </tbody>
             </table>
         </div>
+
+        <!-- Upcoming Matches (RIGHT) -->
         <div class="upcoming-cont">
             <h2>Upcoming Matches</h2>
             <ul class="upcoming-matches-list">
@@ -128,7 +144,6 @@ include 'sidebar.php';
             </ul>
         </div>
     </div>
-
 </main>
 
 </body>

@@ -1,0 +1,56 @@
+@font-face {
+  font-family: 'Logo';
+  src: url('../fonts/Miskan\ Oblique.ttf') format('truetype');
+}
+
+
+.support-container {
+    display: flex;
+    justify-content: center;
+    align-items:start;
+
+    margin-left: 250px; 
+    padding: 20px;
+    
+
+}
+
+.support-container div {
+
+    max-width: 600px;
+    width: 100%;
+}
+
+.support-container .logo {
+
+    font-size: 150px;
+    font-family: logo;
+    margin-bottom: 20px;
+    color: #000000;
+    animation: anim 0.5s ease-in;
+}
+
+@keyframes anim {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.support-container p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #666;
+}
+img{
+    
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+}

@@ -19,3 +19,8 @@ https://www.w3schools.com/php/func_array_in_array.asp
 
 
     https://www.youtube.com/watch?v=aq3InkyXmn0
+
+
+
+    No match selected → Shows match list
+Match clicked → URL gets ?match_id=X → Page reloads → Shows scoreboard for that match

@@ -5,29 +5,27 @@ include ("func.php");
 
 check_admin();
 
+// Simple functions
+function getTeamGamesCount($conn, $team_id) {
+    $query = "SELECT COUNT(*) as games_count FROM matches WHERE (team1_id = $team_id OR team2_id = $team_id) AND status != 'Cancelled'";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_assoc($result);
+    return $row['games_count'];
+}
 
+function teamsAlreadyPlayed($conn, $team1_id, $team2_id) {
+    $query = "SELECT COUNT(*) as match_count FROM matches WHERE ((team1_id = $team1_id AND team2_id = $team2_id) OR (team1_id = $team2_id AND team2_id = $team1_id)) AND status != 'Cancelled'";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_assoc($result);
+    return $row['match_count'] > 0;
+}
 
-
+// Handle match deletion
 if (isset($_GET['delete']) && isset($_GET['match_id'])) {
     $match_id = intval($_GET['match_id']);
-    
-    // I checheck nya to kung may scores na recorded sa match like if both teams have scores greater than 0 dun nya malalaman kung pwede i-delete yung match
-    $score_check = "SELECT COALESCE(team1_score, 0) as team1_score, COALESCE(team2_score, 0) as team2_score FROM scores WHERE match_id = $match_id";
-    $score_result = mysqli_query($conn, $score_check);
-    $score_row = mysqli_fetch_assoc($score_result);
-    
-
-    if ($score_row && ($score_row['team1_score'] > 0 || $score_row['team2_score'] > 0)) {
-        $error = "Cannot delete match with recorded scores (current: {$score_row['team1_score']}-{$score_row['team2_score']}).";
-    } else {
-
-        mysqli_query($conn, "DELETE FROM scores WHERE match_id = $match_id");
-        
-        // Delete the match
-        $delete_query = "DELETE FROM matches WHERE match_id = $match_id";
-        if (mysqli_query($conn, $delete_query)) {
-            $message = "Match deleted successfully!";
-        }
+    $delete_query = "DELETE FROM matches WHERE match_id = $match_id";
+    if (mysqli_query($conn, $delete_query)) {
+        $message = "Match deleted successfully!";
     }
 }
 
@@ -37,83 +35,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $team2_id = $_POST['team2_id'];
     $match_date = $_POST['match_date'];
 
-    // Validate that match date is not in the past
-    $current_datetime = date('Y-m-d H:i:s');
-    if ($match_date < $current_datetime) {
-        $error = "Cannot schedule a match in the past. Please select a future date and time.";
-    } else if ($team1_id == $team2_id) {
+    if ($team1_id == $team2_id) {
         $error = "Please select two different teams.";
+    } else if (getTeamGamesCount($conn, $team1_id) >= 3) {
+        $error = "Team 1 has already played 3 games.";
+    } else if (getTeamGamesCount($conn, $team2_id) >= 3) {
+        $error = "Team 2 has already played 3 games.";
+    } else if (teamsAlreadyPlayed($conn, $team1_id, $team2_id)) {
+        $error = "These teams have already played each other.";
     } else {
-        // Check if either team already has a match scheduled on the same day
-        $date_only = date('Y-m-d', strtotime($match_date));
-        $check_query = "
-            SELECT COUNT(*) as match_count 
-            FROM matches 
-            WHERE DATE(match_date) = '$date_only' 
-            AND (team1_id = $team1_id OR team2_id = $team1_id OR team1_id = $team2_id OR team2_id = $team2_id)
-        ";
-        
-        $check_result = mysqli_query($conn, $check_query);
-        $check_row = mysqli_fetch_assoc($check_result);
-        
-        if ($check_row['match_count'] > 0) {
-
-            $team1_query = "SELECT team_name FROM teams WHERE team_id = $team1_id";
-            $team2_query = "SELECT team_name FROM teams WHERE team_id = $team2_id";
-            $team1_result = mysqli_query($conn, $team1_query);
-            $team2_result = mysqli_query($conn, $team2_query);
-            $team1_name = mysqli_fetch_assoc($team1_result)['team_name'];
-            $team2_name = mysqli_fetch_assoc($team2_result)['team_name'];
-            
-            $error = "Cannot schedule match. One or both teams ($team1_name, $team2_name) already have a match scheduled on " . date('M j, Y', strtotime($match_date)) . ".";
+        $insert_query = "INSERT INTO matches (team1_id, team2_id, match_date) VALUES ($team1_id, $team2_id, '$match_date')";
+        if (mysqli_query($conn, $insert_query)) {
+            $message = "Match scheduled successfully!";
         } else {
-            $insert_query = "INSERT INTO matches (team1_id, team2_id, match_date) VALUES ($team1_id, $team2_id, '$match_date')";
-            if (mysqli_query($conn, $insert_query)) {
-                $message = "Match scheduled successfully!";
-            } else {
-                $error = "Error: " . mysqli_error($conn);
-            }
+            $error = "Error: " . mysqli_error($conn);
         }
     }
 }
 
-// Get all teams for dropdown
+// Get all teams
 $teams_query = "SELECT team_id, team_name FROM teams ORDER BY team_name";
 $teams = mysqli_query($conn, $teams_query);
 
-// Get all matches with better score checking
+// Get all matches
 $matches_query = "
-SELECT m.match_id, m.match_date, m.status, t1.team_name AS team1_name, t2.team_name AS team2_name,
-       COALESCE(s.team1_score, 0) as team1_score, COALESCE(s.team2_score, 0) as team2_score,
-       CASE 
-           WHEN s.team1_score > 0 OR s.team2_score > 0 THEN 1 
-           ELSE 0 
-       END as has_meaningful_scores
+SELECT m.match_id, m.match_date, m.status, t1.team_name AS team1_name, t2.team_name AS team2_name
 FROM matches m
 JOIN teams t1 ON m.team1_id = t1.team_id
 JOIN teams t2 ON m.team2_id = t2.team_id
-LEFT JOIN scores s ON m.match_id = s.match_id
 ORDER BY m.match_date DESC
 ";
 $matches = mysqli_query($conn, $matches_query);
 
-
+// Get tournament standings for right sidebar
 $standings_query = "
 SELECT t.team_id, t.team_name, t.logo,
-COUNT(m.match_id) AS total_scheduled,
-SUM((t.team_id = m.team1_id AND s.team1_score > s.team2_score) OR (t.team_id = m.team2_id AND s.team2_score > s.team1_score)) AS wins,
-SUM((t.team_id = m.team1_id AND s.team1_score < s.team2_score) OR (t.team_id = m.team2_id AND s.team2_score < s.team1_score)) AS losses
+       COUNT(m.match_id) AS games_played,
+       SUM((t.team_id = m.team1_id AND s.team1_score > s.team2_score) OR (t.team_id = m.team2_id AND s.team2_score > s.team1_score)) AS wins,
+       SUM((t.team_id = m.team1_id AND s.team1_score < s.team2_score) OR (t.team_id = m.team2_id AND s.team2_score < s.team1_score)) AS losses,
+       SUM(CASE WHEN t.team_id = m.team1_id THEN s.team1_score ELSE s.team2_score END) - 
+       SUM(CASE WHEN t.team_id = m.team1_id THEN s.team2_score ELSE s.team1_score END) AS point_differential
 FROM teams t
 LEFT JOIN matches m ON t.team_id = m.team1_id OR t.team_id = m.team2_id
 LEFT JOIN scores s ON m.match_id = s.match_id
 GROUP BY t.team_id, t.team_name, t.logo
-ORDER BY total_scheduled DESC, wins DESC
+ORDER BY wins DESC, point_differential DESC
+LIMIT 8
 ";
 $standings = mysqli_query($conn, $standings_query);
-
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -121,7 +90,6 @@ $standings = mysqli_query($conn, $standings_query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&" />
     <title>Manage Matches</title>
     <style>
         .main-content {
@@ -167,6 +135,7 @@ $standings = mysqli_query($conn, $standings_query);
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            box-sizing: border-box;
         }
         
         .create-button {
@@ -176,6 +145,7 @@ $standings = mysqli_query($conn, $standings_query);
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            width: 100%;
         }
         
         table {
@@ -194,8 +164,8 @@ $standings = mysqli_query($conn, $standings_query);
         }
         
         th {
-            background:rgb(48, 50, 163);
-            color:white
+            background: #2d53da;
+            color: white;
         }
         
         .message {
@@ -211,6 +181,26 @@ $standings = mysqli_query($conn, $standings_query);
             color: #721c24;
         }
         
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .warning {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            color: #495057;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
         .team-item {
             display: flex;
             align-items: center;
@@ -222,15 +212,15 @@ $standings = mysqli_query($conn, $standings_query);
         }
         
         .team-logo {
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             object-fit: contain;
         }
         
         .logo-placeholder {
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             background: #f0f0f0;
             border-radius: 50%;
             display: flex;
@@ -260,62 +250,7 @@ $standings = mysqli_query($conn, $standings_query);
             font-size: 18px;
             font-weight: 600;
         }
-
-        .table-header {
-            background:rgb(37, 13, 145) !important;
-        }
-        
-        .delete-btn {
-            background: #dc3545;
-            color: white;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .delete-btn:hover {
-            background: #c82333;
-        }
-        
-        .delete-btn:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-        }
-        
-        .actions-cell {
-            text-align: center;
-        }
-        
-        .confirm-delete {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-        }
-        
-        .confirm-delete a {
-            color: #721c24;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        
-        .min-datetime {
-            min: <?php echo date('Y-m-d\TH:i'); ?>;
-        }
     </style>
-    <script>
-        function confirmDelete(matchId, team1, team2, date) {
-            if (confirm(`Are you sure you want to delete the match between ${team1} and ${team2} on ${date}?`)) {
-                window.location.href = `?delete=1&match_id=${matchId}`;
-            }
-        }
-    </script>
 </head>
 <body>
     <?php include("sidebar.php"); ?>
@@ -333,7 +268,12 @@ $standings = mysqli_query($conn, $standings_query);
             <?php endif; ?>
             
             <div class="form-container">
-                <h2>Create New Match</h2>
+                <h2>Schedule New Match</h2>
+                
+                <div class="warning">
+                    <strong>Rules:</strong> Each team can play max 3 games. Teams cannot play each other twice.
+                </div>
+                
                 <form method="post">
                     <div class="form-group">
                         <label>Team 1:</label>
@@ -342,9 +282,10 @@ $standings = mysqli_query($conn, $standings_query);
                             <?php 
                             mysqli_data_seek($teams, 0);
                             while($team = mysqli_fetch_assoc($teams)): 
+                                $games_count = getTeamGamesCount($conn, $team['team_id']);
                             ?>
                             <option value="<?php echo $team['team_id']; ?>">
-                                <?php echo htmlspecialchars($team['team_name']); ?>
+                                <?php echo htmlspecialchars($team['team_name']); ?> (<?php echo $games_count; ?>/3 games)
                             </option>
                             <?php endwhile; ?>
                         </select>
@@ -357,9 +298,10 @@ $standings = mysqli_query($conn, $standings_query);
                             <?php 
                             mysqli_data_seek($teams, 0);
                             while($team = mysqli_fetch_assoc($teams)): 
+                                $games_count = getTeamGamesCount($conn, $team['team_id']);
                             ?>
                             <option value="<?php echo $team['team_id']; ?>">
-                                <?php echo ($team['team_name']); ?>
+                                <?php echo htmlspecialchars($team['team_name']); ?> (<?php echo $games_count; ?>/3 games)
                             </option>
                             <?php endwhile; ?>
                         </select>
@@ -367,11 +309,10 @@ $standings = mysqli_query($conn, $standings_query);
                     
                     <div class="form-group">
                         <label>Match Date:</label>
-                        <input type="datetime-local" name="match_date" required min="<?php echo date('Y-m-d\TH:i'); ?>">
-                        <small style="color: #666; font-size: 12px;">Note: Cannot schedule matches in the past</small>
+                        <input type="datetime-local" name="match_date" required>
                     </div>
                     
-                    <button class="create-button" type="submit">Create Match</button>
+                    <button class="create-button" type="submit">Schedule Match</button>
                 </form>
             </div>
             
@@ -393,21 +334,11 @@ $standings = mysqli_query($conn, $standings_query);
                         <td><?php echo htmlspecialchars($match['team2_name']); ?></td>
                         <td><?php echo date('M j, Y - g:i A', strtotime($match['match_date'])); ?></td>
                         <td><?php echo htmlspecialchars($match['status']); ?></td>
-                        <td class="actions-cell">
-                            <?php if ($match['has_meaningful_scores'] == 0): ?>
-                                <button type="button" class="delete-btn" 
-                                        onclick="confirmDelete(<?php echo $match['match_id']; ?>, 
-                                               '<?php echo addslashes($match['team1_name']); ?>', 
-                                               '<?php echo addslashes($match['team2_name']); ?>', 
-                                               '<?php echo date('M j, Y', strtotime($match['match_date'])); ?>')">
-                                    Delete
-                                </button>
-                            <?php else: ?>
-                                <button type="button" class="delete-btn" disabled 
-                                        title="Cannot delete match with scores: <?php echo $match['team1_score']; ?>-<?php echo $match['team2_score']; ?>">
-                                    Delete
-                                </button>
-                            <?php endif; ?>
+                        <td>
+                            <button type="button" class="delete-btn" 
+                                    onclick="if(confirm('Delete this match?')) window.location.href='?delete=1&match_id=<?php echo $match['match_id']; ?>'">
+                                Delete
+                            </button>
                         </td>
                     </tr>
                     <?php endwhile; ?>
@@ -416,25 +347,47 @@ $standings = mysqli_query($conn, $standings_query);
         </div>
         
         <div class="right-section">
-            <div class="standings-title">Team Standings</div>
-            <?php while($team = mysqli_fetch_assoc($standings)): ?>
-            <div class="team-item">
-                <?php if(!empty($team['logo']) && file_exists('../' . $team['logo'])): ?>
-                    <img src="../<?php echo $team['logo']; ?>" alt="<?php echo $team['team_name']; ?>" class="team-logo">
-                <?php else: ?>
-                    <div class="logo-placeholder"><?php echo substr($team['team_name'], 0, 2); ?></div>
-                <?php endif; ?>
+            <div class="standings-title">Tournament Standings</div>
+            <div style="font-size: 12px; color: #666; margin-bottom: 15px;">
+                Regular Season Rankings (Top 4 qualify)
+            </div>
+            
+            <?php 
+            $rank = 1;
+            while($team = mysqli_fetch_assoc($standings)): 
+                $is_qualified = $rank <= 4 && $team['games_played'] >= 3;
+            ?>
+            <div class="team-item" style="<?php echo $is_qualified ? 'border-left: 4px solid #4caf50;' : ''; ?>">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="font-weight: bold; color: <?php echo $is_qualified ? '#4caf50' : '#333'; ?>;">
+                        #<?php echo $rank; ?>
+                    </div>
+                    
+                    <?php if(!empty($team['logo']) && file_exists('../' . $team['logo'])): ?>
+                        <img src="../<?php echo $team['logo']; ?>" alt="<?php echo $team['team_name']; ?>" class="team-logo">
+                    <?php else: ?>
+                        <div class="logo-placeholder"><?php echo substr($team['team_name'], 0, 2); ?></div>
+                    <?php endif; ?>
+                </div>
                 
                 <div class="team-info">
-                    <div class="team-name"><?php echo $team['team_name']; ?></div>
+                    <div class="team-name">
+                        <?php echo htmlspecialchars($team['team_name']); ?>
+                        <?php if ($is_qualified): ?>
+                            <span style="color: #4caf50; font-size: 12px;">✓ QUALIFIED</span>
+                        <?php endif; ?>
+                    </div>
                     <div class="team-stats">
-                        Games: <?php echo $team['total_scheduled'] ?? 0; ?> | 
-                        W: <?php echo $team['wins'] ?? 0; ?> | 
-                        L: <?php echo $team['losses'] ?? 0; ?>
+                        <?php echo $team['games_played']; ?>/3 Games | 
+                        <?php echo $team['wins'] ?? 0; ?>W-<?php echo $team['losses'] ?? 0; ?>L | 
+                        PD: <?php echo ($team['point_differential'] ?? 0) > 0 ? '+' : ''; ?><?php echo $team['point_differential'] ?? 0; ?>
                     </div>
                 </div>
             </div>
-            <?php endwhile; ?>
+            <?php 
+            $rank++;
+            endwhile; 
+            ?>
         </div>
     </div>
 </body>

@@ -6,6 +6,67 @@
     } 
 
 
+    include('db.php');
+
+
+
+    $match_query = "
+        SELECT m.*, t1.team_name as team1_name, t2.team_name as team2_name,
+               t1.logo as team1_logo, t2.logo as team2_logo,
+               COALESCE(s.team1_score, 0) as team1_score, 
+               COALESCE(s.team2_score, 0) as team2_score
+        FROM matches m
+        JOIN teams t1 ON m.team1_id = t1.team_id
+        JOIN teams t2 ON m.team2_id = t2.team_id
+        LEFT JOIN scores s ON m.match_id = s.match_id
+        WHERE m.match_date >= CURDATE() 
+        AND m.status IN ('Scheduled', 'Ongoing')
+        ORDER BY 
+            CASE WHEN m.status = 'Ongoing' THEN 1 ELSE 2 END,
+            m.match_date ASC
+        LIMIT 1
+    ";
+    $match_result = mysqli_query($conn, $match_query);
+    $today_match = mysqli_fetch_assoc($match_result);
+    
+    // Get team standings
+    $standings_query = "
+        SELECT t.team_id, t.team_name, t.logo,
+               COUNT(m.match_id) AS total_games,
+               SUM((t.team_id = m.team1_id AND s.team1_score > s.team2_score) OR 
+                   (t.team_id = m.team2_id AND s.team2_score > s.team1_score)) AS wins,
+               SUM((t.team_id = m.team1_id AND s.team1_score < s.team2_score) OR 
+                   (t.team_id = m.team2_id AND s.team2_score < s.team1_score)) AS losses
+        FROM teams t
+        LEFT JOIN matches m ON t.team_id = m.team1_id OR t.team_id = m.team2_id
+        LEFT JOIN scores s ON m.match_id = s.match_id
+        WHERE s.team1_score IS NOT NULL AND s.team2_score IS NOT NULL
+        GROUP BY t.team_id, t.team_name, t.logo
+        ORDER BY wins DESC, total_games DESC
+        LIMIT 5
+    ";
+    $standings_result = mysqli_query($conn, $standings_query);
+    
+    // Get all teams for team logos section
+    $teams_query = "SELECT team_id, team_name, logo FROM teams ORDER BY team_name";
+    $teams_result = mysqli_query($conn, $teams_query);
+    
+    // Get recent match history
+    $history_query = "
+        SELECT m.*, t1.team_name as team1_name, t2.team_name as team2_name,
+               t1.logo as team1_logo, t2.logo as team2_logo,
+               s.team1_score, s.team2_score
+        FROM matches m
+        JOIN teams t1 ON m.team1_id = t1.team_id
+        JOIN teams t2 ON m.team2_id = t2.team_id
+        LEFT JOIN scores s ON m.match_id = s.match_id
+        WHERE s.team1_score IS NOT NULL AND s.team2_score IS NOT NULL
+        AND m.status = 'Completed'
+        ORDER BY m.match_date DESC
+        LIMIT 5
+    ";
+    $history_result = mysqli_query($conn, $history_query);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,32 +92,63 @@
     <div class="container">
         <main class="main-content">
             <div class="match" id = "laman">
-                <h1>MATCH TODAY</h1>
+                <h1>
+                    <?php 
+                    if ($today_match) {
+                        echo $today_match['status'] == 'Ongoing' ? 'LIVE MATCH' : 'MATCH TODAY';
+                    } else {
+                        echo 'NO MATCH TODAY';
+                    }
+                    ?>
+                </h1>
+                
+                <?php if ($today_match): ?>
                 <div class="teams">                   
                   <div class="team1">
-                    <h3>Team name</h3>
-                    <h7>(standing)</h7>    
-                    <img src= "../Images/nba-boston.png" alt="Team 1 Logo" class="team-logo">
+                    <h3><?php echo htmlspecialchars($today_match['team1_name']); ?></h3>
+                    <?php if(!empty($today_match['team1_logo']) && file_exists('../' . $today_match['team1_logo'])): ?>
+                        <img src="../<?php echo htmlspecialchars($today_match['team1_logo']); ?>" alt="<?php echo htmlspecialchars($today_match['team1_name']); ?>" class="team-logo">
+                    <?php else: ?>
+                        <div class="team-logo-placeholder"><?php echo substr($today_match['team1_name'], 0, 2); ?></div>
+                    <?php endif; ?>
                   </div>
-                  <div class="scored"><h1>84</h1></div>
+                  <div class="scored"><h1 id="liveTeam1Score"><?php echo $today_match['team1_score']; ?></h1></div>
                   <div class="score">
                     <h1>SCORE</h1>
-                    <div class="oras"><h2>10:00</h2></div>
+                    <div class="oras"><h2 id="liveGameTime">12:00</h2></div>
+                    <div class="status" id="liveGameStatus">
+                        <?php 
+                        if ($today_match) {
+                            switch($today_match['status']) {
+                                case 'Ongoing': echo 'LIVE'; break;
+                                case 'Scheduled': echo 'SCHEDULED'; break;
+                                case 'Completed': echo 'FINAL'; break;
+                                default: echo $today_match['status']; break;
+                            }
+                        }
+                        ?>
+                    </div>
                   </div>
                   
-                  <div class="scored"><h1>72</h1></div>
+                  <div class="scored"><h1 id="liveTeam2Score"><?php echo $today_match['team2_score']; ?></h1></div>
 
                 <div class="team2"> 
-                  <h3>Team name</h3> 
-                  <h7>(standing)</h7>
-                  <img src= "../Images/nba-haws.png" alt="Team 1 Logo" class="team-logo"> 
+                  <h3><?php echo htmlspecialchars($today_match['team2_name']); ?></h3>
+                  <?php if(!empty($today_match['team2_logo']) && file_exists('../' . $today_match['team2_logo'])): ?>
+                      <img src="../<?php echo htmlspecialchars($today_match['team2_logo']); ?>" alt="<?php echo htmlspecialchars($today_match['team2_name']); ?>" class="team-logo">
+                  <?php else: ?>
+                      <div class="team-logo-placeholder"><?php echo substr($today_match['team2_name'], 0, 2); ?></div>
+                  <?php endif; ?>
                 </div>                
                 </div>
+                <?php else: ?>
+                <div class="no-match-today">
+                    <p>No matches scheduled for today. Check back tomorrow!</p>
+                </div>
+                <?php endif; ?>
             </div>
 
             <div class="human">
-                c
-            
                 <div class="coaches laman">
                     <a href="standing.php"><h1 >Standing</h1></a>
                     <table class="player-table">
@@ -64,26 +156,35 @@
                         <tr>
                             <td>Logo</td>
                             <td>Team name</td>
-                            <td>Standing</td>
+                            <td>Record</td>
                             <td>Win %</td>
                         </tr>
                       <thead>
                       <tbody>
-                        <tr>
-                            <td class = "litrato"><img src="../Images/nba-boston.png" alt="Player Image" class="player-image"></td>
-                            <td>Boston Celtics</td>
-                            <td>12 -  1</td>
-                            <td>99%</td>
-                        </tr>
-                        
-                        <tr>
-                            <td class = "litrato"><img src="../Images/nba-boston.png" alt="Player Image" class="player-image"></td>
-                            <td>Boston Celtics</td>
-                            <td>12 -  1</td>
-                            <td>99%</td>
-                        </tr>
-                      
-
+                        <?php if ($standings_result && mysqli_num_rows($standings_result) > 0): ?>
+                            <?php while($team = mysqli_fetch_assoc($standings_result)): ?>
+                            <tr>
+                                <td class = "litrato">
+                                    <?php if(!empty($team['logo']) && file_exists('../' . $team['logo'])): ?>
+                                        <img src="../<?php echo $team['logo']; ?>" alt="<?php echo $team['team_name']; ?>" class="player-image">
+                                    <?php else: ?>
+                                        <div class="team-placeholder"><?php echo substr($team['team_name'], 0, 2); ?></div>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo htmlspecialchars($team['team_name']); ?></td>
+                                <td><?php echo ($team['wins'] ?? 0) . ' - ' . ($team['losses'] ?? 0); ?></td>
+                                <td>
+                                    <?php 
+                                    $total = ($team['wins'] ?? 0) + ($team['losses'] ?? 0);
+                                    $win_pct = $total > 0 ? round(($team['wins'] ?? 0) / $total * 100) : 0;
+                                    echo $win_pct . '%';
+                                    ?>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr><td colspan="4">No standings data available</td></tr>
+                        <?php endif; ?>
                     </table>
                 </div>
             </div>
@@ -91,16 +192,20 @@
               <h1 >Teams</h1>
               <div class="scroller">
                 <div class="scrolling">
-                <img src="../Images/nba-boston.png" alt="Player Image" class="teamlogo">
-                <img src="../Images/nba-haws.png" alt="Player Image" class="teamlogo">
-                <img src="../Images/nba-minnesota.png" alt="Player Image" class="teamlogo">
-                <img src="../Images/nba-norl.png" alt="Player Image" class="teamlogo">
-                <img src="../Images/nba-boston.png" alt="Player Image" class="teamlogo">
-                <img src="../Images/nba-haws.png" alt="Player Image" class="teamlogo">
-                <img src="../Images/nba-minnesota.png" alt="Player Image" class="teamlogo">
-                <img src="../Images/nba-norl.png" alt="Player Image" class="teamlogo">
-            
-           
+                <?php if ($teams_result && mysqli_num_rows($teams_result) > 0): ?>
+                    <?php while($team = mysqli_fetch_assoc($teams_result)): ?>
+                        <?php if(!empty($team['logo']) && file_exists('../' . $team['logo'])): ?>
+                            <img src="../<?php echo $team['logo']; ?>" alt="<?php echo $team['team_name']; ?>" class="teamlogo">
+                        <?php endif; ?>
+                    <?php endwhile; ?>
+                    <!-- Duplicate for smooth scrolling -->
+                    <?php mysqli_data_seek($teams_result, 0); ?>
+                    <?php while($team = mysqli_fetch_assoc($teams_result)): ?>
+                        <?php if(!empty($team['logo']) && file_exists('../' . $team['logo'])): ?>
+                            <img src="../<?php echo $team['logo']; ?>" alt="<?php echo $team['team_name']; ?>" class="teamlogo">
+                        <?php endif; ?>
+                    <?php endwhile; ?>
+                <?php endif; ?>
               </div>
             </div>
         </main>
@@ -116,90 +221,40 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="match-history">
-                  <div class="teams-wrapper">
-                    <div class="team-history">
-                      <img src="../Images/nba-boston.png" alt="Boston Logo" class="teamlogo">
-                      <div class="scorees">102</div>
-                    </div>
-                    <div class="vs">VS</div>
-                    <div class="team-history">
-                      <img src="../Images/nba-haws.png" alt="Hawks Logo" class="teamlogo">
-                      <div class="scorees">98</div>
-                    </div>
-                  </div>
-                </td>
-                <td>Team 1</td>
-              </tr>
-
-              <tr>
-                <td class="match-history">
-                  <div class="teams-wrapper">
-                    <div class="team-history">
-                      <img src="../Images/nba-boston.png" alt="Boston Logo" class="teamlogo">
-                      <div class="scorees">102</div>
-                    </div>
-                    <div class="vs">VS</div>
-                    <div class="team-history">
-                      <img src="../Images/nba-haws.png" alt="Hawks Logo" class="teamlogo">
-                      <div class="scorees">98</div>
-                    </div>
-                  </div>
-                </td>
-                <td>Team 1</td>
-              </tr>
-
-              <tr>
-                <td class="match-history">
-                  <div class="teams-wrapper">
-                    <div class="team-history">
-                      <img src="../Images/nba-boston.png" alt="Boston Logo" class="teamlogo">
-                      <div class="scorees">102</div>
-                    </div>
-                    <div class="vs">VS</div>
-                    <div class="team-history">
-                      <img src="../Images/nba-haws.png" alt="Hawks Logo" class="teamlogo">
-                      <div class="scorees">98</div>
-                    </div>
-                  </div>
-                </td>
-                <td>Team 1</td>
-              </tr>
-              <tr>
-                <td class="match-history">
-                  <div class="teams-wrapper">
-                    <div class="team-history">
-                      <img src="../Images/nba-boston.png" alt="Boston Logo" class="teamlogo">
-                      <div class="scorees">102</div>
-                    </div>
-                    <div class="vs">VS</div>
-                    <div class="team-history">
-                      <img src="../Images/nba-haws.png" alt="Hawks Logo" class="teamlogo">
-                      <div class="scorees">98</div>
-                    </div>
-                  </div>
-                </td>
-                <td>Team 1</td>
-              </tr>
-              <tr>
-                <td class="match-history">
-                  <div class="teams-wrapper">
-                    <div class="team-history">
-                      <img src="../Images/nba-boston.png" alt="Boston Logo" class="teamlogo">
-                      <div class="scorees">102</div>
-                    </div>
-                    <div class="vs">VS</div>
-                    <div class="team-history">
-                      <img src="../Images/nba-haws.png" alt="Hawks Logo" class="teamlogo">
-                      <div class="scorees">98</div>
-                    </div>
-                  </div>
-                </td>
-                <td>Team 1</td>
-              </tr>
-
-              
+              <?php if ($history_result && mysqli_num_rows($history_result) > 0): ?>
+                  <?php while($match = mysqli_fetch_assoc($history_result)): ?>
+                  <tr>
+                    <td class="match-history">
+                      <div class="teams-wrapper">
+                        <div class="team-history">
+                          <?php if(!empty($match['team1_logo']) && file_exists('../' . $match['team1_logo'])): ?>
+                              <img src="../<?php echo $match['team1_logo']; ?>" alt="<?php echo $match['team1_name']; ?>" class="teamlogo">
+                          <?php endif; ?>
+                          <div class="scorees"><?php echo $match['team1_score']; ?></div>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team-history">
+                          <?php if(!empty($match['team2_logo']) && file_exists('../' . $match['team2_logo'])): ?>
+                              <img src="../<?php echo $match['team2_logo']; ?>" alt="<?php echo $match['team2_name']; ?>" class="teamlogo">
+                          <?php endif; ?>
+                          <div class="scorees"><?php echo $match['team2_score']; ?></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                        <?php 
+                        if ($match['team1_score'] > $match['team2_score']) {
+                            echo htmlspecialchars($match['team1_name']);
+                        } else {
+                            echo htmlspecialchars($match['team2_name']);
+                        }
+                        ?>
+                    </td>
+                  </tr>
+                  <?php endwhile; ?>
+              <?php else: ?>
+                  <tr><td colspan="2">No match history available</td></tr>
+              <?php endif; ?>
             </tbody>
           </table>
   </div>
@@ -243,6 +298,41 @@
           sidebar.classList.toggle("collapsed");
         });
       });
+      
+      <?php if ($today_match): ?>
+      // Real-time updates for any match (not just ongoing)
+      const matchId = <?php echo $today_match['match_id']; ?>;
+      
+      function updateLiveTime(seconds) {
+          let minutes = Math.floor(seconds / 60);
+          let secs = seconds % 60;
+          document.getElementById('liveGameTime').textContent = minutes + ':' + (secs < 10 ? '0' + secs : secs);
+      }
+      
+
+      setInterval(function() {
+          fetch('../api/get_live_data.php?match_id=' + matchId)
+              .then(response => response.json())
+              .then(data => {
+                  // Update scores
+                  if (data.team1_score !== undefined) {
+                      document.getElementById('liveTeam1Score').textContent = data.team1_score;
+                  }
+                  if (data.team2_score !== undefined) {
+                      document.getElementById('liveTeam2Score').textContent = data.team2_score;
+                  }
+                  
+               
+                  if (data.game_time !== undefined) {
+                      updateLiveTime(parseInt(data.game_time));
+                  }
+                  if (data.game_status !== undefined) {
+                      document.getElementById('liveGameStatus').textContent = data.game_status;
+                  }
+              })
+              .catch(error => console.log('Live update error:', error));
+      }, 2000); 
+      <?php endif; ?>
     </script>
 
 

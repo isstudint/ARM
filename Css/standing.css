@@ -13,27 +13,23 @@
     font-size: 2rem;
     font-weight: 600;
     color: #1a202c;
-    margin-bottom: 0.5rem;
 }
-
-
 
 .container {
     display: flex;
     justify-content: center;
     width: 100%;
-    gap: 2rem; /* Add space between main and right panel */
+    gap: 2rem;
 }
 
 .standing-cont {
     width: 100%;
-    max-width: 800px;
+    max-width: 900px;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     overflow: hidden;
 }
-
 
 .standings-table {
     width: 100%;
@@ -41,10 +37,8 @@
     font-size: 0.95rem;
 }
 
-
 .standings-table thead {
     background: #2d53da;
-
 }
 
 .standings-table th {
@@ -55,25 +49,24 @@
     font-size: 1rem;
 }
 
-
-
 .team-row {
     border-bottom: 1px solid #e2e8f0;
 }
 
-.standings-table td {
-    padding: 0.5rem;
-
-    text-align: center;
-
+.qualified-row {
+    background: #f8fff9;
+    border-left: 4px solid #28a745;
 }
 
+.standings-table td {
+    padding: 0.75rem;
+    text-align: center;
+}
 
 .rank-cell {
     font-weight: 600;
     font-size: 1.1rem;
 }
-
 
 .team-logo {
     display: flex;
@@ -82,21 +75,21 @@
 }
 
 .team-logo-img {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     object-fit: contain;
     border-radius: 50%;
 }
 
 .logo-placeholder {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     background-color: #f5f5f5;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: bold;
     color: #333;
 }
@@ -105,24 +98,22 @@
     text-align: left;
 }
 
-/* kung magamit
-.team-name {
-
-}
-*/
-
-/* Sort Links */
-.sort-link {
-    color: #fff;
-    text-decoration: none;
-    display: block;
-    padding: 0.5rem;
-    transition: all 0.2s ease;
+.qualified-badge {
+    background: #28a745;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
 }
 
-.sort-link:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+.active-badge {
+    background: #6c757d;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
 }
 
 .upcoming-cont {
@@ -134,6 +125,7 @@
     margin-left: 1rem;
     border-bottom: 4px solid #ffffff;
     transition: transform 0.2s , border-bottom 0.2s;
+    height: fit-content;
 }
 
 .upcoming-cont:hover {
@@ -207,5 +199,55 @@
     font-size: 0.8rem;
     color: #888;
     font-weight: 500;
+}
+
+/* Tournament Section - Clean Design */
+.tournament-section {
+    margin-top: 40px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.tournament-rules {
+    background: #f8f9fa;
+    padding: 20px;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 20px;
+    border-radius: 8px;
+    max-width: 900px;
+    margin: 20px auto 0;
+}
+
+.tournament-rules h4 {
+    margin: 0 0 10px 0;
+    color: #2d53da;
+    text-align: center;
+}
+
+.tournament-rules p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .tournament-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .upcoming-cont {
+        width: 100%;
+        margin-left: 0;
+    }
 }
 

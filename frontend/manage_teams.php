@@ -66,39 +66,93 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (mysqli_num_rows($duplicate_result) > 0) {
             $error = "Team name '$team_name' already exists. Please choose a different name.";
         } else {
-            // Create uploads directory if it doesn't exist
-            $upload_dir = "../uploads/team_logos/";
-            if (!file_exists($upload_dir)) {
-                mkdir($upload_dir, 0777, true);
-            }
-            
-            $logo_path = '';
-            
-            // Handle file upload
-            if (isset($_FILES['logo']) && $_FILES['logo']['error'] == 0) {
-                $allowed = ['jpg', 'jpeg', 'png', 'gif'];
-                $filename = $_FILES['logo']['name'];
-                $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+            // Check team count limit before adding new team
+            if (empty($team_id)) { // Only check for new teams, not updates
+                $team_count_query = "SELECT COUNT(*) as team_count FROM teams";
+                $count_result = mysqli_query($conn, $team_count_query);
+                $count_data = mysqli_fetch_assoc($count_result);
                 
-                if (in_array($file_ext, $allowed)) {
-                    // Create a unique filename
-                    $new_filename = uniqid('team_', true) . '.' . $file_ext;
-                    $destination = $upload_dir . $new_filename;
-                    
-                    if (move_uploaded_file($_FILES['logo']['tmp_name'], $destination)) {
-                        $logo_path = "uploads/team_logos/" . $new_filename; // Relative path for storage
-                    } else {
-                        $error = "Failed to upload logo file.";
-                    }
+                if ($count_data['team_count'] >= 8) {
+                    $error = "Tournament is full! Maximum 8 teams allowed. Please delete a team first to add a new one.";
                 } else {
-                    $error = "Invalid file type. Please upload JPG, PNG, or GIF files only.";
+
+
+                    $upload_dir = "../uploads/team_logos/";
+                    if (!file_exists($upload_dir)) {
+                        mkdir($upload_dir, 0777, true);
+                    }
+                    
+                    $logo_path = '';
+                    
+    
+                    if (isset($_FILES['logo']) && $_FILES['logo']['error'] == 0) {
+                        $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+                        $filename = $_FILES['logo']['name'];
+                        $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                        
+                        if (in_array($file_ext, $allowed)) {
+                            // Create a unique filename
+                            $new_filename = uniqid('team_', true) . '.' . $file_ext;
+                            $destination = $upload_dir . $new_filename;
+                            
+                            if (move_uploaded_file($_FILES['logo']['tmp_name'], $destination)) {
+                                $logo_path = "uploads/team_logos/" . $new_filename; // Relative path for storage
+                            } else {
+                                $error = "Failed to upload logo file.";
+                            }
+                        } else {
+                            $error = "Invalid file type. Please upload JPG, PNG, or GIF files only.";
+                        }
+                    }
+                    
+                    // Insert new team if no errors
+                    if (!isset($error)) {
+                        if (!empty($logo_path)) {
+                            $sql = "INSERT INTO teams (team_name, coach_name, logo) VALUES ('$team_name', '$coach_name', '$logo_path')";
+                        } else {
+                            $sql = "INSERT INTO teams (team_name, coach_name) VALUES ('$team_name', '$coach_name')";
+                        }
+                        
+                        if(mysqli_query($conn, $sql)) {
+                            $message = "Team added successfully!";
+                        } else {
+                            $error = "Error: " . mysqli_error($conn);
+                        }
+                    }
                 }
-            }
-            
-            // Insert or update team in database if no errors
-            if (!isset($error)) {
-                if (!empty($team_id)) {
-                    // Update existing team
+            } else {
+                // Update existing team code
+                // Create uploads directory if it doesn't exist
+                $upload_dir = "../uploads/team_logos/";
+                if (!file_exists($upload_dir)) {
+                    mkdir($upload_dir, 0777, true);
+                }
+                
+                $logo_path = '';
+                
+                // Handle file upload
+                if (isset($_FILES['logo']) && $_FILES['logo']['error'] == 0) {
+                    $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+                    $filename = $_FILES['logo']['name'];
+                    $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                    
+                    if (in_array($file_ext, $allowed)) {
+                        // Create a unique filename
+                        $new_filename = uniqid('team_', true) . '.' . $file_ext;
+                        $destination = $upload_dir . $new_filename;
+                        
+                        if (move_uploaded_file($_FILES['logo']['tmp_name'], $destination)) {
+                            $logo_path = "uploads/team_logos/" . $new_filename; // Relative path for storage
+                        } else {
+                            $error = "Failed to upload logo file.";
+                        }
+                    } else {
+                        $error = "Invalid file type. Please upload JPG, PNG, or GIF files only.";
+                    }
+                }
+                
+                // Update existing team
+                if (!isset($error)) {
                     $sql = "UPDATE teams SET team_name='$team_name', coach_name='$coach_name'";
                     
                     if (!empty($logo_path)) {
@@ -112,24 +166,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     } else {
                         $error = "Error: " . mysqli_error($conn);
                     }
-                } else {
-                    // Insert new team
-                    if (!empty($logo_path)) {
-                        $sql = "INSERT INTO teams (team_name, coach_name, logo) VALUES ('$team_name', '$coach_name', '$logo_path')";
-                    } else {
-                        $sql = "INSERT INTO teams (team_name, coach_name) VALUES ('$team_name', '$coach_name')";
-                    }
-                    
-                    if(mysqli_query($conn, $sql)) {
-                        $message = "Team added successfully!";
-                    } else {
-                        $error = "Error: " . mysqli_error($conn);
-                    }
                 }
             }
         }
     }
 }
+
+// Get team count for display
+$team_count_query = "SELECT COUNT(*) as team_count FROM teams";
+$count_result = mysqli_query($conn, $team_count_query);
+$total_teams = mysqli_fetch_assoc($count_result)['team_count'];
 
 // Get team details if editing
 $team = [];
@@ -378,7 +424,24 @@ $teams_result = mysqli_query($conn, "SELECT team_id, team_name, coach_name, logo
             <div class="form-section">
                 <h2><?php echo empty($team) ? 'Add New Team' : 'Edit Team'; ?></h2>
                 
-                <form method="post" enctype="multipart/form-data">
+                <?php if (empty($team) && $total_teams >= 8): ?>
+                    <div class="warning">
+                        <span class="material-symbols-outlined">info</span>
+                        Tournament is full! You have reached the maximum limit of 8 teams. Please delete a team first to add a new one.
+                    </div>
+                <?php else: ?>
+                    <div style="background: #e3f2fd; border: 1px solid #2196f3; color: #1565c0; padding: 12px; border-radius: 4px; margin-bottom: 15px;">
+                        <span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 8px;">info</span>
+                        Tournament Teams: <?php echo $total_teams; ?>/8
+                        <?php if ($total_teams < 8): ?>
+                            (<?php echo 8 - $total_teams; ?> spots remaining)
+                        <?php else: ?>
+                            (Tournament Full!)
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+                
+                <form method="post" enctype="multipart/form-data" <?php echo (empty($team) && $total_teams >= 8) ? 'style="display:none;"' : ''; ?>>
                     <?php if (!empty($team)): ?>
                         <input type="hidden" name="team_id" value="<?php echo $team['team_id']; ?>">
                     <?php endif; ?>
@@ -400,12 +463,12 @@ $teams_result = mysqli_query($conn, "SELECT team_id, team_name, coach_name, logo
                     <input type="file" id="logo" name="logo" accept="image/*">
                     <p style="color:#777;font-size:0.9em;">Select an image file (JPG, PNG, or GIF)</p>
                     
-                    <button type="submit">Save Team</button>
+                    <button type="submit"><?php echo empty($team) ? 'Add Team' : 'Update Team'; ?></button>
                 </form>
             </div>
             
             <div class="teams-list">
-                <h2>Current Teams</h2>
+                <h2>Current Teams (<?php echo $total_teams; ?>/8)</h2>
                 <table>
                     <thead>
                         <tr>

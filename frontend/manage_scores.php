@@ -3,7 +3,8 @@
 session_start();
 include('sidebar.php');
 
-$conn = mysqli_connect("localhost", "root", "", "arm");
+include('db.php');
+include('func.php');
 
 $match_id = isset($_GET['match_id']) ? (int)$_GET['match_id'] : null;
 
@@ -64,7 +65,7 @@ if ($match_id) {
     <link rel="stylesheet" href="../Css/score.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ONLY fix bottom controls - don't touch anything else */
+
         .bottom-controls {
             display: flex;
             flex-wrap: wrap;
