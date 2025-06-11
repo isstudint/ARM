@@ -92,21 +92,23 @@
           </tr>
         </thead>
         <tbody>
-          <?php if (mysqli_num_rows($players) > 0): ?>
-            <?php while($player = mysqli_fetch_assoc($players)): ?>
-            <tr>
-              <td><?php echo $player['jersey_num'] ?? 'N/A'; ?></td>
-              <td><?php echo htmlspecialchars($player['player_name']); ?></td>
-              <td><?php echo htmlspecialchars($player['position']); ?></td>
-              <td><?php echo htmlspecialchars($player['team_name']); ?></td>
-              <td><?php echo $player['age']; ?></td>
-            </tr>
-            <?php endwhile; ?>
-          <?php else: ?>
-            <tr>
-              <td colspan="5" style="text-align: center; padding: 20px;">No players found</td>
-            </tr>
-          <?php endif; ?>
+          <tr>
+            <td>John Doe</td>
+            <td>Guard</td>
+            <td>Boston Celtics</td>
+            <td>12</td>
+            <td>3</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>Jane Smith</td>
+            <td>Forward</td>
+            <td>Atlanta Hawks</td>
+            <td>15</td>
+            <td>6</td>
+            <td>4</td> 
+          </tr>
+          <!-- More player rows -->
         </tbody>
       </table>
     </div>
