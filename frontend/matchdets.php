@@ -86,7 +86,7 @@ if ($match) {
             <?php if ($match): ?>
             <div class="match" id="laman">
                 <h1>
-                    <?php echo $match['status'] == 'Ongoing' ? 'LIVE MATCH' : 'UPCOMING MATCH'; ?>
+                    <?php echo $match['status'] == 'Ongoing' ? 'LIVE MATCH' : 'MATCH TODAY'; ?>
                 </h1>
                 <div class="teams">                   
                   <div class="team1">

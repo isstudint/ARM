@@ -51,7 +51,7 @@ if ($match_id) {
     JOIN teams t2 ON m.team2_id = t2.team_id
     LEFT JOIN scores s ON m.match_id = s.match_id
     ORDER BY m.match_date DESC
-    LIMIT 10
+    LIMIT 20
     ";
     $matches = mysqli_query($conn, $matches_query);
 }
@@ -316,8 +316,8 @@ if ($match_id) {
                 <?php mysqli_data_seek($team2_players, 0); ?>
                 <?php while($player = mysqli_fetch_assoc($team2_players)): ?>
                 <div class="player-item">
-                    <div class="player-name"><?php echo htmlspecialchars($player['player_name']); ?></div>
-                    <div class="player-position"><?php echo htmlspecialchars($player['position']); ?></div>
+                    <div class="player-name"><?php echo ($player['player_name']); ?></div>
+                    <div class="player-position"><?php echo ($player['position']); ?></div>
                     <div class="player-stats">
                         <span>PTS: <span id="pts_2_<?php echo $player['player_id']; ?>">0</span></span>
                         <span>REB: <span id="reb_2_<?php echo $player['player_id']; ?>">0</span></span>
