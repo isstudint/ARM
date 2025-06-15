@@ -322,33 +322,17 @@
 }
 
 .champion {
-    background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
-
+    background: #ffd700;
     color: #333;
     padding: 10px;
     text-align: center;
     font-weight: bold;
- background-size: 200% 200%; /* nagpapagalaw */
+    border-radius: 4px;
     margin-top: 10px;
-    animation: championGlow 2s ease-in-out infinite;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-    transform: scale(1);
 }
-
-@keyframes championGlow {
-    0%, 100% {
-        background-position: 0% 50%;
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-    }
-    50% {
-        background-position: 100% 50%;
-        box-shadow: 0 0 30px rgba(255, 215, 0, 0.9);
-    }
-}
-
 
 .seed {
-    background: #0734d6;
+    background: #2d53da;
     color: white;
     width: 24px;
     height: 24px;
@@ -420,41 +404,30 @@
 }
 
 .final-match {
-    border: 3px solid rgba(255, 215, 0, 0.6);
+    border: 3px solid #2d53da;
     border-radius: 4px;
     background: white;
     width: 100%;
-
 }
 
-
-
-
 .final-match .match-header {
-    background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
-    background-size: 200% 200%;
+    background: #2d53da;
+    color: white;
     padding: 10px;
     text-align: center;
     font-size: 16px;
     font-weight: bold;
-    animation: headglow 2s ease-in-out infinite;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-    transform: scale(1);
-       color: #333;
 }
 
-@keyframes headglow {
-    0%, 100% {
-        background-position: 0% 50%;
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-    }
-    50% {
-        background-position: 100% 50%;
-        box-shadow: 0 0 30px rgba(255, 215, 0, 0.9);
-    }
+.final-match .team-slot {
+    padding: 15px;
+    border-bottom: 1px solid #fd0000;
+    text-align: center;
 }
 
-
+.final-match .team-slot:last-child {
+    border-bottom: none;
+}
 
 
 
