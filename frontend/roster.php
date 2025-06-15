@@ -43,7 +43,7 @@
     <div class="teams-navbar">
       <nav>
         <ul class="team-logo-list">
-          <li><a href="roster.php" class="<?php echo !$selected_team ? 'active' : ''; ?>">All Teams</a></li>
+          <li><a href="roster.php" class="<?php echo !$selected_team ? 'active' : ''; ?>" style= "text-decoration: none"><button class = "all_teams" style="text-decoration: none; background:rgb(0, 233, 221); color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">All Teams</button></a></li>
           <?php while($team = mysqli_fetch_assoc($teams)): ?>
           <li>
             <a href="roster.php?team_id=<?php echo $team['team_id']; ?>" 
