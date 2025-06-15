@@ -23,9 +23,100 @@ function teamsAlreadyPlayed($conn, $team1_id, $team2_id) {
 // Handle match deletion
 if (isset($_GET['delete']) && isset($_GET['match_id'])) {
     $match_id = intval($_GET['match_id']);
+    
+
+    mysqli_query($conn, "DELETE FROM player_stats WHERE match_id = $match_id");
+    mysqli_query($conn, "DELETE FROM scores WHERE match_id = $match_id");
+    
+    // Delete match
     $delete_query = "DELETE FROM matches WHERE match_id = $match_id";
     if (mysqli_query($conn, $delete_query)) {
         $message = "Match deleted successfully!";
+    } else {
+        $error = "Error deleting match: " . mysqli_error($conn);
+    }
+}
+
+// Function to check if playoffs should be scheduled when regular season is complete
+function checkAndSchedulePlayoffs($conn) {
+    $qualified_query = "
+        SELECT t.team_id, t.team_name,
+               COUNT(DISTINCT s.match_id) as games_played,
+               SUM((t.team_id = m.team1_id AND s.team1_score > s.team2_score) OR (t.team_id = m.team2_id AND s.team2_score > s.team1_score)) AS wins,
+               SUM(CASE WHEN t.team_id = m.team1_id THEN s.team1_score ELSE s.team2_score END) - 
+               SUM(CASE WHEN t.team_id = m.team1_id THEN s.team2_score ELSE s.team1_score END) AS point_differential
+        FROM teams t
+        LEFT JOIN matches m ON t.team_id = m.team1_id OR t.team_id = m.team2_id
+        LEFT JOIN scores s ON m.match_id = s.match_id
+        WHERE s.team1_score IS NOT NULL AND s.team2_score IS NOT NULL
+        GROUP BY t.team_id, t.team_name
+        HAVING games_played >= 3
+        ORDER BY wins DESC, point_differential DESC
+        LIMIT 4
+    ";
+    
+    $qualified_result = mysqli_query($conn, $qualified_query);
+    $qualified_teams = [];
+    
+    while($team = mysqli_fetch_assoc($qualified_result)) {
+        $qualified_teams[] = $team;
+    }
+    
+    if (count($qualified_teams) >= 4) {
+        $existing_playoffs = mysqli_query($conn, "SELECT COUNT(*) as count FROM matches WHERE status = 'Playoff'");
+        $playoff_count = mysqli_fetch_assoc($existing_playoffs)['count'];
+        
+        if ($playoff_count == 0) {
+            $semifinal1_date = date('Y-m-d H:i:s', strtotime('+1 day 14:00'));
+            $semifinal2_date = date('Y-m-d H:i:s', strtotime('+1 day 16:00'));
+            $final_date = date('Y-m-d H:i:s', strtotime('+2 days 15:00'));
+            
+            // Semifinal 1: #1 vs #4
+            mysqli_query($conn, "INSERT INTO matches (team1_id, team2_id, match_date, status) VALUES ({$qualified_teams[0]['team_id']}, {$qualified_teams[3]['team_id']}, '$semifinal1_date', 'Playoff')");
+            
+            // Semifinal 2: #2 vs #3  
+            mysqli_query($conn, "INSERT INTO matches (team1_id, team2_id, match_date, status) VALUES ({$qualified_teams[1]['team_id']}, {$qualified_teams[2]['team_id']}, '$semifinal2_date', 'Playoff')");
+            
+            // Championship Final - Use first qualified team as placeholder, will be updated when semifinals complete
+            mysqli_query($conn, "INSERT INTO matches (team1_id, team2_id, match_date, status) VALUES ({$qualified_teams[0]['team_id']}, {$qualified_teams[1]['team_id']}, '$final_date', 'Final')");
+        }
+    }
+    
+
+    checkAndUpdateFinal($conn);
+}
+
+// Function to update final match when semifinals are complete
+function checkAndUpdateFinal($conn) {
+    $semifinals_query = "
+        SELECT m.match_id, m.team1_id, m.team2_id, s.team1_score, s.team2_score,
+               CASE 
+                   WHEN s.team1_score > s.team2_score THEN m.team1_id
+                   WHEN s.team2_score > s.team1_score THEN m.team2_id
+                   ELSE NULL
+               END as winner_id
+        FROM matches m
+        LEFT JOIN scores s ON m.match_id = s.match_id
+        WHERE m.status = 'Playoff'
+        AND s.team1_score IS NOT NULL AND s.team2_score IS NOT NULL
+    ";
+    
+    $semifinals_result = mysqli_query($conn, $semifinals_query);
+    $winners = [];
+    
+    while($semifinal = mysqli_fetch_assoc($semifinals_result)) {
+        if ($semifinal['winner_id']) {
+            $winners[] = $semifinal['winner_id'];
+        }
+    }
+    
+    // If both semifinals are complete, update the final
+    if (count($winners) == 2) {
+        $final_check = mysqli_query($conn, "SELECT match_id FROM matches WHERE status = 'Final' LIMIT 1");
+        if ($final_row = mysqli_fetch_assoc($final_check)) {
+            $update_final = "UPDATE matches SET team1_id = {$winners[0]}, team2_id = {$winners[1]} WHERE match_id = {$final_row['match_id']}";
+            mysqli_query($conn, $update_final);
+        }
     }
 }
 
@@ -47,6 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $insert_query = "INSERT INTO matches (team1_id, team2_id, match_date) VALUES ($team1_id, $team2_id, '$match_date')";
         if (mysqli_query($conn, $insert_query)) {
             $message = "Match scheduled successfully!";
+            checkAndSchedulePlayoffs($conn);
         } else {
             $error = "Error: " . mysqli_error($conn);
         }
@@ -347,16 +439,30 @@ $standings = mysqli_query($conn, $standings_query);
                 </thead>
                 <tbody>
                     <?php while($match = mysqli_fetch_assoc($matches)): ?>
-                    <tr>
+                    <tr style="<?php echo $match['status'] == 'Playoff' ? 'background-color: #e8f5e8;' : ($match['status'] == 'Final' ? 'background-color: #ffd700;' : ''); ?>">
                         <td><?php echo htmlspecialchars($match['team1_name']); ?></td>
                         <td><?php echo htmlspecialchars($match['team2_name']); ?></td>
                         <td><?php echo date('M j, Y - g:i A', strtotime($match['match_date'])); ?></td>
-                        <td><?php echo htmlspecialchars($match['status']); ?></td>
                         <td>
+                            <?php 
+                            if ($match['status'] == 'Playoff') {
+                                echo '<strong style="color: #28a745;">SEMIFINAL</strong>';
+                            } else if ($match['status'] == 'Final') {
+                                echo '<strong style="color: #ffd700;">CHAMPIONSHIP</strong>';
+                            } else {
+                                echo htmlspecialchars($match['status']); 
+                            }
+                            ?>
+                        </td>
+                        <td>
+                            <?php if ($match['status'] != 'Playoff' && $match['status'] != 'Final'): ?>
                             <button type="button" class="delete-btn" 
                                     onclick="if(confirm('Delete this match?')) window.location.href='?delete=1&match_id=<?php echo $match['match_id']; ?>'">
                                 Delete
                             </button>
+                            <?php else: ?>
+                                <span style="color: #666; font-size: 12px;">Playoff Match</span>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php endwhile; ?>
@@ -392,7 +498,7 @@ $standings = mysqli_query($conn, $standings_query);
                     <div class="team-name">
                         <?php echo htmlspecialchars($team['team_name']); ?>
                         <?php if ($is_qualified): ?>
-                            <span style="color: #4caf50; font-size: 12px;">✓ QUALIFIED</span>
+                            <span style="color: #4caf50; font-size: 12px;">QUALIFIED</span>
                         <?php endif; ?>
                     </div>
                     <div class="team-stats">
