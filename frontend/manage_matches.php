@@ -92,11 +92,28 @@ $standings = mysqli_query($conn, $standings_query);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Matches</title>
     <style>
+        .sidebar.collapsed .sidebar-header .toggler{
+            transform: translate(-50px, 40px);
+        }
+
+        .sidebar.collapsed .sidebar-title {
+            margin-left: 0;
+            transform: translateX(-6px); 
+            transition: transform 0.3s ease;
+        }
+
+        
+        .sidebar.collapsed ~ .main-content {
+            margin-left: 105px;
+        }   
+
+
         .main-content {
             margin-left: 302px;
             padding: 20px;
             display: flex;
             gap: 20px;
+            transition: margin-left 0.5s ease   ;
         }
         
         .left-section {
@@ -104,6 +121,7 @@ $standings = mysqli_query($conn, $standings_query);
         }
         
         .right-section {
+            margin-top: 50px;
             flex: 1;
             background: white;
             padding: 20px;
@@ -391,4 +409,15 @@ $standings = mysqli_query($conn, $standings_query);
         </div>
     </div>
 </body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const sidebarToggler = document.querySelector(".sidebar-toggler");
+        const sidebar = document.querySelector(".sidebar");
+
+        sidebarToggler.addEventListener("click", () => {
+          sidebar.classList.toggle("collapsed");
+        });
+      });
+</script>
 </html>

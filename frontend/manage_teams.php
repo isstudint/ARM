@@ -200,9 +200,28 @@ $teams_result = mysqli_query($conn, "SELECT team_id, team_name, coach_name, logo
     <link rel="stylesheet" href="../Css/sidebar.css">
     <title>Manage Teams</title>
     <style>
+        
+
+        .sidebar.collapsed .sidebar-header .toggler{
+            transform: translate(-50px, 40px);
+        }
+
+        .sidebar.collapsed .sidebar-title {
+            margin-left: 0;
+            transform: translateX(-6px); 
+            transition: transform 0.3s ease;
+        }
+
+        
+        .sidebar.collapsed ~ .main-content {
+            margin-left: 105px;
+        }   
+
+        
         .main-content {
             margin-left: 302px;
             padding: 20px;
+            transition: margin-left 0.3s ease;
         }
         
         .admin-container {
@@ -529,6 +548,15 @@ $teams_result = mysqli_query($conn, "SELECT team_id, team_name, coach_name, logo
     </form>
 
     <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+        const sidebarToggler = document.querySelector(".sidebar-toggler");
+        const sidebar = document.querySelector(".sidebar");
+
+        sidebarToggler.addEventListener("click", () => {
+          sidebar.classList.toggle("collapsed");
+        });
+      });
         let currentDeleteId = null;
         
         function confirmDelete(teamId, teamName) {

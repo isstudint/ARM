@@ -54,3 +54,23 @@ img{
     margin: 0 auto;
     border-radius: 10px;
 }
+
+
+
+        .sidebar.collapsed .sidebar-header .toggler{
+            transform: translate(-50px, 40px);
+        }
+
+        .sidebar.collapsed .sidebar-title {
+            margin-left: 0;
+            transform: translateX(-6px); 
+            transition: transform 0.3s ease;
+        }
+
+        
+        .sidebar.collapsed ~ .main-content {
+            margin-left: 105px;
+        }   
+
+
+        

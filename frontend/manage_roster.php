@@ -167,6 +167,15 @@ include("sidebar.php");
     <link rel="stylesheet" href="../Css/landing.css">
     <title>Manage Players</title>
     <style>
+        .sidebar.collapsed .sidebar-header .toggler{
+            transform: translate(-50px, 40px);
+        }
+
+        .sidebar.collapsed .sidebar-title {
+            margin-left: 0;
+            transform: translateX(-6px); 
+            transition: transform 0.3s ease;
+        }
 
         .admin-container {
             max-width: 1200px;
@@ -424,6 +433,16 @@ include("sidebar.php");
     </div>
     
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        const sidebarToggler = document.querySelector(".sidebar-toggler");
+        const sidebar = document.querySelector(".sidebar");
+
+        sidebarToggler.addEventListener("click", () => {
+          sidebar.classList.toggle("collapsed");
+        });
+      });
+
+        
         function confirmDelete(playerId, playerName) {
             if (confirm('Are you sure you want to delete player "' + playerName + '"? This action cannot be undone.')) {
                 window.location.href = '?delete=1&id=' + playerId;

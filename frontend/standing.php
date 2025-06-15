@@ -6,6 +6,7 @@
    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&" />
    <link rel="stylesheet" href="sidebar.css">
    <link rel="stylesheet" href="../Css/standing.css">
+
    <title>Team Standings</title>
 </head>
 <body> 
@@ -147,4 +148,15 @@ include 'sidebar.php';
 </main>
 
 </body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const sidebarToggler = document.querySelector(".sidebar-toggler");
+        const sidebar = document.querySelector(".sidebar");
+
+        sidebarToggler.addEventListener("click", () => {
+          sidebar.classList.toggle("collapsed");
+        });
+      });
+</script>
 </html>

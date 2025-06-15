@@ -35,11 +35,11 @@ if ($match_id) {
     $team2_players = mysqli_query($conn, $team2_players_query);
     
 
-    echo "<div style='background: yellow; padding: 10px; margin: 10px; z-index: 1000; position: relative;'>";
-    echo "DEBUG:  Team1 ID: {$match['team1_id']}, Team2 ID: {$match['team2_id']}<br>";
-    echo "Team1 players found: " . mysqli_num_rows($team1_players) . "<br>";
-    echo "Team2 players found: " . mysqli_num_rows($team2_players) . "<br>";
-    echo "</div>";
+    // echo "<div style='background: yellow; padding: 10px; margin: 10px; z-index: 1000; position: relative;'>";
+    // echo "DEBUG:  Team1 ID: {$match['team1_id']}, Team2 ID: {$match['team2_id']}<br>";
+    // echo "Team1 players found: " . mysqli_num_rows($team1_players) . "<br>";
+    // echo "Team2 players found: " . mysqli_num_rows($team2_players) . "<br>";
+    // echo "</div>";
 
 
 } else {
@@ -62,6 +62,7 @@ if ($match_id) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Scoreboard</title>
     <link rel="stylesheet" href="../Css/sidebar.css">
+    
     <link rel="stylesheet" href="../Css/score.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -391,6 +392,10 @@ if ($match_id) {
 </body>
 
 <script>
+
+
+
+    
 let team1Score = <?php echo ($match_id && $match) ? ($match['team1_score'] ?? 0) : 0; ?>;
 let team2Score = <?php echo ($match_id && $match) ? ($match['team2_score'] ?? 0) : 0; ?>;
 let matchId = <?php echo ($match_id && $match) ? $match_id : 'null'; ?>;
@@ -843,5 +848,19 @@ window.onbeforeunload = function() {
     if (gameTimer) clearInterval(gameTimer);
     if (syncTimer) clearInterval(syncTimer);
 };
+
+
+document.addEventListener("DOMContentLoaded", () => {
+        const sidebarToggler = document.querySelector(".sidebar-toggler");
+        const sidebar = document.querySelector(".sidebar");
+
+        sidebarToggler.addEventListener("click", () => {
+          sidebar.classList.toggle("collapsed");
+        });
+      });
+
+
+
 </script>
+
 </html>
