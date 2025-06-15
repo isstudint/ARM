@@ -132,20 +132,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
                 // Handle file upload
                 if (isset($_FILES['logo']) && $_FILES['logo']['error'] == 0) {
-                    $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+                    $allowed = ['jpg', 'jpeg', 'png', 'gif','jfif'];
                     $filename = $_FILES['logo']['name'];
                     $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
                     
                     if (in_array($file_ext, $allowed)) {
-                        // Create a unique filename
+
                         $new_filename = uniqid('team_', true) . '.' . $file_ext;
                         $destination = $upload_dir . $new_filename;
                         
                         if (move_uploaded_file($_FILES['logo']['tmp_name'], $destination)) {
-                            $logo_path = "uploads/team_logos/" . $new_filename; // Relative path for storage
-                        } else {
-                            $error = "Failed to upload logo file.";
-                        }
+                            $logo_path = "uploads/team_logos/" . $new_filename; 
+                        } 
                     } else {
                         $error = "Invalid file type. Please upload JPG, PNG, or GIF files only.";
                     }
@@ -167,17 +165,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $error = "Error: " . mysqli_error($conn);
                     }
                 }
+
+
+
             }
+
         }
     }
 }
 
-// Get team count for display
+
 $team_count_query = "SELECT COUNT(*) as team_count FROM teams";
 $count_result = mysqli_query($conn, $team_count_query);
 $total_teams = mysqli_fetch_assoc($count_result)['team_count'];
 
-// Get team details if editing
+
 $team = [];
 if (isset($_GET['id'])) {
     $team_id = $_GET['id'];
@@ -187,7 +189,7 @@ if (isset($_GET['id'])) {
     }
 }
 
-// Get all teams for listing
+
 $teams_result = mysqli_query($conn, "SELECT team_id, team_name, coach_name, logo FROM teams ORDER BY team_name");
 ?>
 
@@ -197,192 +199,10 @@ $teams_result = mysqli_query($conn, "SELECT team_id, team_name, coach_name, logo
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&" />
-    <link rel="stylesheet" href="../Css/sidebar.css">
+    <link rel="stylesheet" href="../Css/manage_t.css">
     <title>Manage Teams</title>
     <style>
-        .main-content {
-            margin-left: 302px;
-            padding: 20px;
-        }
-        
-        .admin-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .form-section {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-        
-        form label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        form input, form select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        
-        form button {
-            background: #2d53da;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .teams-list {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .teams-list table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .teams-list th, .teams-list td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .team-logo-preview {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-            border-radius: 50%;
-        }
-        
-        .message {
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-        }
-        
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        
-        .current-logo {
-            max-width: 100px;
-            max-height: 100px;
-            border-radius: 50%;
-            object-fit: contain;
-        }
-        
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-        
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 30px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-        
-        .modal-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .modal-header .material-symbols-outlined {
-            color: #dc3545;
-            font-size: 24px;
-            margin-right: 10px;
-        }
-        
-        .modal-title {
-            margin: 0;
-            color: #dc3545;
-            font-size: 18px;
-        }
-        
-        .modal-body {
-            margin-bottom: 30px;
-            line-height: 1.5;
-            color: #333;
-        }
-        
-        .modal-footer {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-        
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s;
-        }
-        
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-        
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-        
-        .warning {
-            background-color: #fff3cd;
-            border: 1px solid #ffeaa7;
-            color: #856404;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        
-        .warning .material-symbols-outlined {
-            color: #856404;
-            vertical-align: middle;
-            margin-right: 8px;
-        }
+
     </style>
 </head>
 <body>
@@ -427,7 +247,7 @@ $teams_result = mysqli_query($conn, "SELECT team_id, team_name, coach_name, logo
                 <?php if (empty($team) && $total_teams >= 8): ?>
                     <div class="warning">
                         <span class="material-symbols-outlined">info</span>
-                        Tournament is full! You have reached the maximum limit of 8 teams. Please delete a team first to add a new one.
+                        Tournament Teams Full!. The Limit of 8 teams has been reached.
                     </div>
                 <?php else: ?>
                     <div style="background: #e3f2fd; border: 1px solid #2196f3; color: #1565c0; padding: 12px; border-radius: 4px; margin-bottom: 15px;">

@@ -55,9 +55,24 @@ include 'sidebar.php';
                     $seed = 1;
                     while($team = mysqli_fetch_assoc($tournament_teams)):
                         $is_qualified = $seed <= 4 && $team['games_played'] >= 3;
+                        
+                        // Color coding for playoff matchups
+                        $row_class = '';
+                        $seed_color = '';
+                        if ($is_qualified) {
+                            if ($seed == 1 || $seed == 4) {
+                                $row_class = 'matchup-green';
+                                $seed_color = '#28a745';
+                            } else if ($seed == 2 || $seed == 3) {
+                                $row_class = 'matchup-orange';
+                                $seed_color = '#fd7e14';
+                            }
+                        }
                     ?>
-                    <tr class="team-row <?php echo $is_qualified ? 'qualified-row' : ''; ?>">
-                        <td class="rank-cell"><?php echo $seed; ?></td>
+                    <tr class="team-row <?php echo $is_qualified ? 'qualified-row ' . $row_class : 'not-qualified-row'; ?>">
+                        <td class="rank-cell">
+                            <strong style="color: <?php echo $seed_color ?: '#666'; ?>;"><?php echo $seed; ?></strong>
+                        </td>
                         <td class="logo-cell">
                             <div class="team-logo">
                                 <?php if(!empty($team['logo']) && file_exists('../' . $team['logo'])): ?>
@@ -144,6 +159,102 @@ include 'sidebar.php';
             </ul>
         </div>
     </div>
+
+
+    <?php
+
+    $qualified_teams_query = "
+        SELECT t.team_name, t.logo,
+               COUNT(DISTINCT s.match_id) as games_played,
+               SUM((t.team_id = m.team1_id AND s.team1_score > s.team2_score) OR (t.team_id = m.team2_id AND s.team2_score > s.team1_score)) AS wins,
+               SUM((t.team_id = m.team1_id AND s.team1_score < s.team2_score) OR (t.team_id = m.team2_id AND s.team2_score < s.team1_score)) AS losses,
+               SUM(CASE WHEN t.team_id = m.team1_id THEN s.team1_score ELSE s.team2_score END) - 
+               SUM(CASE WHEN t.team_id = m.team1_id THEN s.team2_score ELSE s.team1_score END) AS point_differential
+        FROM teams t
+        LEFT JOIN matches m ON t.team_id = m.team1_id OR t.team_id = m.team2_id
+        LEFT JOIN scores s ON m.match_id = s.match_id
+        GROUP BY t.team_id, t.team_name, t.logo
+        ORDER BY wins DESC, point_differential DESC
+        LIMIT 4
+    ";
+    $bracket_teams = mysqli_query($conn, $qualified_teams_query);
+    
+    $qualified_teams = [];
+    $rank = 1;
+    while($team = mysqli_fetch_assoc($bracket_teams)):
+        if ($team['games_played'] >= 3) {
+            $qualified_teams[$rank] = $team;
+        }
+        $rank++;
+    endwhile;
+    ?>
+    
+    <?php if (count($qualified_teams) >= 4): ?>
+    <div class="playoff-bracket">
+        <h2>Playoff Bracket</h2>
+        <div class="bracket-container">
+            <div class="semifinal-round">
+                <div class="semifinal-match">
+                    <div class="match-header">SEMIFINAL 1</div>
+                    <div class="team-slot">
+                        <span class="seed">1</span>
+                        <span class="team-name"><?php echo htmlspecialchars($qualified_teams[1]['team_name'] ?? 'TBD'); ?></span>
+                    </div>
+                    <div class="team-slot">
+                        <span class="seed">4</span>
+                        <span class="team-name"><?php echo htmlspecialchars($qualified_teams[4]['team_name'] ?? 'TBD'); ?></span>
+                    </div>
+                </div>
+                
+                <div class="semifinal-match">
+                    <div class="match-header">SEMIFINAL 2</div>
+                    <div class="team-slot">
+                        <span class="seed">2</span>
+                        <span class="team-name"><?php echo htmlspecialchars($qualified_teams[2]['team_name'] ?? 'TBD'); ?></span>
+                    </div>
+                    <div class="team-slot">
+                        <span class="seed">3</span>
+                        <span class="team-name"><?php echo htmlspecialchars($qualified_teams[3]['team_name'] ?? 'TBD'); ?></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bracket-connector">
+                <div class="connector-line"></div>
+            </div>
+            
+            <div class="final-round">
+                <div class="final-match">
+                    <div class="match-header">CHAMPIONSHIP</div>
+                    <?php
+                    // Get final match teams if available
+                    $final_query = "
+                        SELECT t1.team_name as team1_name, t2.team_name as team2_name
+                        FROM matches m
+                        JOIN teams t1 ON m.team1_id = t1.team_id
+                        JOIN teams t2 ON m.team2_id = t2.team_id
+                        WHERE m.status = 'Final'
+                        LIMIT 1
+                    ";
+                    $final_result = mysqli_query($conn, $final_query);
+                    $final_match = mysqli_fetch_assoc($final_result);
+                    ?>
+                    <div class="team-slot">
+                        <span class="team-name">
+                            <?php echo $final_match ? htmlspecialchars($final_match['team1_name']) : 'Winner Semifinal 1'; ?>
+                        </span>
+                    </div>
+                    <div class="team-slot">
+                        <span class="team-name">
+                            <?php echo $final_match ? htmlspecialchars($final_match['team2_name']) : 'Winner Semifinal 2'; ?>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
 </main>
 
 </body>
