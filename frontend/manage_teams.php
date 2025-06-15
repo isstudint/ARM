@@ -512,7 +512,7 @@ $teams_result = mysqli_query($conn, "SELECT team_id, team_name, coach_name, logo
                             <td><?php echo htmlspecialchars($team_row['team_name']); ?></td>
                             <td><?php echo htmlspecialchars($team_row['coach_name'] ?: 'Not assigned'); ?></td>
                             <td>
-                                <a href="?id=<?php echo $team_row['team_id']; ?>" style="color: #2d53da; text-decoration: none; margin-right: 10px;">Edit</a>
+                                <a href="?id=<?php echo $team_row['team_id']; ?>" style="text-decoration: none; background:rgb(212, 146, 47); color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">Edit</a>
                                 <button type="button" onclick="confirmDelete(<?php echo $team_row['team_id']; ?>, '<?php echo addslashes($team_row['team_name']); ?>')" 
                                         style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">
                                     Delete

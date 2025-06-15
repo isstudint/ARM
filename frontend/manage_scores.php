@@ -137,6 +137,125 @@ if ($match_id) {
             border-radius: 4px;
             cursor: pointer;
         }
+
+        .pindot{
+            background-color:rgb(0,81,255);
+            border: 1px solid blue;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+            color: white;
+            font-family:"Poppins", sans-serif;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .pindot:hover {
+            width: 100%;
+            background-color:rgb(4, 21, 180);
+            
+        }
+
+        .bawas{
+            background-color:rgb(245, 47, 47);
+            border: 1px solid red;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+            color: white;
+            font-family:"Poppins", sans-serif;
+        
+        }
+
+        .bawas:hover {
+            background-color:rgb(168, 4, 4);
+            border: 1px solid rgb(168, 4, 4);
+        }
+
+        .pause{
+            background-color:rgb(255, 153, 0);
+            border: 1px solid orange;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+            color: white;
+            font-family:"Poppins", sans-serif;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .pause:hover {
+            background-color:rgb(255, 102, 0);
+            border: 1px solid rgb(255, 102, 0);
+        }
+
+        .reset{
+            background-color:rgb(245, 47, 47);
+            border: 1px solid red;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+            color: white;
+            font-family:"Poppins", sans-serif;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .reset:hover {
+            background-color:rgb(168, 4, 4);
+            border: 1px solid rgb(168, 4, 4);
+        }
+
+        
+        .correct{
+            background-color: #10b981;
+            border: 1px solid #10b981;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+            color: white;
+            font-family:"Poppins", sans-serif;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .correct:hover {
+            background-color: #059669;
+            border: 1px solid #059669;
+        }
+        
+        .status{
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 16px;
+            color: #374151;
+            font-family: "Poppins", sans-serif;
+
+        }
+
+        .status:hover {
+            background-color: #e5e7eb;
+            border: 1px solid #9ca3af;
+        }
+
+        .set_time{
+            background-color: #10b981;
+            border: 1px solid #10b981;
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 16px;
+            color: white;
+            font-family: "Poppins", sans-serif;
+            cursor: pointer;
+        }
+
+        .set_time:hover {
+            background-color: #059669;
+            border: 1px solid #059669;
+        }
+
+     
+
+        
+
+       
     </style>
 </head>
 
@@ -204,7 +323,7 @@ if ($match_id) {
                 </div>
                 <div class="time-controls">
                     <input type="text" id="timeInput" placeholder="12:00" maxlength="5">
-                    <button onclick="setTime()">Set Time</button>
+                    <button class = "set_time" onclick="setTime()">Set Time</button>
                 </div>
             </div>
 
@@ -223,10 +342,10 @@ if ($match_id) {
                     </div>
                     <div class="team-score" id="team1Score"><?php echo $match['team1_score'] ?? 0; ?></div>
                     <div class="score-buttons">
-                        <button onclick="addScore(1, 1)">+1</button>
-                        <button onclick="addScore(1, 2)">+2</button>
-                        <button onclick="addScore(1, 3)">+3</button>
-                        <button onclick="removeScore(1, 1)">-1</button>
+                        <button class = "pindot" onclick="addScore(1, 1)">+1</button>
+                        <button class = "pindot" onclick="addScore(1, 2)">+2</button>
+                        <button class = "pindot" onclick="addScore(1, 3)">+3</button>
+                        <button class = "pindot bawas" onclick="removeScore(1, 1)">-1</button>
                     </div>
                 </div>
 
@@ -251,24 +370,24 @@ if ($match_id) {
                     </div>
                     <div class="team-score" id="team2Score"><?php echo $match['team2_score'] ?? 0; ?></div>
                     <div class="score-buttons">
-                        <button onclick="addScore(2, 1)">+1</button>
-                        <button onclick="addScore(2, 2)">+2</button>
-                        <button onclick="addScore(2, 3)">+3</button>
-                        <button onclick="removeScore(2, 1)">-1</button>
+                        <button class = "pindot" onclick="addScore(2, 1)">+1</button>
+                        <button class = "pindot" onclick="addScore(2, 2)">+2</button>
+                        <button class = "pindot" onclick="addScore(2, 3)">+3</button>
+                        <button class = "pindot bawas" onclick="removeScore(2, 1)">-1</button>
                     </div>
                 </div>
             </div>
 
 
             <div class="bottom-controls">
-                <button onclick="pauseGame()" id="pauseBtn">Pause</button>
-                <button onclick="resetGame()">Reset All</button>
-                <button onclick="endGame()">End Game</button>
-                <button onclick="openCorrectionModal()">Correct Stats</button>
+                <button class = "pause" onclick="pauseGame()" id="pauseBtn">Pause</button>
+                <button class = "reset" onclick="resetGame()">Reset All</button>
+                <button class = "reset" onclick="endGame()">End Game</button>
+                <button class = "correct" onclick="openCorrectionModal()">Correct Stats</button>
                 
                 <div class="status-controls" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; width: 100%; text-align: center;">
                     <h4>Match Status</h4>
-                    <select id="matchStatus" onchange="updateMatchStatus()">
+                    <select class = "status" id="matchStatus" onchange="updateMatchStatus()" style = "width: 200px; padding: 8px; font-size: 16px;">
                         <option value="Scheduled" <?php echo ($match['status'] == 'Scheduled') ? 'selected' : ''; ?>>Scheduled</option>
                         <option value="Ongoing" <?php echo ($match['status'] == 'Ongoing') ? 'selected' : ''; ?>>Live/Ongoing</option>
                         <option value="Completed" <?php echo ($match['status'] == 'Completed') ? 'selected' : ''; ?>>Completed</option>
