@@ -43,7 +43,7 @@
     <div class="teams-navbar">
       <nav>
         <ul class="team-logo-list">
-          <li><a href="roster.php" class="<?php echo !$selected_team ? 'active' : ''; ?>">All Teams</a></li>
+          <li><a href="roster.php" class="<?php echo !$selected_team ? 'active' : ''; ?>" style= "text-decoration: none"><button class = "all_teams" style="text-decoration: none; background:rgb(0, 233, 221); color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">All Teams</button></a></li>
           <?php while($team = mysqli_fetch_assoc($teams)): ?>
           <li>
             <a href="roster.php?team_id=<?php echo $team['team_id']; ?>" 
@@ -84,6 +84,7 @@
       <table id="rosterTable">
         <thead>
           <tr>
+            <th>Img</th>
             <th>Jersey #</th>
             <th>Player Name</th>
             <th>Position</th>
@@ -92,24 +93,25 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>John Doe</td>
-            <td>Guard</td>
-            <td>Boston Celtics</td>
-            <td>12</td>
-            <td>3</td>
-            <td>5</td>
-          </tr>
-          <tr>
-            <td>Jane Smith</td>
-            <td>Forward</td>
-            <td>Atlanta Hawks</td>
-            <td>15</td>
-            <td>6</td>
-            <td>4</td> 
-          </tr>
-          <!-- More player rows -->
-        </tbody>
+          <?php while($player = mysqli_fetch_assoc($players)): ?>
+            <tr>
+              <td>
+                  <?php if(!empty($player_row['image']) && file_exists('../' . $player_row['image'])): ?>
+                      <img src="../<?php echo $player_row['image']; ?>" alt="<?php echo $player_row['player_name']; ?>" class="player-image-preview">
+                  <?php else: ?>
+                      <div>No image</div>
+                  <?php endif; ?>
+              </td>
+              <td><?php echo htmlspecialchars($player['jersey_num']); ?></td>
+              <td><?php echo htmlspecialchars($player['player_name']); ?></td>
+              <td><?php echo htmlspecialchars($player['position']); ?></td>
+              <td><?php echo htmlspecialchars($player['team_name']); ?></td>
+              <td><?php echo htmlspecialchars($player['age']); ?></td>
+              
+            </tr>
+          <?php endwhile; ?>
+      </tbody>
+
       </table>
     </div>
   </div>

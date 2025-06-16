@@ -132,20 +132,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
                 // Handle file upload
                 if (isset($_FILES['logo']) && $_FILES['logo']['error'] == 0) {
-                    $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+                    $allowed = ['jpg', 'jpeg', 'png', 'gif','jfif'];
                     $filename = $_FILES['logo']['name'];
                     $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
                     
                     if (in_array($file_ext, $allowed)) {
-                        // Create a unique filename
+
                         $new_filename = uniqid('team_', true) . '.' . $file_ext;
                         $destination = $upload_dir . $new_filename;
                         
                         if (move_uploaded_file($_FILES['logo']['tmp_name'], $destination)) {
-                            $logo_path = "uploads/team_logos/" . $new_filename; // Relative path for storage
-                        } else {
-                            $error = "Failed to upload logo file.";
-                        }
+                            $logo_path = "uploads/team_logos/" . $new_filename; 
+                        } 
                     } else {
                         $error = "Invalid file type. Please upload JPG, PNG, or GIF files only.";
                     }
@@ -167,17 +165,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $error = "Error: " . mysqli_error($conn);
                     }
                 }
+
+
+
             }
+
         }
     }
 }
 
-// Get team count for display
+
 $team_count_query = "SELECT COUNT(*) as team_count FROM teams";
 $count_result = mysqli_query($conn, $team_count_query);
 $total_teams = mysqli_fetch_assoc($count_result)['team_count'];
 
-// Get team details if editing
+
 $team = [];
 if (isset($_GET['id'])) {
     $team_id = $_GET['id'];
@@ -187,7 +189,7 @@ if (isset($_GET['id'])) {
     }
 }
 
-// Get all teams for listing
+
 $teams_result = mysqli_query($conn, "SELECT team_id, team_name, coach_name, logo FROM teams ORDER BY team_name");
 ?>
 
@@ -197,12 +199,31 @@ $teams_result = mysqli_query($conn, "SELECT team_id, team_name, coach_name, logo
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&" />
-    <link rel="stylesheet" href="../Css/sidebar.css">
+    <link rel="stylesheet" href="../Css/manage_t.css">
     <title>Manage Teams</title>
     <style>
+        
+
+        .sidebar.collapsed .sidebar-header .toggler{
+            transform: translate(-50px, 40px);
+        }
+
+        .sidebar.collapsed .sidebar-title {
+            margin-left: 0;
+            transform: translateX(-6px); 
+            transition: transform 0.3s ease;
+        }
+
+        
+        .sidebar.collapsed ~ .main-content {
+            margin-left: 105px;
+        }   
+
+        
         .main-content {
             margin-left: 302px;
             padding: 20px;
+            transition: margin-left 0.3s ease;
         }
         
         .admin-container {
@@ -427,7 +448,7 @@ $teams_result = mysqli_query($conn, "SELECT team_id, team_name, coach_name, logo
                 <?php if (empty($team) && $total_teams >= 8): ?>
                     <div class="warning">
                         <span class="material-symbols-outlined">info</span>
-                        Tournament is full! You have reached the maximum limit of 8 teams. Please delete a team first to add a new one.
+                        Tournament Teams Full!. The Limit of 8 teams has been reached.
                     </div>
                 <?php else: ?>
                     <div style="background: #e3f2fd; border: 1px solid #2196f3; color: #1565c0; padding: 12px; border-radius: 4px; margin-bottom: 15px;">
@@ -491,7 +512,7 @@ $teams_result = mysqli_query($conn, "SELECT team_id, team_name, coach_name, logo
                             <td><?php echo htmlspecialchars($team_row['team_name']); ?></td>
                             <td><?php echo htmlspecialchars($team_row['coach_name'] ?: 'Not assigned'); ?></td>
                             <td>
-                                <a href="?id=<?php echo $team_row['team_id']; ?>" style="color: #2d53da; text-decoration: none; margin-right: 10px;">Edit</a>
+                                <a href="?id=<?php echo $team_row['team_id']; ?>" style="text-decoration: none; background:rgb(212, 146, 47); color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">Edit</a>
                                 <button type="button" onclick="confirmDelete(<?php echo $team_row['team_id']; ?>, '<?php echo addslashes($team_row['team_name']); ?>')" 
                                         style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 12px;">
                                     Delete
@@ -529,6 +550,15 @@ $teams_result = mysqli_query($conn, "SELECT team_id, team_name, coach_name, logo
     </form>
 
     <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+        const sidebarToggler = document.querySelector(".sidebar-toggler");
+        const sidebar = document.querySelector(".sidebar");
+
+        sidebarToggler.addEventListener("click", () => {
+          sidebar.classList.toggle("collapsed");
+        });
+      });
         let currentDeleteId = null;
         
         function confirmDelete(teamId, teamName) {

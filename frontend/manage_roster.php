@@ -167,6 +167,15 @@ include("sidebar.php");
     <link rel="stylesheet" href="../Css/landing.css">
     <title>Manage Players</title>
     <style>
+        .sidebar.collapsed .sidebar-header .toggler{
+            transform: translate(-50px, 40px);
+        }
+
+        .sidebar.collapsed .sidebar-title {
+            margin-left: 0;
+            transform: translateX(-6px); 
+            transition: transform 0.3s ease;
+        }
 
         .admin-container {
             max-width: 1200px;
@@ -294,6 +303,32 @@ include("sidebar.php");
             background-color: #dc3545;
             color: white;
         }
+        .edit, .delete {
+        text-decoration: none;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 12px;
+        }
+
+        .edit {
+        background-color: rgb(212, 146, 47);
+        }
+        .edit:hover {
+        background-color: rgb(179, 133, 27);
+        }
+
+        .delete {
+        background-color: #dc3545;
+        }
+        .delete:hover {
+        background-color: rgb(187, 28, 44);
+        }
+
+
+        
     </style>
 </head>
 <body>
@@ -412,8 +447,9 @@ include("sidebar.php");
                             <td><?php echo($player_row['jersey_num'])    ?></td>
                             <td><?php echo ($player_row['age']); ?></td>
                             <td>
-                                <a href="?id=<?php echo $player_row['player_id']; ?>" style="margin-right: 10px; color: #4285f4; text-decoration: none;">Edit</a>
-                                <a href="javascript:void(0)" onclick="confirmDelete(<?php echo $player_row['player_id']; ?>, '<?php echo addslashes($player_row['player_name']); ?>')" style="color: #dc3545; text-decoration: none;">Delete</a>
+                                <a href="?id=<?php echo $player_row['player_id']; ?>" class="edit">Edit</a>
+                                <a href="javascript:void(0)" class="delete" onclick="confirmDelete(<?php echo $player_row['player_id']; ?>, '<?php echo addslashes($player_row['player_name']); ?>')">Delete</a>
+
                             </td>
                         </tr>
                         <?php endwhile; ?>
@@ -424,6 +460,16 @@ include("sidebar.php");
     </div>
     
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        const sidebarToggler = document.querySelector(".sidebar-toggler");
+        const sidebar = document.querySelector(".sidebar");
+
+        sidebarToggler.addEventListener("click", () => {
+          sidebar.classList.toggle("collapsed");
+        });
+      });
+
+        
         function confirmDelete(playerId, playerName) {
             if (confirm('Are you sure you want to delete player "' + playerName + '"? This action cannot be undone.')) {
                 window.location.href = '?delete=1&id=' + playerId;

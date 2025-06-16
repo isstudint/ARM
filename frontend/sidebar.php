@@ -38,7 +38,7 @@
         <nav class="sidebar-nav">
             <ul class="nav-list primary-nav">
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="landing.php" class="nav-link">
                         <span class="material-symbols-outlined">dashboard</span>
                         <span class="nav-label">Dashboard</span>
                     </a>

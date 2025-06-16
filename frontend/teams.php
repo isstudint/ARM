@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../Css/teams.css">
+    
     <title>Teams</title>
  
 </head>
@@ -137,4 +138,14 @@ $rankings = mysqli_query($conn, $rankings_query);
         </div>
     </div>
 </body>
+<script>
+   document.addEventListener("DOMContentLoaded", () => {
+        const sidebarToggler = document.querySelector(".sidebar-toggler");
+        const sidebar = document.querySelector(".sidebar");
+
+        sidebarToggler.addEventListener("click", () => {
+          sidebar.classList.toggle("collapsed");
+        });
+      });
+</script>  
 </html>

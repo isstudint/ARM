@@ -22,6 +22,8 @@ body {
     gap: 15px;
     padding: 15px;
     align-items: start;
+    transition: left 0.5s ease; /* animation */
+
 }
 
 /* Team Rosters */
@@ -555,3 +557,22 @@ body {
         padding: 10px;
     }
 }
+
+
+/* sidebar */
+
+
+.sidebar.collapsed .sidebar-header .toggler{
+    transform: translate(-50px, 40px);
+}
+
+.sidebar.collapsed .sidebar-title {
+    margin-left: 0;
+    transform: translateX(-6px); 
+    transition: transform 0.3s ease;
+}
+
+.sidebar.collapsed ~ .game-container {
+    left: 100px;
+}
+

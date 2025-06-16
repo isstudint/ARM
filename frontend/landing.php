@@ -43,7 +43,7 @@
         WHERE s.team1_score IS NOT NULL AND s.team2_score IS NOT NULL
         GROUP BY t.team_id, t.team_name, t.logo
         ORDER BY wins DESC, total_games DESC
-        LIMIT 5
+        LIMIT 4
     ";
     $standings_result = mysqli_query($conn, $standings_query);
     
@@ -63,7 +63,7 @@
         WHERE s.team1_score IS NOT NULL AND s.team2_score IS NOT NULL
         AND m.status = 'Completed'
         ORDER BY m.match_date DESC
-        LIMIT 5
+        LIMIT 8
     ";
     $history_result = mysqli_query($conn, $history_query);
 
