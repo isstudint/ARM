@@ -49,13 +49,12 @@ while ($row = mysqli_fetch_assoc($games_result)) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="../Css/landig.css" />
   <link rel="stylesheet" href="../Css/history1.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
   <title>Game History</title>
 
   </head>
 <body>
   <?php include("sidebar.php") ?>
-
+  <br>
   <div class="header">
     <h1>Game History</h1>
   </div>
@@ -80,7 +79,7 @@ while ($row = mysqli_fetch_assoc($games_result)) {
               <div class="team-name <?php echo ($game['winner'] == 'team1') ? 'winner' : ''; ?>">
                 <?php echo htmlspecialchars($game['team1_name']); ?>
                 <?php if ($game['winner'] == 'team1'): ?>
-                  <span class="winner-crown">👑</span>
+                  
                 <?php endif; ?>
               </div>
             </div>
@@ -93,7 +92,7 @@ while ($row = mysqli_fetch_assoc($games_result)) {
               <div class="team-name <?php echo ($game['winner'] == 'team2') ? 'winner' : ''; ?>">
                 <?php echo htmlspecialchars($game['team2_name']); ?>
                 <?php if ($game['winner'] == 'team2'): ?>
-                  <span class="winner-crown">👑</span>
+                  
                 <?php endif; ?>
               </div>
             </div>
@@ -117,6 +116,7 @@ while ($row = mysqli_fetch_assoc($games_result)) {
       <?php endforeach; ?>
     <?php endif; ?>
   </div>
+    
 
   <script>
    document.addEventListener("DOMContentLoaded", () => {
