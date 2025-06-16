@@ -9,35 +9,31 @@ check_admin();
 if (isset($_GET['delete']) && isset($_GET['id'])) {
     $player_id = intval($_GET['id']);
     
-    // Force delete if confirmed
     if (isset($_GET['force']) && $_GET['force'] == '1') {
         // Get player image to delete file
         $player_query = "SELECT image FROM players WHERE player_id = $player_id";
         $player_result = mysqli_query($conn, $player_query);
         $player_data = mysqli_fetch_assoc($player_result);
         
-        // First delete player stats
+        // Delete player stats and player
         mysqli_query($conn, "DELETE FROM player_stats WHERE player_id = $player_id");
-        
-        // Then delete player from database
         $delete_query = "DELETE FROM players WHERE player_id = $player_id";
+        
         if (mysqli_query($conn, $delete_query)) {
-
             if (!empty($player_data['image']) && file_exists('../' . $player_data['image'])) {
-                unlink('../' . $player_data['image']); // para masama yung image
+                unlink('../' . $player_data['image']);
             }
             $message = "Player and all statistics deleted successfully!";
         } else {
             $error = "Error deleting player: " . mysqli_error($conn);
         }
     } else {
-        // Check if player has any stats recorded
+        // Check if player has stats
         $stats_check = "SELECT COUNT(*) as stat_count FROM player_stats WHERE player_id = $player_id";
         $stats_result = mysqli_query($conn, $stats_check);
         $stats_row = mysqli_fetch_assoc($stats_result);
         
         if ($stats_row['stat_count'] > 0) {
-            // Get player name for confirmation modal
             $player_query = "SELECT player_name FROM players WHERE player_id = $player_id";
             $player_result = mysqli_query($conn, $player_query);
             $player_data = mysqli_fetch_assoc($player_result);
@@ -48,15 +44,13 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
                 'stat_count' => $stats_row['stat_count']
             ];
         } else {
-            // Get player image to delete file
+            // Delete player without stats
             $player_query = "SELECT image FROM players WHERE player_id = $player_id";
             $player_result = mysqli_query($conn, $player_query);
             $player_data = mysqli_fetch_assoc($player_result);
             
-            // Delete player from database
             $delete_query = "DELETE FROM players WHERE player_id = $player_id";
             if (mysqli_query($conn, $delete_query)) {
-                // Delete image file if exists
                 if (!empty($player_data['image']) && file_exists('../' . $player_data['image'])) {
                     unlink('../' . $player_data['image']);
                 }
@@ -66,16 +60,15 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
     }
 }
 
-// Handle form submission for player creation/update
+// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $player_id = isset($_POST['player_id']) ? $_POST['player_id'] : '';
+    $player_id = $_POST['player_id'] ?? '';
     $player_name = $_POST['player_name'] ?? '';
     $team_id = $_POST['team_id'] ?? '';
     $position = $_POST['position'] ?? '';
     $age = $_POST['age'] ?? '';
     $jersey_num = $_POST['jersey_num'] ?? '';
     
-    // Create uploads directory if it doesn't exist
     $upload_dir = "../uploads/player_images/";
     if (!file_exists($upload_dir)) {
         mkdir($upload_dir, 0777, true);
@@ -99,15 +92,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     
-
     if (!empty($player_id)) {
-
+        // Update player
         $sql = "UPDATE players SET player_name='$player_name', team_id='$team_id', position='$position', age='$age', jersey_num='$jersey_num'";
-        
         if (!empty($image_path)) {
             $sql .= ", image='$image_path'";
         }
-        
         $sql .= " WHERE player_id='$player_id'";
         
         if(mysqli_query($conn, $sql)) {
@@ -116,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error = "Error: " . mysqli_error($conn);
         }
     } else {
-
+        // Create new player
         if (!empty($image_path)) {
             $sql = "INSERT INTO players (player_name, team_id, position, age, jersey_num, image) VALUES ('$player_name', '$team_id', '$position', '$age', '$jersey_num', '$image_path')";
         } else {
@@ -131,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-
+// Get player for editing
 $player = [];
 if (isset($_GET['id'])) {
     $player_id = $_GET['id'];
@@ -141,21 +131,14 @@ if (isset($_GET['id'])) {
     }
 }
 
-
+// Get teams and players
 $teams_result = mysqli_query($conn, "SELECT team_id, team_name FROM teams ORDER BY team_name");
-
-
 $players_result = mysqli_query($conn, "
     SELECT p.player_id, p.player_name, p.position, p.jersey_num ,p.age, p.image, t.team_name 
     FROM players p 
     LEFT JOIN teams t ON p.team_id = t.team_id 
     ORDER BY t.team_name, p.player_name
 ");
-
-// Check if query was successful
-if (!$players_result) {
-    die("Query failed: " . mysqli_error($conn));
-}
 
 include("sidebar.php");
 ?>
@@ -164,36 +147,37 @@ include("sidebar.php");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../Css/landing.css">
     <title>Manage Players</title>
     <style>
-        .sidebar.collapsed .sidebar-header .toggler{
-            transform: translate(-50px, 40px);
+        .main-content {
+            margin-left: 302px;
+            padding: 20px;
+            transition: margin-left 0.5s ease;
         }
-
-        .sidebar.collapsed .sidebar-title {
-            margin-left: 0;
-            transform: translateX(-6px); 
-            transition: transform 0.3s ease;
+        
+        .sidebar.collapsed ~ .main-content {
+            margin-left: 105px;
         }
-
+        
         .admin-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
         }
-        .form-section {
+        
+        .form-section, .players-list {
             background: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             margin-bottom: 30px;
         }
+        
         form label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
         }
+        
         form input, form select {
             width: 100%;
             padding: 8px;
@@ -202,6 +186,7 @@ include("sidebar.php");
             border-radius: 4px;
             box-sizing: border-box;
         }
+        
         form button {
             background: #4285f4;
             color: white;
@@ -210,42 +195,41 @@ include("sidebar.php");
             border-radius: 4px;
             cursor: pointer;
         }
-        .players-list {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .players-list table {
+        
+        table {
             width: 100%;
             border-collapse: collapse;
         }
-        .players-list th, .players-list td {
+        
+        th, td {
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid #eee;
         }
+        
         .player-image-preview {
             width: 50px;
             height: 50px;
             object-fit: cover;
             border-radius: 50%;
         }
+        
         .message {
             padding: 10px;
             margin-bottom: 20px;
             border-radius: 4px;
         }
+        
         .success {
             background-color: #d4edda;
             color: #155724;
         }
+        
         .error {
             background-color: #f8d7da;
             color: #721c24;
         }
         
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -261,7 +245,6 @@ include("sidebar.php");
             background-color: #fefefe;
             margin: 15% auto;
             padding: 20px;
-            border: 1px solid #888;
             border-radius: 8px;
             width: 90%;
             max-width: 500px;
@@ -273,12 +256,6 @@ include("sidebar.php");
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
-        }
-        
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
         }
         
         .modal-buttons {
@@ -380,10 +357,12 @@ include("sidebar.php");
                     <?php if (!empty($player['image'])): ?>
                         <div>
                             <p>Current image:</p>
-                            <img src="../<?php echo ($player['image']); ?>" alt="Current Image" style="max-width: 100px; max-height: 100px;">
+                            <img src="../<?php echo $player['image']; ?>" alt="Current Image" style="max-width: 100px; max-height: 100px;">
                         </div>
                         <br>
                     <?php endif; ?>
+                    
+                    <label for="player_image">Player Image</label>
                     <input type="file" id="player_image" name="player_image" accept="image/*">
                     <p style="color:#777;font-size:0.9em;">Select an image file (JPG, PNG, or GIF)</p>
                     
@@ -400,7 +379,7 @@ include("sidebar.php");
                             <th>Player Name</th>
                             <th>Team</th>
                             <th>Position</th>
-                            <th>Jersy Number</th>
+                            <th>Jersey Number</th>
                             <th>Age</th>
                             <th>Actions</th>
                         </tr>
@@ -415,11 +394,11 @@ include("sidebar.php");
                                     <div>No image</div>
                                 <?php endif; ?>
                             </td>
-                            <td><?php echo ($player_row['player_name']); ?></td>
-                            <td><?php echo ($player_row['team_name']); ?></td>
-                            <td><?php echo ($player_row['position']); ?></td>
-                            <td><?php echo($player_row['jersey_num'])    ?></td>
-                            <td><?php echo ($player_row['age']); ?></td>
+                            <td><?php echo htmlspecialchars($player_row['player_name']); ?></td>
+                            <td><?php echo htmlspecialchars($player_row['team_name']); ?></td>
+                            <td><?php echo htmlspecialchars($player_row['position']); ?></td>
+                            <td><?php echo htmlspecialchars($player_row['jersey_num']); ?></td>
+                            <td><?php echo htmlspecialchars($player_row['age']); ?></td>
                             <td>
                                 <a href="?id=<?php echo $player_row['player_id']; ?>" style="margin-right: 10px; color: #4285f4; text-decoration: none;">Edit</a>
                                 <a href="javascript:void(0)" onclick="confirmDelete(<?php echo $player_row['player_id']; ?>, '<?php echo addslashes($player_row['player_name']); ?>')" style="color: #dc3545; text-decoration: none;">Delete</a>
@@ -434,14 +413,13 @@ include("sidebar.php");
     
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-        const sidebarToggler = document.querySelector(".sidebar-toggler");
-        const sidebar = document.querySelector(".sidebar");
+            const sidebarToggler = document.querySelector(".sidebar-toggler");
+            const sidebar = document.querySelector(".sidebar");
 
-        sidebarToggler.addEventListener("click", () => {
-          sidebar.classList.toggle("collapsed");
+            sidebarToggler.addEventListener("click", () => {
+                sidebar.classList.toggle("collapsed");
+            });
         });
-      });
-
         
         function confirmDelete(playerId, playerName) {
             if (confirm('Are you sure you want to delete player "' + playerName + '"? This action cannot be undone.')) {
@@ -458,7 +436,6 @@ include("sidebar.php");
             window.location.href = '?delete=1&id=<?php echo $confirm_delete['player_id']; ?>&force=1';
         }
         
-        // Close modal when clicking outside
         window.onclick = function(event) {
             let modal = document.getElementById('deleteModal');
             if (event.target == modal) {

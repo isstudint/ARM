@@ -234,7 +234,7 @@ include ('sidebar.php');
         <h2>Playoff Bracket</h2>
         <div class="bracket-container">
             <div class="semifinal-round">
-                <!-- Semifinal 1 -->
+   
                 <div class="semifinal-match">
                     <div class="match-header">SEMIFINAL 1</div>
                     <?php if (!empty($semifinals[0])): ?>
@@ -315,13 +315,13 @@ include ('sidebar.php');
                         <div class="team-slot">
                             <span class="team-name"><?php echo htmlspecialchars($final_match['team1_name']); ?></span>
                             <?php if ($final_match['team1_score'] !== null): ?>
-                                <span class="score"><?php echo $final_match['team1_score']; ?></span>
+                                <span class="score-cham"><?php echo $final_match['team1_score']; ?></span>
                             <?php endif; ?>
                         </div>
                         <div class="team-slot">
                             <span class="team-name"><?php echo htmlspecialchars($final_match['team2_name']); ?></span>
                             <?php if ($final_match['team2_score'] !== null): ?>
-                                <span class="score"><?php echo $final_match['team2_score']; ?></span>
+                                <span class="score-cham"><?php echo $final_match['team2_score']; ?></span>
                             <?php endif; ?>
                         </div>
                         <?php if ($final_match['winner']): ?>
@@ -340,7 +340,8 @@ include ('sidebar.php');
         </div>
     </div>
     <?php endif; ?>
-
+<br>
+<br>
 </main>
 
 </body>

@@ -58,15 +58,7 @@
     border-left: 4px solid #28a745;
 }
 
-.not-qualified-row {
-}
-
 .matchup-green {
-    border-left: 4px solid #28a745 !important;
-    background: #e8f5e8 !important;
-}
-
-.matchup-orange {
     border-left: 4px solid #28a745 !important;
     background: #e8f5e8 !important;
 }
@@ -246,7 +238,7 @@
     text-align: center;
 }
 
-/* Playoff Bracket Styles - Simple & Clean */
+
 .playoff-bracket {
     background: #fff;
     border-radius: 8px;
@@ -311,7 +303,14 @@
     border-radius: 4px;
     font-size: 12px;
 }
-
+.score-cham{
+    font-weight: bold;
+    background: #f1ee12;
+    color: #333;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 18px;
+}
 .winner {
     background: #28a745;
     color: white;

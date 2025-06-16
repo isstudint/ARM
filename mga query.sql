@@ -5,7 +5,7 @@ SELECT team_id, team_name FROM teams ORDER BY team_id;
 DELETE FROM scores;
 DELETE FROM matches;
 
--- FIXED: Each team plays exactly 3 games (12 total matches for 8 teams)
+
 INSERT INTO matches (team1_id, team2_id, match_date, status)
 SELECT 
     t1.team_id,
