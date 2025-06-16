@@ -1,3 +1,12 @@
+ @font-face {
+    font-family: 'Logo';
+    src: url('../fonts/Miskan\ Oblique.ttf') format('truetype');
+}
+ @font-face {
+  font-family: 'Header';
+  src: url('../fonts/HelveticaNeueHeavy.otf') format('truetype');
+}
+ 
  * {
         margin: 0;
         padding: 0;
@@ -6,34 +15,31 @@
 
     body {
         background: linear-gradient(#dcf0fc, #e3f0ff);
-        font-family: 'Arial', sans-serif;
         color: white;
-        padding: 20px;
         min-height: 100vh;
     }
+
+    
+
 
     .header {
         max-width: 1200px;
         margin: 0 auto 20px auto;
         padding: 0 20px;
         text-align: center;
+        
     }
 
     .header h1 {
-        color: #333;
-        margin-bottom: 20px;
+        color: rgb(46, 45, 45);
+        text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        0 4px 8px rgba(0, 0, 0, 0.08),
+        0 8px 16px rgba(0, 0, 0, 0.06);
+        font-family: 'Header';
+        font-size: 50px;
     }
-
-    /* Add Game Form */
-    .add-game-form {
-        max-width: 800px;
-        margin: 0 auto 30px auto;
-        background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-
+    
     .form-title {
         color: #333;
         margin-bottom: 20px;
@@ -75,37 +81,7 @@
         border-color: #4CAF50;
     }
 
-    .btn {
-        background: #4CAF50;
-        color: white;
-        padding: 12px 25px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
 
-    .btn:hover {
-        background: #45a049;
-        transform: translateY(-1px);
-    }
-
-    .btn-danger {
-        background: #f44336;
-        padding: 5px 10px;
-        font-size: 12px;
-    }
-
-    .btn-danger:hover {
-        background: #da190b;
-    }
-
-    .vs-text {
-        color: #666;
-        font-weight: bold;
-        margin: 20px 10px 0 10px;
-    }
 
     /* Messages */
     .message {
@@ -131,13 +107,13 @@
 
     /* Scoreboard */
     .scoreboard {
-        max-width: 800px;
+        max-width: 900px;
         margin: 0 auto;
         background: white;
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        max-height: 500px;
+        max-height: 800px;
         overflow-y: auto;
     }
 
@@ -248,11 +224,7 @@
 
     }
 
-    .delete-btn {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-    }
+    
 
     .no-games {
         text-align: center;
@@ -271,10 +243,5 @@
             margin: 10px 0;
             text-align: center;
         }
-    }
-    .winner-crown {
-      color: #FFD700;
-      margin-left: 8px;
-      font-size: 18px;
     }
     

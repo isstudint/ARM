@@ -99,4 +99,8 @@ table tr:hover {
   background-color: #f1f1f1;
 }
 
+.all_teams:hover{
+  background-color: #e0f7fa; /* Light blue background on hover */
+  cursor: pointer; /* Change cursor to pointer to indicate clickable */
+}
 

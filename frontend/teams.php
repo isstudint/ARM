@@ -11,7 +11,7 @@
 <?php 
 $conn = mysqli_connect("localhost", "root", "", "arm");
 
-$teams_query = "
+$teams_query = "    
 SELECT t.team_id, t.team_name, t.logo,
 COUNT(m.match_id) AS total_matches,
 SUM((t.team_id = m.team1_id AND s.team1_score > s.team2_score) OR (t.team_id = m.team2_id AND s.team2_score > s.team1_score)) AS wins,

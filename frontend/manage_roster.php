@@ -280,6 +280,32 @@ include("sidebar.php");
             background-color: #dc3545;
             color: white;
         }
+        .edit, .delete {
+        text-decoration: none;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 12px;
+        }
+
+        .edit {
+        background-color: rgb(212, 146, 47);
+        }
+        .edit:hover {
+        background-color: rgb(179, 133, 27);
+        }
+
+        .delete {
+        background-color: #dc3545;
+        }
+        .delete:hover {
+        background-color: rgb(187, 28, 44);
+        }
+
+
+        
     </style>
 </head>
 <body>
@@ -400,8 +426,9 @@ include("sidebar.php");
                             <td><?php echo htmlspecialchars($player_row['jersey_num']); ?></td>
                             <td><?php echo htmlspecialchars($player_row['age']); ?></td>
                             <td>
-                                <a href="?id=<?php echo $player_row['player_id']; ?>" style="margin-right: 10px; color: #4285f4; text-decoration: none;">Edit</a>
-                                <a href="javascript:void(0)" onclick="confirmDelete(<?php echo $player_row['player_id']; ?>, '<?php echo addslashes($player_row['player_name']); ?>')" style="color: #dc3545; text-decoration: none;">Delete</a>
+                                <a href="?id=<?php echo $player_row['player_id']; ?>" class="edit">Edit</a>
+                                <a href="javascript:void(0)" class="delete" onclick="confirmDelete(<?php echo $player_row['player_id']; ?>, '<?php echo addslashes($player_row['player_name']); ?>')">Delete</a>
+
                             </td>
                         </tr>
                         <?php endwhile; ?>

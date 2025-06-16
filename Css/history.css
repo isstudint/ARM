@@ -10,9 +10,6 @@
     
 }
 
-.sidebar.collapsed + .history-container {
-    margin-left: 117px; 
-}
 
 .main-content {
   max-width: 1200px;
