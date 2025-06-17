@@ -27,13 +27,14 @@
     
 
 .container-ito {
-    max-width: calc(100vw - 320px); /* Same calculation as roster */
+    max-width: calc(100vw - 100px); /* Same calculation as roster */
     margin-left: 300px;
     border-radius: 10px;
     overflow: hidden;
     background: white;
     margin-right: 20px;
     transition: margin-left 0.4s ease;
+   height: 100%;
 }
 
 
