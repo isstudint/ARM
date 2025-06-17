@@ -18,7 +18,7 @@ if ($match_id) {
         echo json_encode($state);
     } else {
         echo json_encode([
-            'game_time' => 720,
+            'game_time' => 480,
             'quarter' => 1,
             'game_status' => 'Ready'
         ]);

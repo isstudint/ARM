@@ -116,15 +116,9 @@ include ('sidebar.php');
             <ul class="upcoming-matches-list">
                 <?php
                 $upcoming_query = "
-                    SELECT m.match_date, 
-                           t1.team_name AS team1, t1.logo AS team1_logo,
-                           t2.team_name AS team2, t2.logo AS team2_logo
-                    FROM matches m
-                    JOIN teams t1 ON m.team1_id = t1.team_id
-                    JOIN teams t2 ON m.team2_id = t2.team_id
-                    WHERE m.match_date > NOW()
-                    ORDER BY m.match_date ASC
-                    LIMIT 5
+SELECT m.match_date, t1.team_name AS team1, t1.logo AS team1_logo, t2.team_name AS team2, t2.logo 
+AS team2_logo FROM matches m JOIN teams t1 ON m.team1_id = t1.team_id JOIN teams t2 ON m.team2_id = t2.team_id WHERE m.match_date > NOW() 
+ AND m.status = 'Scheduled' ORDER BY m.match_date ASC LIMIT 5;
                 ";
                 $upcoming = mysqli_query($conn, $upcoming_query);
                 while($match = mysqli_fetch_assoc($upcoming)):

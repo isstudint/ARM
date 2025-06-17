@@ -39,7 +39,7 @@ if ($match_id) {
         'team1_score' => $scores['team1_score'] ?? 0,
         'team2_score' => $scores['team2_score'] ?? 0,
         'player_stats' => $player_stats,
-        'game_time' => $game_state['game_time'] ?? 720,
+        'game_time' => $game_state['game_time'] ?? 480,
         'quarter' => $game_state['quarter'] ?? 1,
         'game_status' => $game_state['game_status'] ?? 'Scheduled'
     ]);

@@ -8,7 +8,7 @@ if (!$conn) {
 }
 
 $match_id = isset($_POST['match_id']) ? (int)$_POST['match_id'] : 0;
-$game_time = isset($_POST['game_time']) ? (int)$_POST['game_time'] : 720;
+$game_time = isset($_POST['game_time']) ? (int)$_POST['game_time'] : 480;
 $quarter = isset($_POST['quarter']) ? (int)$_POST['quarter'] : 1;
 $game_status = isset($_POST['game_status']) ? mysqli_real_escape_string($conn, $_POST['game_status']) : 'Ready';
 

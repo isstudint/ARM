@@ -27,13 +27,14 @@
     
 
 .container-ito {
-    max-width: calc(100vw - 320px); /* Same calculation as roster */
+    max-width: calc(100vw - 100px); /* Same calculation as roster */
     margin-left: 300px;
     border-radius: 10px;
     overflow: hidden;
     background: white;
     margin-right: 20px;
     transition: margin-left 0.4s ease;
+   height: 100%;
 }
 
 
@@ -78,7 +79,7 @@
         .team-card {
             background: white;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 28px rgba(0,0,0,0.1);
             border-bottom: 4px solid #ffffff; 
             overflow: hidden;
             transition: transform 0.2s, box-shadow 0.2s , border-bottom 0.2s;
@@ -249,7 +250,7 @@
         .mission-card {
     background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 28px rgba(0,0,0,0.1);
     border-bottom: 4px solid #ffffff; 
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s , border-bottom 0.2s;
@@ -293,7 +294,7 @@
         .login-title {
             font-size: 1.5rem;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             color: white;
             font-family: 'Header';
         }
@@ -314,6 +315,7 @@
             transition: all 0.3s ease;
             font-family: 'Header';
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
         }
         
 
