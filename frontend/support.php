@@ -99,10 +99,8 @@
         </div>
         
         <div class="login-section">
-            <div class="login-title">Login as an Admin or Coach</div>
-            <form method="POST" action="Login.php" class="login-form">
-                <button type="submit" class="login-button">Login</button>
-            </form>
+            <div class="login-title">Login as an Admin or Coach</div>   
+                <a href ="login.php" class="login-form"><button type="submit" class="login-button">Login</button></a>
             <div class="email-text">Send us a message if you want to be Admin or Coach</div>
             <input type="email" class="email-input" id="email-inp" placeholder="Message us">
         </div>

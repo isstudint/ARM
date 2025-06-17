@@ -36,7 +36,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
             $error_msg = "Access key not registered!";
         }
     } else {
-        
+        $error_msg = "Please enter both access key and password!";
     }
 }
 ?>

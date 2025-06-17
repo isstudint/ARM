@@ -185,7 +185,7 @@ if ($match) {
                     <table class="player-table">
                       <thead class="thead">
                         <tr>
-                          <td>Image</td>
+                          <td>Img</td>
                           <td>Jersey #</td>
                           <td>Player name</td>
                           <td>Position</td>
@@ -237,7 +237,7 @@ if ($match) {
                     <table class="player-table">
                       <thead class="thead">
                         <tr>
-                          <td>Image</td>
+                          <td>Img</td>
                           <td>Jersey #</td>
                           <td>Player name</td>
                           <td>Position</td>
