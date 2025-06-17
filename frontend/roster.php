@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="../Css/roster.css" />
   <link rel="stylesheet" href="../Css/landig.css" />
+  
   <title>Rosters</title>
+  <style>
+
+  </style>
 </head>
 <body>
   <?php include("sidebar.php") ?>
@@ -13,13 +17,16 @@
   <?php
   $conn = mysqli_connect("localhost", "root", "", "arm");
   
-  // Get teams for navbar
+
   $teams_query = "SELECT team_id, team_name, logo FROM teams ORDER BY team_name";
   $teams = mysqli_query($conn, $teams_query);
   
+
+
+
   // Get selected team or show all
   $selected_team = isset($_GET['team_id']) ? (int)$_GET['team_id'] : null;
-  
+
   // Get players
   if ($selected_team) {
     $players_query = "
@@ -96,10 +103,10 @@
           <?php while($player = mysqli_fetch_assoc($players)): ?>
             <tr>
               <td>
-                  <?php if(!empty($player_row['image']) && file_exists('../' . $player_row['image'])): ?>
-                      <img src="../<?php echo $player_row['image']; ?>" alt="<?php echo $player_row['player_name']; ?>" class="player-image-preview">
+                  <?php if(!empty($player['image']) && file_exists('../' . $player['image'])): ?>
+                      <img src="../<?php echo htmlspecialchars($player['image']); ?>" alt="<?php echo htmlspecialchars($player['player_name']); ?>" class="player-image-preview">
                   <?php else: ?>
-                      <div>No image</div>
+                      <div class="no-image-placeholder">No Image</div>
                   <?php endif; ?>
               </td>
               <td><?php echo htmlspecialchars($player['jersey_num']); ?></td>
@@ -107,7 +114,6 @@
               <td><?php echo htmlspecialchars($player['position']); ?></td>
               <td><?php echo htmlspecialchars($player['team_name']); ?></td>
               <td><?php echo htmlspecialchars($player['age']); ?></td>
-              
             </tr>
           <?php endwhile; ?>
       </tbody>
@@ -147,4 +153,5 @@
 
   </script>
 </body>
+</html>
 </html>

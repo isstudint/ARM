@@ -11,20 +11,27 @@
 
 
     $match_query = "
-        SELECT m.*, t1.team_name as team1_name, t2.team_name as team2_name,
-               t1.logo as team1_logo, t2.logo as team2_logo,
-               COALESCE(s.team1_score, 0) as team1_score, 
-               COALESCE(s.team2_score, 0) as team2_score
-        FROM matches m
-        JOIN teams t1 ON m.team1_id = t1.team_id
-        JOIN teams t2 ON m.team2_id = t2.team_id
-        LEFT JOIN scores s ON m.match_id = s.match_id
-        WHERE m.match_date >= CURDATE() 
-        AND m.status IN ('Scheduled', 'Ongoing')
-        ORDER BY 
-            CASE WHEN m.status = 'Ongoing' THEN 1 ELSE 2 END,
-            m.match_date ASC
-        LIMIT 1
+    SELECT m.match_id, m.status, m.match_date, m.match_type,
+           t1.team_name as team1_name, t1.logo as team1_logo, m.team1_id,
+           t2.team_name as team2_name, t2.logo as team2_logo, m.team2_id,
+           COALESCE(s.team1_score, 0) as team1_score, 
+           COALESCE(s.team2_score, 0) as team2_score
+    FROM matches m
+    INNER JOIN teams t1 ON m.team1_id = t1.team_id
+    INNER JOIN teams t2 ON m.team2_id = t2.team_id
+    LEFT JOIN scores s ON m.match_id = s.match_id
+    WHERE (
+        (m.match_date >= CURDATE() AND m.status IN ('Scheduled', 'Ongoing')) 
+        OR 
+        (m.status = 'Ongoing' AND m.match_type IN ('semifinal', 'final'))
+    )
+    ORDER BY 
+        CASE WHEN m.status = 'Ongoing' THEN 1 ELSE 2 END,
+        CASE WHEN m.match_type = 'final' THEN 1 
+             WHEN m.match_type = 'semifinal' THEN 2 
+             ELSE 3 END,
+        m.match_date ASC
+    LIMIT 1
     ";
     $match_result = mysqli_query($conn, $match_query);
     $today_match = mysqli_fetch_assoc($match_result);

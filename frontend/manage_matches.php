@@ -37,21 +37,18 @@ if (isset($_GET['delete']) && isset($_GET['match_id'])) {
     }
 }
 
-// Function to check if playoffs should be scheduled when regular season is complete
+
 function checkAndSchedulePlayoffs($conn) {
-    // First check if playoffs already exist - use match_type instead of status
     $existing_playoffs = mysqli_query($conn, "SELECT COUNT(*) as count FROM matches WHERE match_type IN ('semifinal', 'final')");
     $playoff_count = mysqli_fetch_assoc($existing_playoffs)['count'];
     
     if ($playoff_count > 0) {
         checkAndUpdateFinal($conn);
-        return false; // Playoffs already scheduled
+        return false;
     }
     
-    // Check if ALL regular season matches are completed (have scores)
     $regular_matches_query = "
-        SELECT COUNT(*) as total_matches,
-               COUNT(s.match_id) as completed_matches
+        SELECT COUNT(*) as total_matches, COUNT(s.match_id) as completed_matches
         FROM matches m
         LEFT JOIN scores s ON m.match_id = s.match_id
         WHERE m.match_type = 'regular'
@@ -59,12 +56,10 @@ function checkAndSchedulePlayoffs($conn) {
     $regular_result = mysqli_query($conn, $regular_matches_query);
     $regular_data = mysqli_fetch_assoc($regular_result);
     
-    // Only schedule playoffs if ALL regular matches are completed
     if ($regular_data['total_matches'] != $regular_data['completed_matches']) {
-        return false; // Still have unfinished regular season matches
+        return false;
     }
     
-    // Get top 4 teams based on wins and point differential
     $qualified_query = "
         SELECT t.team_id, t.team_name,
                COUNT(DISTINCT s.match_id) as games_played,
@@ -185,7 +180,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $team2_id = $_POST['team2_id'];
     $match_date = $_POST['match_date'];
 
-    if ($team1_id == $team2_id) {
+ 
+    $current_datetime = date('Y-m-d H:i:s');
+    if ($match_date < $current_datetime) {
+        $error = "Cannot schedule";
+    } else if ($team1_id == $team2_id) {
         $error = "Please select two different teams.";
     } else if (getTeamGamesCount($conn, $team1_id) >= 3) {
         $error = "Team 1 has already played 3 games.";
@@ -262,184 +261,7 @@ $standings = mysqli_query($conn, $standings_query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Matches</title>
-    <style>
-        .sidebar.collapsed .sidebar-header .toggler{
-            transform: translate(-50px, 40px);
-        }
-
-        .sidebar.collapsed .sidebar-title {
-            margin-left: 0;
-            transform: translateX(-6px); 
-            transition: transform 0.3s ease;
-        }
-
-        
-        .sidebar.collapsed ~ .main-content {
-            margin-left: 105px;
-        }   
-
-
-        .main-content {
-            margin-left: 302px;
-            padding: 20px;
-            display: flex;
-            gap: 20px;
-            transition: margin-left 0.5s ease   ;
-        }
-        
-        .left-section {
-            flex: 2;
-        }
-        
-        .right-section {
-            margin-top: 50px;
-            flex: 1;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            height: fit-content;
-        }
-        
-        .form-container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        select, input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        
-        .create-button {
-            background: #2d53da;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
-        
-        table {
-            width: 100%;
-            background: white;
-            border-collapse: collapse;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        
-        th {
-            background: #2d53da;
-            color: white;
-        }
-        
-        .message {
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        
-        .delete-btn {
-            background: #dc3545;
-            color: white;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        
-        .warning {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            color: #495057;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-        
-        .team-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px;
-            margin-bottom: 8px;
-            border: 1px solid #eee;
-            border-radius: 6px;
-        }
-        
-        .team-logo {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            object-fit: contain;
-        }
-        
-        .logo-placeholder {
-            width: 30px;
-            height: 30px;
-            background: #f0f0f0;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-            color: #666;
-        }
-        
-        .team-info {
-            flex: 1;
-        }
-        
-        .team-name {
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-        
-        .team-stats {
-            font-size: 12px;
-            color: #666;
-        }
-        
-        .standings-title {
-            margin-bottom: 15px;
-            font-size: 18px;
-            font-weight: 600;
-        }
-    </style>
+    <link rel="stylesheet" href="../Css/manage_m.css">
 </head>
 <body>
     <?php include("sidebar.php"); ?>
@@ -464,12 +286,10 @@ $standings = mysqli_query($conn, $standings_query);
                     <br><small>Playoffs will automatically schedule when all regular season matches are completed.</small>
                     <br><br>
                     <?php
-                    // Check if playoffs should be available to schedule
                     $playoff_check = mysqli_query($conn, "SELECT COUNT(*) as count FROM matches WHERE match_type IN ('semifinal', 'final')");
                     $playoff_exists = mysqli_fetch_assoc($playoff_check)['count'];
                     
                     if ($playoff_exists == 0) {
-                        // Check if regular season is complete
                         $regular_check = mysqli_query($conn, "
                             SELECT COUNT(*) as total_matches, COUNT(s.match_id) as completed_matches
                             FROM matches m
@@ -478,26 +298,23 @@ $standings = mysqli_query($conn, $standings_query);
                         ");
                         $regular_data = mysqli_fetch_assoc($regular_check);
                         
-                        echo "<p style='font-size: 12px; color: #666;'>Debug: Total matches: {$regular_data['total_matches']}, Completed: {$regular_data['completed_matches']}</p>";
-                        
                         if ($regular_data['total_matches'] == $regular_data['completed_matches'] && $regular_data['total_matches'] >= 12) {
-                            echo '<a href="?schedule_playoffs=1" style="background: #28a745; color: white; padding: 10px 15px; border-radius: 4px; text-decoration: none; font-size: 14px; font-weight: bold;">
-                                    🏆 Schedule Semifinals Now
+                            echo '<a href="?schedule_playoffs=1" style="background: #28a745; color: white; padding: 11px; border-radius: 4px; text-decoration: none; font-size: 14px;">
+                                    Schedule Semifinals
                                   </a>';
                         } else {
-                            echo '<span style="color: #dc3545; font-size: 12px;">❌ Complete all regular season matches to enable playoff scheduling</span>';
-                            echo "<br><small>Need " . ($regular_data['total_matches'] - $regular_data['completed_matches']) . " more matches with scores</small>";
+                            echo '<span style="color: #dc3545; font-size: 12px;">Complete all regular season matches to enable playoff scheduling</span>';
+                            
                         }
                     } else {
-                        echo '<span style="color: #28a745; font-size: 12px;">✅ Playoffs already scheduled</span>';
+                        echo '<span style="color: #28a745; font-size: 12px;">Playoffs already scheduled</span>';
                         
-                        // Check if final needs to be scheduled
                         $final_check = mysqli_query($conn, "SELECT COUNT(*) as count FROM matches WHERE match_type = 'final'");
                         $final_exists = mysqli_fetch_assoc($final_check)['count'];
                         
                         if ($final_exists == 0) {
                             echo '<br><a href="?check_final=1" style="background: #ffd700; color: #333; padding: 8px 12px; border-radius: 4px; text-decoration: none; font-size: 12px; margin-top: 5px; display: inline-block;">
-                                    🏆 Check Final Scheduling
+                                    Check Final Scheduling
                                   </a>';
                         }
                     }
@@ -531,7 +348,7 @@ $standings = mysqli_query($conn, $standings_query);
                                 $games_count = getTeamGamesCount($conn, $team['team_id']);
                             ?>
                             <option value="<?php echo $team['team_id']; ?>">
-                                <?php echo htmlspecialchars($team['team_name']); ?> (<?php echo $games_count; ?>/3 games)
+                                <?php echo ($team['team_name']); ?> (<?php echo $games_count; ?>/3 games)
                             </option>
                             <?php endwhile; ?>
                         </select>
@@ -539,7 +356,8 @@ $standings = mysqli_query($conn, $standings_query);
                     
                     <div class="form-group">
                         <label>Match Date:</label>
-                        <input type="datetime-local" name="match_date" required>
+                        <input type="datetime-local" name="match_date" required min="<?php echo date('Y-m-d\TH:i'); ?>">
+                        <small style="color: #666; font-size: 12px;">Match cannot be scheduled past day</small>
                     </div>
                     
                     <button class="create-button" type="submit">Schedule Match</button>
@@ -652,6 +470,6 @@ $standings = mysqli_query($conn, $standings_query);
         sidebarToggler.addEventListener("click", () => {
           sidebar.classList.toggle("collapsed");
         });
-      });
+    });
 </script>
 </html>

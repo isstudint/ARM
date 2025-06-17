@@ -104,3 +104,23 @@ table tr:hover {
   cursor: pointer; /* Change cursor to pointer to indicate clickable */
 }
 
+
+
+
+    .player-image-preview {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #ddd;
+    }
+
+    .main-content {
+        margin-left: 302px;
+        padding: 20px;
+        transition: margin-left 0.5s ease;
+    }
+
+    .sidebar.collapsed ~ .main-content {
+        margin-left: 105px;
+    }
