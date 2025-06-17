@@ -24,19 +24,32 @@
         background: linear-gradient(#dcf0fc, #e3f0ff);
 
     }
+    
+
 .container-ito {
-            max-width: 1180px;
-            margin-left: 300px;
-            border-radius: 20px;
-            overflow: hidden;
-            background: white;
-        }
+    max-width: calc(100vw - 320px); /* Same calculation as roster */
+    margin-left: 300px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: white;
+    margin-right: 20px;
+    transition: margin-left 0.4s ease;
+}
+
+
+/* Alternative selectors in case the above doesn't work */
+.collapsed + .container-ito,
+.sidebar.collapsed ~ .container-ito {
+    margin-left: 117px !important;
+    max-width: calc(100vw - 137px) !important;
+    
+}
         .header {
             text-align: center;
             padding: 10px 10px 10px;
             color: white;
             width: 100%;
-           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);;
+            background-color: #2d53da;
         }
 
         .header h1 {
@@ -271,7 +284,7 @@
             font-family: 'Regular';
         }
          .login-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #2d53da;
             padding: 40px 40px;
             text-align: center;
             color: white;

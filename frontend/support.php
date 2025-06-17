@@ -27,13 +27,13 @@
                     <div class="role">Full Stack Developer</div>
                     <div class="social-links">
                           <a href="https://www.facebook.com/" target="_blank" class="facebook">
-                          <img src="../footer/fb.png" alt="Facebook Icon">
+                          <img src="../Images/social-logo/fb.png" alt="Facebook Icon">
                       </a>
                       <a href="https://www.instagram.com/" target="_blank" class="instagram">
-                          <img src="../footer/ig.png" alt="Instagram Icon">
+                          <img src="../Images/social-logo/ig.png" alt="Instagram Icon">
                         </a>
                         <a href="https://www.youtube.com/" target="_blank" class="youtube">
-                          <img src="../footer/yr.png" alt="YouTube Icon">
+                          <img src="../Images/social-logo/yt.png" alt="YouTube Icon">
                         </a>
                     </div>
                 </div>
@@ -46,13 +46,13 @@
                     <div class="role">Frontend Developer</div>  
                     <div class="social-links">
                           <a href="https://www.facebook.com/" target="_blank" class="facebook">
-                          <img src="../footer/fb.png" alt="Facebook Icon">
+                          <img src="../Images/social-logo/fb.png" alt="Facebook Icon">
                       </a>
                       <a href="https://www.instagram.com/" target="_blank" class="instagram">
-                          <img src="../footer/ig.png" alt="Instagram Icon">
+                          <img src="../Images/social-logo/ig.png" alt="Instagram Icon">
                         </a>
                         <a href="https://www.youtube.com/" target="_blank" class="youtube">
-                          <img src="../footer/yr.png" alt="YouTube Icon">
+                          <img src="../Images/social-logo/yt.png" alt="YouTube Icon">
                         </a>
                     </div>
                 </div>
@@ -65,13 +65,13 @@
                     <div class="role">Full Stack Developer</div>
                     <div class="social-links">
                          <a href="https://www.facebook.com/" target="_blank" class="facebook">
-                          <img src="../footer/fb.png" alt="Facebook Icon">
+                          <img src="../Images/social-logo/fb.png" alt="Facebook Icon">
                       </a>
                       <a href="https://www.instagram.com/" target="_blank" class="instagram">
-                          <img src="../footer/ig.png" alt="Instagram Icon">
+                          <img src="../Images/social-logo/ig.png" alt="Instagram Icon">
                         </a>
                         <a href="https://www.youtube.com/" target="_blank" class="youtube">
-                          <img src="../footer/yr.png" alt="YouTube Icon">
+                          <img src="../Images/social-logo/yt.png" alt="YouTube Icon">
                         </a>
                     </div>
                 </div>
