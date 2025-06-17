@@ -37,9 +37,9 @@ $match = $match_result ? mysqli_fetch_assoc($match_result) : false;
 $team1_players = $team2_players = false;
 
 if ($match) {
-    // Optimized player queries with consistent COALESCE usage
+    // Updated player queries to include player image/photo
     $team1_players_query = "
-        SELECT p.player_id, p.player_name, p.position, p.jersey_num,
+        SELECT p.player_id, p.player_name, p.position, p.jersey_num, p.image,
                COALESCE(ps.points, 0) as points,
                COALESCE(ps.rebounds, 0) as rebounds,
                COALESCE(ps.assists, 0) as assists
@@ -50,7 +50,7 @@ if ($match) {
     ";
     
     $team2_players_query = "
-        SELECT p.player_id, p.player_name, p.position, p.jersey_num,
+        SELECT p.player_id, p.player_name, p.position, p.jersey_num, p.image,
                COALESCE(ps.points, 0) as points,
                COALESCE(ps.rebounds, 0) as rebounds,
                COALESCE(ps.assists, 0) as assists
@@ -83,6 +83,36 @@ if ($match) {
     <link rel="stylesheet" href="../Css/landing.css" />
     <link rel="stylesheet" href="../Css/matchdets.css" />
     <title>Match Details - ARM</title>
+    <style>
+        /* Additional CSS for player images */
+        .player-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ccc;
+        }
+        
+        .player-image-placeholder {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #666;
+            border: 2px solid #ccc;
+        }
+        
+        .player-table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 8px;
+        }
+    </style>
 </head>
 <body>
     <?php include("sidebar.php") ?>
@@ -155,6 +185,7 @@ if ($match) {
                     <table class="player-table">
                       <thead class="thead">
                         <tr>
+                          <td>Img</td>
                           <td>Jersey #</td>
                           <td>Player name</td>
                           <td>Position</td>
@@ -167,7 +198,18 @@ if ($match) {
                         <?php if ($team1_players && mysqli_num_rows($team1_players) > 0): ?>
                             <?php while($player = mysqli_fetch_assoc($team1_players)): ?>
                             <tr>
-                              <td style="text-align: center;"><?php echo $player['jersey_num'] ?: 'N/A'; ?></td>
+                              <td>
+                                <?php if(!empty($player['image']) && file_exists('../' . $player['image'])): ?>
+                                    <img src="../<?php echo htmlspecialchars($player['image']); ?>" 
+                                         alt="<?php echo htmlspecialchars($player['player_name']); ?>" 
+                                         class="player-image">
+                                <?php else: ?>
+                                    <div class="player-image-placeholder">
+                                        <?php echo strtoupper(substr($player['player_name'], 0, 2)); ?>
+                                    </div>
+                                <?php endif; ?>
+                              </td>
+                              <td><?php echo $player['jersey_num'] ?: 'N/A'; ?></td>
                               <td><?php echo htmlspecialchars($player['player_name']); ?></td>
                               <td><?php echo htmlspecialchars($player['position']); ?></td>
                               <td class="stat-cell" data-player="<?php echo $player['player_id']; ?>" data-stat="points">
@@ -182,7 +224,7 @@ if ($match) {
                             </tr>
                             <?php endwhile; ?>
                         <?php else: ?>
-                            <tr><td colspan="6">No players found for this team</td></tr>
+                            <tr><td colspan="7">No players found for this team</td></tr>
                         <?php endif; ?>
                       </tbody>
                     </table>  
@@ -195,6 +237,7 @@ if ($match) {
                     <table class="player-table">
                       <thead class="thead">
                         <tr>
+                          <td>Img</td>
                           <td>Jersey #</td>
                           <td>Player name</td>
                           <td>Position</td>
@@ -207,7 +250,18 @@ if ($match) {
                         <?php if ($team2_players && mysqli_num_rows($team2_players) > 0): ?>
                             <?php while($player = mysqli_fetch_assoc($team2_players)): ?>
                             <tr>
-                              <td style="text-align: center;"><?php echo $player['jersey_num'] ?: 'N/A'; ?></td>
+                              <td>
+                                <?php if(!empty($player['image']) && file_exists('../' . $player['image'])): ?>
+                                    <img src="../<?php echo htmlspecialchars($player['image']); ?>" 
+                                         alt="<?php echo htmlspecialchars($player['player_name']); ?>" 
+                                         class="player-image">
+                                <?php else: ?>
+                                    <div class="player-image-placeholder">
+                                        <?php echo strtoupper(substr($player['player_name'], 0, 2)); ?>
+                                    </div>
+                                <?php endif; ?>
+                              </td>
+                              <td><?php echo $player['jersey_num'] ?: 'N/A'; ?></td>
                               <td><?php echo htmlspecialchars($player['player_name']); ?></td>
                               <td><?php echo htmlspecialchars($player['position']); ?></td>
                               <td class="stat-cell" data-player="<?php echo $player['player_id']; ?>" data-stat="points"><?php echo $player['points']; ?></td>
@@ -216,7 +270,7 @@ if ($match) {
                             </tr>
                             <?php endwhile; ?>
                         <?php else: ?>
-                            <tr><td colspan="6">No players found for this team</td></tr>
+                            <tr><td colspan="7">No players found for this team</td></tr>
                         <?php endif; ?>
                       </tbody>
                     </table>  
