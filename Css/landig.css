@@ -199,12 +199,23 @@ a.header-logo{
     display: flex;
     flex-direction: column;
     gap: 20px;
+    cursor:pointer;
+    border-bottom: solid 4px #ddd;
+    transition: border-bottom 0.2s;
+}
+
+.match:hover{
+    background: #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-bottom: solid 4px #2d53da;
 }
 
 .teams{
     display: flex;
     justify-content: space-between;
     width: 100%;
+
     
 
 }
@@ -363,6 +374,12 @@ a.header-logo{
   margin-top: 20px;
   max-width: 100vw; /* 🚫 prevents it from exceeding viewport width */
   overflow: hidden; /* 🧹 hides any overflow */
+  cursor: pointer;
+}
+
+.team:hover {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-bottom: solid 4px #2d53da;
 }
 
 .scroller {
@@ -410,7 +427,19 @@ a.header-logo{
   border-radius: 16px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  cursor:pointer;
+  border-bottom: solid 4px #ddd;
+  transition: border-bottom 0.2s;
+  
 }
+
+
+.right:hover{ 
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-bottom: solid 4px #2d53da;
+    
+}
+
 
 .match-history-table {
   width: 100%;
@@ -475,6 +504,17 @@ a.header-logo{
   font-size: 20px;
   color: #000;
   font-family: 'light';
+}
+
+.text{
+  font-size: 16px;
+  color: #000;
+  margin-top: 10px;
+  text-decoration: none;
+}
+
+.text:hover{
+  color: #2d53da;
 }
 
 

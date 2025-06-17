@@ -112,7 +112,7 @@
 /* Scoreboard styles with sidebar responsiveness */
 .scoreboard {
     margin-left: 300px;
-    max-width: calc(100vw - 330px); /* Account for 300px sidebar + 20px margin + 10px right margin */
+    max-width: calc(100vw - 100px); /* Account for 300px sidebar + 20px margin + 10px right margin */
     background: white;
     border-radius: 12px;
     overflow: hidden;

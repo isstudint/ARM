@@ -98,8 +98,10 @@
 
     <div class="container">
         <main class="main-content">
-            <div class="match" id = "laman">
+         
+            <div class="match" id = "laman" >
                 <h1>
+                  <a href="matchdets.php" class = "text" style="font-size: 32px">
                     <?php 
                     if ($today_match) {
                         echo $today_match['status'] == 'Ongoing' ? 'LIVE MATCH' : 'MATCH TODAY';
@@ -107,6 +109,7 @@
                         echo 'NO MATCH TODAY';
                     }
                     ?>
+                  </a>
                 </h1>
                 
                 <?php if ($today_match): ?>
@@ -136,7 +139,7 @@
                         ?>
                     </div>
                   </div>
-                  
+                            
                   <div class="scored"><h1 id="liveTeam2Score"><?php echo $today_match['team2_score']; ?></h1></div>
 
                 <div class="team2"> 
@@ -154,10 +157,13 @@
                 </div>
                 <?php endif; ?>
             </div>
-
+                  
             <div class="human">
                 <div class="coaches laman">
-                    <a href="standing.php"><h1 >Standing</h1></a>
+                    <a href="standing.php" class="text" style="display: flex; justify-content: center; text-decoration: none;">
+                      <h1 style="margin: 0;">STANDING</h1>
+                    </a>
+
                     <table class="player-table">
                       <thead class="thead">
                         <tr>
@@ -196,7 +202,7 @@
                 </div>
             </div>
             <div class="team" id = "laman">
-              <h1 >Teams</h1>
+              <a href="teams.php" class = "text"><h1 >TEAMS</h1></a>
               <div class="scroller">
                 <div class="scrolling">
                 <?php if ($teams_result && mysqli_num_rows($teams_result) > 0): ?>
@@ -218,7 +224,7 @@
         </main>
 
         <div class="right">
-          <h1>Match history</h1>
+          <a href="history.php" class = "text"><h1>MATCH HISTORY</h1></a>
 
           <table class="match-history-table">
             <thead>
