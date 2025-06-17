@@ -120,7 +120,7 @@
     max-height: 700px;
     overflow-y: auto;
     margin-right: 10px;
- transition: margin-left 0.4s ease;
+    transition: margin-left 0.4s ease;
 
 }
 
@@ -293,7 +293,7 @@
     }
 
     .modal-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #2d53da;
       color: white;
       padding: 20px;
       border-radius: 12px 12px 0 0;
