@@ -67,195 +67,6 @@ if ($match_id) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
 
-        .bottom-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .bottom-controls > button {
-            margin: 5px;
-        }
-        
-        /* Modal for corrections only */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-        
-        .modal-content {
-            background-color: white;
-            margin: 10% auto;
-            padding: 20px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 400px;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-        
-        .close {
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .correction-section {
-            margin-bottom: 15px;
-        }
-        
-        .correction-section select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-        }
-        
-        .correction-buttons {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-        }
-        
-        .correction-buttons button {
-            padding: 8px 12px;
-            background: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .pindot{
-            background-color:rgb(0,81,255);
-            border: 1px solid blue;
-            border-radius: 6px;
-            transition: background-color 0.3s ease;
-            color: white;
-            font-family:"Poppins", sans-serif;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .pindot:hover {
-            width: 100%;
-            background-color:rgb(4, 21, 180);
-            
-        }
-
-        .bawas{
-            background-color:rgb(245, 47, 47);
-            border: 1px solid red;
-            border-radius: 6px;
-            transition: background-color 0.3s ease;
-            color: white;
-            font-family:"Poppins", sans-serif;
-        
-        }
-
-        .bawas:hover {
-            background-color:rgb(168, 4, 4);
-            border: 1px solid rgb(168, 4, 4);
-        }
-
-        .pause{
-            background-color:rgb(255, 153, 0);
-            border: 1px solid orange;
-            border-radius: 6px;
-            transition: background-color 0.3s ease;
-            color: white;
-            font-family:"Poppins", sans-serif;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .pause:hover {
-            background-color:rgb(255, 102, 0);
-            border: 1px solid rgb(255, 102, 0);
-        }
-
-        .reset{
-            background-color:rgb(245, 47, 47);
-            border: 1px solid red;
-            border-radius: 6px;
-            transition: background-color 0.3s ease;
-            color: white;
-            font-family:"Poppins", sans-serif;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .reset:hover {
-            background-color:rgb(168, 4, 4);
-            border: 1px solid rgb(168, 4, 4);
-        }
-
-        
-        .correct{
-            background-color: #10b981;
-            border: 1px solid #10b981;
-            border-radius: 6px;
-            transition: background-color 0.3s ease;
-            color: white;
-            font-family:"Poppins", sans-serif;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .correct:hover {
-            background-color: #059669;
-            border: 1px solid #059669;
-        }
-        
-        .status{
-            background-color: #f3f4f6;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            padding: 8px;
-            font-size: 16px;
-            color: #374151;
-            font-family: "Poppins", sans-serif;
-
-        }
-
-        .status:hover {
-            background-color: #e5e7eb;
-            border: 1px solid #9ca3af;
-        }
-
-        .set_time{
-            background-color: #10b981;
-            border: 1px solid #10b981;
-            border-radius: 6px;
-            padding: 8px;
-            font-size: 16px;
-            color: white;
-            font-family: "Poppins", sans-serif;
-            cursor: pointer;
-        }
-
-        .set_time:hover {
-            background-color: #059669;
-            border: 1px solid #059669;
-        }
-
-     
-
-        
-
-       
     </style>
 </head>
 
@@ -319,10 +130,10 @@ if ($match_id) {
                 <div class="game-status" id="gameStatus">Ready</div>
                 <div class="quarter-time">
                     <div>Quarter: <span id="quarter">1</span></div>
-                    <div class="time-display" id="gameTime">12:00</div>
+                    <div class="time-display" id="gameTime">8:00</div>
                 </div>
                 <div class="time-controls">
-                    <input type="text" id="timeInput" placeholder="12:00" maxlength="5">
+                    <input type="text" id="timeInput" placeholder="8:00" maxlength="5">
                     <button class = "set_time" onclick="setTime()">Set Time</button>
                 </div>
             </div>
@@ -345,7 +156,7 @@ if ($match_id) {
                         <button class = "pindot" onclick="addScore(1, 1)">+1</button>
                         <button class = "pindot" onclick="addScore(1, 2)">+2</button>
                         <button class = "pindot" onclick="addScore(1, 3)">+3</button>
-                        <button class = "pindot bawas" onclick="removeScore(1, 1)">-1</button>
+                        <button class = "pindot bawas" onclick="undoLastScore(1)">Undo</button>
                     </div>
                 </div>
 
@@ -373,7 +184,7 @@ if ($match_id) {
                         <button class = "pindot" onclick="addScore(2, 1)">+1</button>
                         <button class = "pindot" onclick="addScore(2, 2)">+2</button>
                         <button class = "pindot" onclick="addScore(2, 3)">+3</button>
-                        <button class = "pindot bawas" onclick="removeScore(2, 1)">-1</button>
+                        <button class = "pindot bawas" onclick="undoLastScore(2)">Undo</button>
                     </div>
                 </div>
             </div>
@@ -521,7 +332,7 @@ let matchId = <?php echo ($match_id && $match) ? $match_id : 'null'; ?>;
 
 let gameRunning = false;
 let gamePaused = false;
-let gameTime = 720;
+let gameTime = 480;
 let currentQuarter = 1;
 let gameTimer;
 let syncTimer;
@@ -725,29 +536,115 @@ function setTime() {
 }
 
 function addScore(team, points) {
+    let oldScore = team === 1 ? team1Score : team2Score;
+    
     if (team === 1) {
         team1Score += points;
         document.getElementById('team1Score').textContent = team1Score;
         updateDB(1, team1Score);
+        
+        // Log transaction
+        logScoreTransaction(matchId, 1, oldScore, team1Score, points, 'add', 'Score added: +' + points);
     } else {
         team2Score += points;
         document.getElementById('team2Score').textContent = team2Score;
         updateDB(2, team2Score);
+        
+        // Log transaction
+        logScoreTransaction(matchId, 2, oldScore, team2Score, points, 'add', 'Score added: +' + points);
     }
 }
 
-function removeScore(team, points) {
-    if (confirm('Remove ' + points + ' point(s)?')) {
-        if (team === 1 && team1Score >= points) {
-            team1Score -= points;
-            document.getElementById('team1Score').textContent = team1Score;
-            updateDB(1, team1Score);
-        } else if (team === 2 && team2Score >= points) {
-            team2Score -= points;
-            document.getElementById('team2Score').textContent = team2Score;
-            updateDB(2, team2Score);
-        }
+// Replace removeScore function with undoLastScore
+function undoLastScore(team) {
+    if (confirm('Undo the last score change for this team?')) {
+        fetch(`../api/get_last_transaction.php?match_id=${matchId}&team=${team}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.transaction) {
+                    let lastTransaction = data.transaction;
+                    let newScore = lastTransaction.old_score;
+                    
+                    // Update the score to the previous value
+                    if (team === 1) {
+                        team1Score = newScore;
+                        document.getElementById('team1Score').textContent = team1Score;
+                    } else {
+                        team2Score = newScore;
+                        document.getElementById('team2Score').textContent = team2Score;
+                    }
+                    
+                    updateDB(team, newScore);
+                    
+                    // Log the undo transaction
+                    logScoreTransaction(matchId, team, lastTransaction.new_score, newScore, 
+                        newScore - lastTransaction.new_score, 'undo', 
+                        `Undid: ${lastTransaction.reason}`);
+                        
+                    console.log(`✅ Undid last score: Team ${team} | ${lastTransaction.new_score} → ${newScore}`);
+                } else {
+                    alert('No previous score changes found for this team');
+                    console.log('❌ No transactions to undo');
+                }
+            })
+            .catch(error => {
+                console.error('Undo error:', error);
+                alert('Error undoing score');
+            });
     }
+}
+
+function logScoreTransaction(matchId, team, oldScore, newScore, change, actionType, reason) {
+    let formData = new FormData();
+    formData.append('match_id', matchId);
+    formData.append('team_number', team);
+    formData.append('old_score', oldScore);
+    formData.append('new_score', newScore);
+    formData.append('score_change', change);
+    formData.append('action_type', actionType);
+    formData.append('reason', reason);
+    
+    fetch('../api/log_score_transaction.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log(`✅ Score Transaction Logged: Team ${team} | ${oldScore} → ${newScore} (${change > 0 ? '+' : ''}${change}) | ${reason}`);
+        } else {
+            console.error('❌ Transaction failed:', data.error);
+        }
+    })
+    .catch(error => console.error('Transaction error:', error));
+}
+
+function toggleTransactionLog() {
+    const logPanel = document.getElementById('transactionLog');
+    if (logPanel.style.display === 'none') {
+        logPanel.style.display = 'block';
+        loadTransactionLog();
+    } else {
+        logPanel.style.display = 'none';
+    }
+}
+
+function loadTransactionLog() {
+    fetch(`../api/get_score_transactions.php?match_id=${matchId}`)
+        .then(response => response.json())
+        .then(data => {
+            let html = '';
+            data.forEach(transaction => {
+                html += `
+                    <div style="margin-bottom: 10px; padding: 8px; background: white; border-radius: 4px;">
+                        <strong>Team ${transaction.team_number}</strong>: ${transaction.old_score} → ${transaction.new_score} 
+                        (${transaction.score_change > 0 ? '+' : ''}${transaction.score_change})
+                        <br><small>${transaction.reason} - ${transaction.created_at}</small>
+                    </div>
+                `;
+            });
+            document.getElementById('transactionList').innerHTML = html || 'No transactions yet';
+        });
 }
 
 function changeQuarter(direction) {
@@ -755,7 +652,7 @@ function changeQuarter(direction) {
     if (newQuarter >= 1 && newQuarter <= 4) {
         currentQuarter = newQuarter;
         document.getElementById('quarter').textContent = currentQuarter;
-        gameTime = 720;
+        gameTime = 480;
         updateTime();
         saveGameState();
     }
@@ -817,7 +714,7 @@ function resetGame() {
         statElements.forEach(element => element.textContent = '0');
         
         // Reset game state
-        gameTime = 720;
+        gameTime = 480;
         currentQuarter = 1;
         gameRunning = false;
         gamePaused = false;
@@ -977,9 +874,6 @@ document.addEventListener("DOMContentLoaded", () => {
           sidebar.classList.toggle("collapsed");
         });
       });
-
-
-
 </script>
 
 </html>

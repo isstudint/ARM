@@ -1,5 +1,5 @@
 <?php
-// Move database connection to top and add error handling
+
 include('db.php');
 
 if (!$conn) {
@@ -124,7 +124,7 @@ if ($match) {
                   <div class="scored"><h1 id="liveTeam1Score"><?php echo $match['team1_score']; ?></h1></div>
                   <div class="score">
                     <h1>SCORE</h1>
-                    <div class="oras"><h2 id="liveGameTime">12:00</h2></div>
+                    <div class="oras"><h2 id="liveGameTime">8:00</h2></div>
                     <div class="status" id="liveGameStatus">
                         <?php 
                         $statusLabels = [

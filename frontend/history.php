@@ -20,12 +20,10 @@ $history_query = "
         CASE 
             WHEN s.team1_score > s.team2_score THEN t1.team_name
             WHEN s.team2_score > s.team1_score THEN t2.team_name
-            ELSE 'Tie'
         END as winner_name,
         CASE 
             WHEN s.team1_score > s.team2_score THEN 'team1'
             WHEN s.team2_score > s.team1_score THEN 'team2'
-            ELSE 'tie'
         END as winner
     FROM matches m
     JOIN teams t1 ON m.team1_id = t1.team_id

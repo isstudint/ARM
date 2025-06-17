@@ -386,7 +386,7 @@ $standings = mysqli_query($conn, $standings_query);
                             if ($match['match_type'] == 'semifinal') {
                                 echo '<strong style="color: #28a745;">SEMIFINAL</strong>';
                             } else if ($match['match_type'] == 'final') {
-                                echo '<strong style="color: #ffd700;">CHAMPIONSHIP</strong>';
+                                echo '<strong style="color:rgb(0, 0, 0);">CHAMPIONSHIP</strong>';
                             } else {
                                 echo ($match['status']); 
                             }
