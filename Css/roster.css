@@ -17,19 +17,36 @@
   background-color: #f0f8ff;
   height: 180px;
   width: 100%;
-  overflow-x: hidden;        /* Hide horizontal scrollbar by default */
+  overflow-x: hidden;        
   overflow-y: hidden;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Start aligned by default */
+  justify-content: flex-start; 
   border-radius: 16px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   transition: overflow-x 0.3s ease;
 }
 
 .teams-navbar:hover {
-  overflow-x: auto;          /* Show scrollbar on hover */
+  overflow-x: auto;          
 }
+
+
+
+
+table thead {
+  background-color: #005b96 !important;
+
+}
+
+table thead tr {
+  background-color: #005b96 !important;
+  transition: none !important;
+
+}
+
+
+
 
 .team-logo-list {
   display: flex;
@@ -133,7 +150,7 @@ table tbody tr:hover {
     }
 
     .player-modal .modal-header {
-      background: linear-gradient(135deg, #2d53da, #4a69e2);
+      background: #005b96;
       color: white;
       padding: 20px;
       border-radius: 12px 12px 0 0;

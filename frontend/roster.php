@@ -155,7 +155,7 @@ if ($selected_team) {
           <!-- Player info will be populated here -->
         </div>
         <div class="stats-container" id="playerStatsContainer">
-          <!-- Player game history will be populated here -->
+ 
         </div>
       </div>
     </div>
