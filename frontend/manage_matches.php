@@ -24,14 +24,42 @@ function teamsAlreadyPlayed($conn, $team1_id, $team2_id) {
 if (isset($_GET['delete']) && isset($_GET['match_id'])) {
     $match_id = intval($_GET['match_id']);
     
-
+    // Get match type before deletion
+    $match_type_query = "SELECT match_type FROM matches WHERE match_id = $match_id";
+    $match_type_result = mysqli_query($conn, $match_type_query);
+    $match_data = mysqli_fetch_assoc($match_type_result);
+    
+    // Delete ALL related data in the correct order to avoid foreign key constraints
+    
+    // 1. Delete score transactions first (this was missing!)
+    mysqli_query($conn, "DELETE FROM score_transactions WHERE match_id = $match_id");
+    
+    // 2. Delete player stats
     mysqli_query($conn, "DELETE FROM player_stats WHERE match_id = $match_id");
+    
+    // 3. Delete scores
     mysqli_query($conn, "DELETE FROM scores WHERE match_id = $match_id");
     
-    // Delete match
+    // 4. If deleting a semifinal, also delete the final match if it exists
+    if ($match_data['match_type'] == 'semifinal') {
+        $final_matches = mysqli_query($conn, "SELECT match_id FROM matches WHERE match_type = 'final'");
+        while ($final_match = mysqli_fetch_assoc($final_matches)) {
+            $final_id = $final_match['match_id'];
+            // Delete final match dependencies too
+            mysqli_query($conn, "DELETE FROM score_transactions WHERE match_id = $final_id");
+            mysqli_query($conn, "DELETE FROM player_stats WHERE match_id = $final_id");
+            mysqli_query($conn, "DELETE FROM scores WHERE match_id = $final_id");
+            mysqli_query($conn, "DELETE FROM matches WHERE match_id = $final_id");
+        }
+    }
+    
+    // 5. Finally delete the match itself
     $delete_query = "DELETE FROM matches WHERE match_id = $match_id";
     if (mysqli_query($conn, $delete_query)) {
         $message = "Match deleted successfully!";
+        if ($match_data['match_type'] == 'semifinal') {
+            $message .= " Final match was also deleted.";
+        }
     } else {
         $error = "Error deleting match: " . mysqli_error($conn);
     }
