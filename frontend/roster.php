@@ -28,20 +28,35 @@
   $selected_team = isset($_GET['team_id']) ? (int)$_GET['team_id'] : null;
 
   // Get players
-  if ($selected_team) {
-    $players_query = "
-    SELECT p.*, t.team_name 
-    FROM players p 
-    JOIN teams t ON p.team_id = t.team_id 
+if ($selected_team) {
+  $players_query = "
+    SELECT 
+      p.*, 
+      t.team_name,
+      ROUND(AVG(s.points), 2) AS ppg,
+      ROUND(AVG(s.assists), 2) AS apg,
+      ROUND(AVG(s.rebounds), 2) AS rpg
+    FROM players p
+    JOIN teams t ON p.team_id = t.team_id
+    LEFT JOIN player_stats s ON p.player_id = s.player_id
     WHERE p.team_id = $selected_team
+    GROUP BY p.player_id
     ORDER BY p.player_name";
-  } else {
-    $players_query = "
-    SELECT p.*, t.team_name 
-    FROM players p 
-    JOIN teams t ON p.team_id = t.team_id 
+} else {
+  $players_query = "
+    SELECT 
+      p.*, 
+      t.team_name,
+      ROUND(AVG(s.points), 2) AS ppg,
+      ROUND(AVG(s.assists), 2) AS apg,
+      ROUND(AVG(s.rebounds), 2) AS rpg
+    FROM players p
+    JOIN teams t ON p.team_id = t.team_id
+    LEFT JOIN player_stats s ON p.player_id = s.player_id
+    GROUP BY p.player_id
     ORDER BY t.team_name, p.player_name";
-  }
+}
+
   $players = mysqli_query($conn, $players_query);
   ?>
 
@@ -97,6 +112,9 @@
             <th>Position</th>
             <th>Team</th>
             <th>Age</th>
+            <th>Ppg</th>
+            <th>Apg</th>
+            <th>Rpg</th>
           </tr>
         </thead>
         <tbody>
@@ -114,6 +132,9 @@
               <td><?php echo htmlspecialchars($player['position']); ?></td>
               <td><?php echo htmlspecialchars($player['team_name']); ?></td>
               <td><?php echo htmlspecialchars($player['age']); ?></td>
+              <td><?php echo htmlspecialchars($player['ppg']); ?></td>
+              <td><?php echo htmlspecialchars($player['apg']); ?></td> 
+              <td><?php echo htmlspecialchars($player['rpg']); ?></td>
             </tr>
           <?php endwhile; ?>
       </tbody>
