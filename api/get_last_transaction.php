@@ -5,7 +5,7 @@ if (isset($_GET['match_id']) && isset($_GET['team'])) {
     $match_id = (int)$_GET['match_id'];
     $team = (int)$_GET['team'];
     
-    // Get the most recent non-undo transaction for this team
+
     $query = "SELECT * FROM score_transactions 
               WHERE match_id = $match_id 
               AND team_number = $team 
