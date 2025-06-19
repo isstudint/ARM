@@ -344,7 +344,7 @@
                   }
               })
               .catch(error => console.log('Live update error:', error));
-      }, 2000); 
+      }, 1000); 
       <?php endif; ?>
     </script>
 

@@ -63,60 +63,109 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $player_id = $_POST['player_id'] ?? '';
-    $player_name = $_POST['player_name'] ?? '';
+    $player_name = trim($_POST['player_name'] ?? '');
     $team_id = $_POST['team_id'] ?? '';
     $position = $_POST['position'] ?? '';
     $age = $_POST['age'] ?? '';
     $jersey_num = $_POST['jersey_num'] ?? '';
     
-    $upload_dir = "../uploads/player_images/";
-    if (!file_exists($upload_dir)) {
-        mkdir($upload_dir, 0777, true);
-    }
-    
-    $image_path = '';
-    
-    // Handle file upload
-    if (isset($_FILES['player_image']) && $_FILES['player_image']['error'] == 0) {
-        $allowed = ['jpg', 'jpeg', 'png', 'gif'];
-        $filename = $_FILES['player_image']['name'];
-        $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        
-        if (in_array($file_ext, $allowed)) {
-            $new_filename = uniqid('player_', true) . '.' . $file_ext;
-            $destination = $upload_dir . $new_filename;
-            
-            if (move_uploaded_file($_FILES['player_image']['tmp_name'], $destination)) {
-                $image_path = "uploads/player_images/" . $new_filename;
-            }
-        }
-    }
-    
+    // Validation: Check for duplicate player name in the same team
+    $duplicate_check = "SELECT player_id FROM players WHERE player_name = '$player_name' AND team_id = '$team_id'";
     if (!empty($player_id)) {
-        // Update player
-        $sql = "UPDATE players SET player_name='$player_name', team_id='$team_id', position='$position', age='$age', jersey_num='$jersey_num'";
-        if (!empty($image_path)) {
-            $sql .= ", image='$image_path'";
-        }
-        $sql .= " WHERE player_id='$player_id'";
-        
-        if(mysqli_query($conn, $sql)) {
-            $message = "Player updated successfully!";
-        } else {
-            $error = "Error: " . mysqli_error($conn);
-        }
+        $duplicate_check .= " AND player_id != '$player_id'";
+    }
+    $duplicate_result = mysqli_query($conn, $duplicate_check);
+    
+    if (mysqli_num_rows($duplicate_result) > 0) {
+        $error = "A player with the name '$player_name' already exists in this team!";
     } else {
-        // Create new player
-        if (!empty($image_path)) {
-            $sql = "INSERT INTO players (player_name, team_id, position, age, jersey_num, image) VALUES ('$player_name', '$team_id', '$position', '$age', '$jersey_num', '$image_path')";
-        } else {
-            $sql = "INSERT INTO players (player_name, team_id, position, age, jersey_num) VALUES ('$player_name', '$team_id', '$position', '$age', '$jersey_num')";
+        // Validation: Check if player exists in another team
+        $existing_player_check = "SELECT p.player_id, t.team_name FROM players p 
+                                 JOIN teams t ON p.team_id = t.team_id 
+                                 WHERE p.player_name = '$player_name'";
+        if (!empty($player_id)) {
+            $existing_player_check .= " AND p.player_id != '$player_id'";
         }
+        $existing_result = mysqli_query($conn, $existing_player_check);
         
-        if(mysqli_query($conn, $sql)) {
-            $message = "Player added successfully!";
+        if (mysqli_num_rows($existing_result) > 0) {
+            $existing_player = mysqli_fetch_assoc($existing_result);
+            $error = "Player '$player_name' already exists in team: " . $existing_player['team_name'] . "!";
         } else {
-            $error = "Error: " . mysqli_error($conn);
+            // Validation: Check for duplicate jersey number in the same team
+            $jersey_check = "SELECT player_id FROM players WHERE jersey_num = '$jersey_num' AND team_id = '$team_id'";
+            if (!empty($player_id)) {
+                $jersey_check .= " AND player_id != '$player_id'";
+            }
+            $jersey_result = mysqli_query($conn, $jersey_check);
+            
+            if (mysqli_num_rows($jersey_result) > 0) {
+                $error = "Jersey number $jersey_num is already taken in this team!";
+            } else {
+                // Proceed with file upload and database operations
+                $upload_dir = "../uploads/player_images/";
+                if (!file_exists($upload_dir)) {
+                    mkdir($upload_dir, 0777, true);
+                }
+                
+                $image_path = '';
+                
+                // Handle file upload
+                if (isset($_FILES['player_image']) && $_FILES['player_image']['error'] == 0) {
+                    $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+                    $filename = $_FILES['player_image']['name'];
+                    $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                    
+                    if (in_array($file_ext, $allowed)) {
+                        $new_filename = uniqid('player_', true) . '.' . $file_ext;
+                        $destination = $upload_dir . $new_filename;
+                        
+                        if (move_uploaded_file($_FILES['player_image']['tmp_name'], $destination)) {
+                            $image_path = "uploads/player_images/" . $new_filename;
+                        }
+                    } else {
+                        $error = "Please upload a valid image file (JPG, JPEG, PNG, or GIF)!";
+                    }
+                }
+                
+                // Only proceed if no file upload errors
+                if (!isset($error)) {
+                    if (!empty($player_id)) {
+                        // Update player
+                        $sql = "UPDATE players SET player_name='$player_name', team_id='$team_id', position='$position', age='$age', jersey_num='$jersey_num'";
+                        if (!empty($image_path)) {
+                            // Delete old image if exists
+                            $old_image_query = "SELECT image FROM players WHERE player_id = '$player_id'";
+                            $old_image_result = mysqli_query($conn, $old_image_query);
+                            $old_image_data = mysqli_fetch_assoc($old_image_result);
+                            if (!empty($old_image_data['image']) && file_exists('../' . $old_image_data['image'])) {
+                                unlink('../' . $old_image_data['image']);
+                            }
+                            $sql .= ", image='$image_path'";
+                        }
+                        $sql .= " WHERE player_id='$player_id'";
+                        
+                        if(mysqli_query($conn, $sql)) {
+                            $message = "Player updated successfully!";
+                        } else {
+                            $error = "Error updating player: " . mysqli_error($conn);
+                        }
+                    } else {
+                        // Create new player
+                        if (!empty($image_path)) {
+                            $sql = "INSERT INTO players (player_name, team_id, position, age, jersey_num, image) VALUES ('$player_name', '$team_id', '$position', '$age', '$jersey_num', '$image_path')";
+                        } else {
+                            $sql = "INSERT INTO players (player_name, team_id, position, age, jersey_num) VALUES ('$player_name', '$team_id', '$position', '$age', '$jersey_num')";
+                        }
+                        
+                        if(mysqli_query($conn, $sql)) {
+                            $message = "Player added successfully!";
+                        } else {
+                            $error = "Error adding player: " . mysqli_error($conn);
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -193,7 +242,8 @@ include("sidebar.php");
                     <?php endif; ?>
                     
                     <label for="player_name">Player Name</label>
-                    <input type="text" id="player_name" name="player_name" value="<?php echo $player['player_name'] ?? ''; ?>" required>
+                    <input type="text" id="player_name" name="player_name" value="<?php echo htmlspecialchars($player['player_name'] ?? ''); ?>" required>
+                    <small style="color:#777;font-size:0.9em;">Player's full name</small>
                     
                     <label for="team_id">Team</label>
                     <select id="team_id" name="team_id" required>
@@ -224,6 +274,7 @@ include("sidebar.php");
                     
                     <label for="jersey_num">Jersey Number</label>
                     <input type="number" id="jersey_num" name="jersey_num" min="0" max="99" value="<?php echo $player['jersey_num'] ?? ''; ?>" required>
+                    <small style="color:#777;font-size:0.9em;">Uniform number worn by the player</small>
 
                     <?php if (!empty($player['image'])): ?>
                         <div>

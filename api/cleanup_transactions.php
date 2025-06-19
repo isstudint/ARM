@@ -1,7 +1,7 @@
 <?php
 include('../frontend/db.php');
 
-// Clean up transactions older than 30 days
+
 $cleanup_query = "DELETE FROM score_transactions WHERE created_at < DATE_SUB(NOW(), INTERVAL 30 DAY)";
 
 if (mysqli_query($conn, $cleanup_query)) {

@@ -336,7 +336,7 @@ if ($match) {
     }
     
     // Start live updates
-    setInterval(fetchLiveData, 2000);
+    setInterval(fetchLiveData, 1000);
     fetchLiveData(); // Initial load
     <?php endif; ?>
 

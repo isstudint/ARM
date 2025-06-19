@@ -64,7 +64,7 @@ while ($row = mysqli_fetch_assoc($games_result)) {
   <div class="scoreboard">
     <?php if (empty($games)): ?>
       <div class="no-games">
-        <div style="font-size: 48px; color: #ccc; margin-bottom: 20px;">🏀</div>
+        <div style="font-size: 48px; color: #ccc; margin-bottom: 20px;"></div>
         <h3 style="color: #666; margin-bottom: 10px;">No Completed Games Yet</h3>
         <p style="color: #888;">Games will appear here once matches are completed and scores are recorded.</p>
       </div>
